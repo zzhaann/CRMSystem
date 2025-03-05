@@ -1,0 +1,189 @@
+﻿
+ @model List<CRMSystem.Models.Order>
+
+<div class="app-main-layout">
+
+    <!-- Header -->
+
+    <div class="app-main-layout-header">
+        <div class="app-main-layout-wrapper header">
+            <div class="page-heading"><h2>Incoming Orders</h2></div>
+            <div class="page-tabs-menu">
+                <li class="page-tab-link revenue">@Html.ActionLink("Incoming", "Incoming", "Dashboard")</li>
+                <li class="page-tab-link projects">@Html.ActionLink("Processing", "Processing", "Dashboard")</li>
+                <li class="page-tab-link crypto">@Html.ActionLink("Completed", "Completed", "Dashboard")</li>
+            </div>
+        </div>
+    </div>
+     
+    <!-- Header  END-->
+
+
+    <!-- MAIN CONTENT-->
+    <div class="app-main-layout-wrapper">
+        <div class="app-main-layout-content">
+            <div class="page-tabs-content">
+                <div class="section">
+                    <div class="container-fluid">  <!--Bootstrap ГАЙЙС-->
+                        <div class="row">
+                            <div class="col w-col w-col-12">
+                                <div class="card p-4 shadow-lg">
+                                    <div class="card-heading">
+                                        <h4 class="mb-3">Incoming orders</h4>
+                                    </div>
+
+                                    <!-- Ошибки и сообщения -->
+                                    @if (TempData["ErrorMessage"] != null)
+                                    {
+                                        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                                    }
+                                    @if (TempData["SuccessMessage"] != null)
+                                    {
+                                        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                                    }
+
+                                    <!-- Кнопка добавить заказ модал виндоуды ашад data-bs-targetпен  -->
+                                    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addOrderModal">+ New order</button>
+
+
+                                    <!--Таблица заказов бутстрапик-->
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Номер контракта</th>
+                                                <th>Цветы</th>
+                                                <th>Количество</th>
+                                                <th>Цена</th>
+                                                <th>Клиент</th>
+                                                <th>Телефон</th>
+                                                <th>Флорист</th>
+                                                <th>Действия</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var order in Model)
+                                            {
+                                                <tr id="order-@order.Id">
+                                                    <td>@order.ContractNumber</td>
+                                                    <td>@order.FlowerName</td>
+                                                    <td>@order.Quantity</td>
+                                                    <td>@order.Price</td>
+                                                    <td>@(order.CustomerName ?? "Не указан")</td>
+                                                    <td>@order.CustomerPhone</td>
+                                                    <td>@order.Florist.FullName</td>
+                                                    <td>
+                                                        <!-- Кнопка изменить статус -->
+                                                        <form asp-action="MoveToProcessing" asp-controller="Dashboard" method="post" class="d-inline">
+                                                            <input type="hidden" name="id" value="@order.Id" />
+                                                            <button type="submit" class="btn btn-warning btn-sm">Change status</button>
+                                                        </form>
+
+                                                        <!-- Кнопка удалить заказ -->
+                                                        <button type="button" class="btn btn-danger btn-sm delete-order-btn" data-id="@order.Id">Delete</button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                    <!-- модал виндоу для добавления заказа -->
+                                    <div class="modal fade" id="addOrderModal" tabindex="-1" aria-labelledby="addOrderLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Add an order</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form asp-action="Create" asp-controller="Dashboard" method="post">
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Номер контракта</label>
+                                                            <input type="text" class="form-control" name="ContractNumber" required />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Название цветов</label>
+                                                            <input type="text" class="form-control" name="FlowerName" required />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Количество</label>
+                                                            <input type="number" class="form-control" name="Quantity" required />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Цена</label>
+                                                            <input type="number" step="0.01" class="form-control" name="Price" required />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Имя клиента</label>
+                                                            <input type="text" class="form-control" name="CustomerName" />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Телефон клиента</label>
+                                                            <input type="text" class="form-control" name="CustomerPhone" required />
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Флорист</label>
+                                                            <select class="form-select" name="FloristId" required>
+                                                                <option value="1">Флорист 1</option>
+                                                                <option value="2">Флорист 2</option> <!--db-dan kosyp alaiyk-->
+                                                            </select>
+                                                        </div>
+                                                        <button type="submit" class="btn btn-primary">Добавить заказ</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Конец модального окна -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script for animation delete-->
+<script>
+     document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll(".delete-order-btn").forEach(button => {
+            button.addEventListener("click", function () {
+                let orderId = this.getAttribute("data-id");
+
+                if (confirm("Вы уверены, что хотите удалить этот заказ?")) {
+                    let row = document.getElementById("order-" + orderId);
+
+                    // Анимация исчезновения
+                    row.style.transition = "opacity 0.5s";
+                    row.style.opacity = "0";
+
+                    setTimeout(() => {
+                        fetch(`/Dashboard/Delete/${orderId}`, {
+                            method: "POST",  
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRF-TOKEN": document.querySelector('input[name="__RequestVerificationToken"]').value
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.message) {
+                                row.remove();
+                            } else {
+                                alert("Ошибка удаления заказа: " + data.error);
+                                row.style.opacity = "1";  
+                            }
+                        })
+                        .catch(error => {
+                            alert("Ошибка соединения с сервером!");
+                            row.style.opacity = "1";
+                        });
+                    }, 500);
+                }
+            });
+        });
+    });
+
+</script>
+

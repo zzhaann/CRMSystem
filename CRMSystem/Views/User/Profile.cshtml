@@ -1,0 +1,174 @@
+﻿
+
+    <div class="app-main-layout-container">
+        <div class="app-main-layout-mask"></div>
+        <div class="app-main-layout">
+            <div class="app-main-layout-header">
+                <div class="app-main-layout-wrapper header">
+                    <div class="page-heading">
+                        <h2>User Profile</h2>
+                        <p>Components for editing profile, friends list, public profile, and post view.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="app-main-layout-wrapper">
+                <div class="app-main-layout-content">
+                    <div class="section">
+
+                        <!-- Основной контейнер с профилем и сменой пароля -->
+                        <table width="100%">
+                            <tr>
+                                <!-- Профиль пользователя -->
+                                <td width="55%" valign="top">
+                                    <div class="card profile-card">
+                                        <div class="profile-bg">
+                                            <a href="#" class="edit-profile-bg w-inline-block"></a>
+                                        </div>
+                                        <div class="profile-info">
+                                            <img src="~/profile-photo.jpg" class="avatar big" >
+                                            <div class="profile-details">
+                                                <h5 class="profile-name">Mark Roster</h5>
+                                                <div>markroster</div>
+                                            </div>
+                                            <div class="profile-follow">
+                                                <a href="#" class="button button-small button-primary w-button">Follow</a>
+                                            </div>
+                                        </div>
+                                        <div class="profile-about">
+                                            <div class="profile-info-row">
+                                                <div>
+                                                    <strong>Phone</strong>
+                                                    <div>+35278953712</div>
+                                                </div>
+                                                <div>
+                                                    <strong>Date of Birth</strong>
+                                                    <div>25.04.1992</div>
+                                                </div>
+                                            </div>
+                                            <div class="profile-info-row">
+                                                <div>
+                                                    <strong>Email</strong>
+                                                    <div>petrovdz91@gmail.com</div>
+                                                </div>
+                                                <div>
+                                                    <strong>Location</strong>
+                                                    <div>Ukraine, Kyiv</div>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <strong>Position</strong>
+                                                <p>Template designer at <strong>Webflow Inc</strong>.</p>
+                                            </div>
+                                            <div>
+                                                <strong>Bio</strong>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            <td width="5%" valign="top"> <div ></div></td>
+                                <!-- Блок Change Password -->
+                                <td width="40%" valign="top">
+                                    <div class="card">
+                                    
+                                            <div class="card-heading vertical">
+                                                <h4>Change password</h4>
+                                                <div class="heading-text">
+                                                    <p class="hint inline">Forgot your password? <em><br /></em></p>
+                                                    <a href="#" class="hint modal-action">Reset password</a>
+                                                    <div class="modal">
+                                                        <div class="modal-mask"></div>
+                                                        <div class="modal-container">
+                                                            <a href="#" class="modal-close w-inline-block"></a>
+                                                            <div class="modal-title">
+                                                                <h4 class="text-center">Reset password</h4>
+                                                                <p class="text-center">Enter your email and we'll send you instructions on how to reset your password.</p>
+                                                            </div>
+                                                            <div class="w-form">
+                                                                <form id="email-form" name="email-form" data-name="Email Form">
+                                                                    <div class="form-group">
+                                                                        <label for="name-5" class="label">Email</label>
+                                                                        <input type="email" class="input w-input" maxlength="256" name="name-3" data-name="Name 3" placeholder="Enter your email" id="name-3" />
+                                                                    </div>
+                                                                    <input type="submit" value="Reset password" data-wait="Please wait..." class="button button-primary button-block w-button" />
+                                                                </form>
+                                                                <div class="success-message w-form-done">
+                                                                    <div>Thank you! Your submission has been received!</div>
+                                                                </div>
+                                                                <div class="error-message w-form-fail">
+                                                                    <div>Oops! Something went wrong while submitting the form.</div>
+                                                                </div>
+                                                          
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Change Password Form -->
+                                            <div class="w-form">
+                                                <form id="email-form" name="email-form" data-name="Email Form">
+                                                    <div class="form-group">
+                                                        <label for="name-5" class="label">Current password</label>
+                                                        <input type="password" class="input w-input" maxlength="256" name="name-4" data-name="Name 4" id="name-4" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="name-5" class="label">New password</label>
+                                                        <input type="password" class="input w-input" maxlength="256" name="name-3" data-name="Name 3" id="name-3" />
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="name-5" class="label">Repeat password</label>
+                                                        <input type="password" class="input w-input" maxlength="256" name="name-2" data-name="Name 2" id="name-2" />
+                                                    </div>
+                                                    <input type="submit" value="Update password" data-wait="Please wait..." class="button button-primary w-button" />
+                                                </form>
+                                                <div class="success-message w-form-done">
+                                                    <div>Thank you! Your submission has been received!</div>
+                                                </div>
+                                                <div class="error-message w-form-fail">
+                                                    <div>Oops! Something went wrong while submitting the form.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                        <div >
+
+                       <br />
+                       <br />
+                        </div>
+                        <!-- Блок Delete Account -->
+                        <table width="100%">
+                            <tr>
+                                <td width="50%" valign="top">
+                                    <div class="card">
+                                        <h4>Delete account</h4>
+                                        <p>Before deleting your account, you must cancel your subscription.</p>
+                                        <a href="#" class="button button-outline modal-action w-button">Delete account</a>
+                                        <div class="modal">
+                                            <div class="modal-mask"></div>
+                                            <div class="modal-container">
+                                                <a href="#" class="modal-close w-inline-block"></a>
+                                                <div class="modal-title">
+                                                    <h4 class="text-center">Delete account</h4>
+                                                    <p class="text-center">Are you sure you want to delete the account?</p>
+                                                </div>
+                                                <div>
+                                                    <a href="#" class="button-block button button-primary w-button">Cancel</a>
+                                                    <a href="#" class="button-block button button-outline w-button">Delete account</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+

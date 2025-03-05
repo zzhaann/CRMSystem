@@ -1,0 +1,63 @@
+﻿@model List<CRMSystem.Models.Order>
+
+<div class="app-main-layout">
+    <div class="app-main-layout-header">
+        <div class="app-main-layout-wrapper header">
+            <div class="page-heading"><h2>Dashboard</h2></div>
+            <div class="page-tabs-menu">
+                <li class="page-tab-link revenue">@Html.ActionLink("Incoming", "Incoming", "Dashboard")</li>
+                <li class="page-tab-link projects">@Html.ActionLink("Processing", "Processing", "Dashboard")</li>
+                <li class="page-tab-link crypto">@Html.ActionLink("Completed", "Completed", "Dashboard")</li>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-main-layout-wrapper">
+        <div class="app-main-layout-content">
+            <div class="page-tabs-content">
+                <div class="section">
+                    <div class="flex row w-row">
+                        <div class="col w-col w-col-12">
+                            <div class="card">
+                                <div class="card-heading">
+                                    <h4 class="mb-0">Завершённые заказы</h4>
+                                </div>
+
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Номер контракта</th>
+                                            <th>Цветы</th>
+                                            <th>Количество</th>
+                                            <th>Цена</th>
+                                            <th>Клиент</th>
+                                            <th>Телефон</th>
+                                            <th>Флорист</th>
+                                            <th>Дата завершения</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var order in Model)
+                                        {
+                                            <tr>
+                                                <td>@order.ContractNumber</td>
+                                                <td>@order.FlowerName</td>
+                                                <td>@order.Quantity</td>
+                                                <td>@order.Price</td>
+                                                <td>@(order.CustomerName ?? "Не указан")</td>
+                                                <td>@order.CustomerPhone</td>
+                                                <td>@order.Florist.FullName</td>
+                                                <td>@order.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

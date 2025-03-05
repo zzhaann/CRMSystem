@@ -1,0 +1,115 @@
+﻿@model CRMSystem.Models.AnalyticsViewModel
+
+@{
+    ViewData["Title"] = "Анализ заказов за месяц";
+}
+
+<div class="app-main-layout">
+    <div class="app-main-layout-header">
+        <div class="app-main-layout-wrapper header">
+            <div class="page-heading"><h2>Analytics</h2></div>
+            <div class="page-tabs-menu">
+                <li class="page-tab-link revenue">@Html.ActionLink("Analyze for today", "AnalyzeDay", "Analytics")</li>
+                <li class="page-tab-link revenue">@Html.ActionLink("Analyze for week", "AnalyzeWeek", "Analytics")</li>
+                <li class="page-tab-link revenue">@Html.ActionLink("Analyze for month", "AnalyzeMonth", "Analytics")</li>
+                <li class="page-tab-link revenue">@Html.ActionLink("Analyze for year", "AnalyzeYear", "Analytics")</li>
+
+
+                @*  <a href="/" class="page-tab-link revenue">Incoming</a>
+                        <a href="/dashboards/projects" class="page-tab-link projects">Processing</a>
+                        <a href="/dashboards/cryptocurrency" class="page-tab-link crypto">Completed</a> *@
+
+            </div>
+        </div>
+    </div>
+
+    <div class="app-main-layout-wrapper">
+        <div class="app-main-layout-content">
+            <div class="page-tabs-content">
+                <div class="section">
+        <div class="app-main-layout-content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 mb-4">
+                        <div class="card shadow-lg p-4">
+                            <h5 class="text-center fw-bold"> Количество заказов и выручка (по неделям)</h5>
+                            <div style="height: 350px;">
+                                <canvas id="ordersChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 mb-4">
+                        <div class="card shadow-lg p-4">
+                            <h5 class="text-center fw-bold"> ТОП-3 самых популярных цветов месяца</h5>
+                            <div style="height: 350px;">
+                                <canvas id="flowersChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <div class="card shadow-lg p-4">
+                            <h5 class="text-center fw-bold"> ТОП-3 флористов месяца</h5>
+                            <div style="height: 350px;">
+                                <canvas id="floristsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var ctxOrders = document.getElementById("ordersChart").getContext("2d");
+        new Chart(ctxOrders, {
+            type: "line",
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.Labels)),
+                datasets: [{
+                    label: "Количество заказов",
+                    data: @Html.Raw(Json.Serialize(Model.OrderCounts)),
+                    backgroundColor: "rgba(75, 192, 192, 0.7)"
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        var ctxFlowers = document.getElementById("flowersChart").getContext("2d");
+        new Chart(ctxFlowers, {
+            type: "pie",
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.TopFlowers)),
+                datasets: [{
+                    data: @Html.Raw(Json.Serialize(Model.FlowerCounts)),
+                    backgroundColor: ["#ff6384", "#36a2eb", "#ffce56"]
+                }]
+            }
+        });
+
+        var ctxFlorists = document.getElementById("floristsChart").getContext("2d");
+        new Chart(ctxFlorists, {
+            type: "bar",
+            data: {
+                labels: @Html.Raw(Json.Serialize(Model.TopFlorists)),
+                datasets: [{
+                    label: "Заказы",
+                    data: @Html.Raw(Json.Serialize(Model.FloristOrders)),
+                    backgroundColor: "rgba(255, 159, 64, 0.7)"
+                }]
+            }
+        });
+    });
+</script>
+
+
+
