@@ -11,10 +11,7 @@
                         <img src="images/5e89ee4106f670eaf2d24514_artboard-20white-20color.svg" width="100" alt="" />
                     </a>
                     <div>
-                        <h4 class="white">Welcome onboard!</h4>
-                        <p class="white text-large">A few clicks from creating your personal or admin dashboard.</p>
-                        <p class="white text-large">Save your time and money!</p>
-                        <a href="/" class="button button-primary mt-20 w-button">Learn more</a>
+                    <h4 class="white">Welcome to FloraCRM!</h4>
                     </div>
                 </div>
             </div>
@@ -33,19 +30,15 @@
                                 <img src="images/5f1849420a7237b75a4f508d_artboard-20dark.svg" width="100" alt="" />
                             </a>
                         </div>
-                        <h3 class="text-center mb-40">Sign up to Artboard</h3>
-
+                        <h3 class="text-center mb-40">Sign up to FloraCRM</h3>
                         <!-- Форма регистрации -->
                         <div class="w-form">
-                            <form id="email-form" name="email-form" data-name="Email Form">
-                                <a href="http://google.com" class="button button-google button-block w-button">
-                                    Signup with Google
-                                </a>
-                                <p class="text-center">or continue with email:</p>
+                            <form id="signup-form" asp-controller="Account" asp-action="Signup" method="post">
+                                <div asp-validation-summary="All" class="text-danger"></div>
 
                                 <label for="name" class="label"><strong>What should we call you?</strong></label>
-                                <input type="text" class="input w-input" maxlength="256" name="name" data-name="Name"
-                                       placeholder="Enter your name" id="name" required="" />
+                                <input type="text" class="input w-input" maxlength="256" name="username"
+                                       data-name="Username" placeholder="Enter your username" id="username" required="" />
 
                                 <label for="email" class="label"><strong>What's your email?</strong></label>
                                 <input type="email" class="input w-input" maxlength="256" name="email" data-name="Email"
@@ -55,14 +48,14 @@
                                 <input type="password" class="input w-input" maxlength="256" name="password"
                                        data-name="Password" placeholder="Enter your password" id="password" required="" />
 
-                                <label class="w-checkbox checkbox-field mb-40">
+                                @* <label class="w-checkbox checkbox-field mb-40">
                                     <div class="w-checkbox-input w-checkbox-input--inputType-custom checkbox"></div>
                                     <input type="checkbox" id="checkbox" name="checkbox" data-name="Checkbox" required=""
                                            style="opacity:0;position:absolute;z-index:-1" />
                                     <span class="hint w-form-label">
                                         I agree to the <a href="/" target="_blank" class="link">Artboard terms & conditions</a>
                                     </span>
-                                </label>
+                                </label> *@
 
                                 <input type="submit" value="Create account" data-wait="Please wait..."
                                        class="button button-primary button-block w-button" />
