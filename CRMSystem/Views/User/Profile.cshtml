@@ -1,4 +1,6 @@
 ﻿
+@model CRMSystem.Models.ChangePasswordModel
+
 
     <div class="app-main-layout-container">
         <div class="app-main-layout-mask"></div>
@@ -106,20 +108,23 @@
 
                                             <!-- Change Password Form -->
                                             <div class="w-form">
-                                                <form id="email-form" name="email-form" data-name="Email Form">
+                                                <form asp-controller="User" asp-action="ChangePassword" method="post">
                                                     <div class="form-group">
-                                                        <label for="name-5" class="label">Current password</label>
-                                                        <input type="password" class="input w-input" maxlength="256" name="name-4" data-name="Name 4" id="name-4" />
+                                                        <label asp-for="CurrentPassword" class="label"></label>
+                                                        <input asp-for="CurrentPassword" class="input w-input" maxlength="256" />
+                                                        <span asp-validation-for="CurrentPassword" class="text-danger"></span>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="name-5" class="label">New password</label>
-                                                        <input type="password" class="input w-input" maxlength="256" name="name-3" data-name="Name 3" id="name-3" />
+                                                        <label asp-for="NewPassword" class="label"></label>
+                                                        <input asp-for="NewPassword" class="input w-input" maxlength="256" />
+                                                        <span asp-validation-for="NewPassword" class="text-danger"></span>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label for="name-5" class="label">Repeat password</label>
-                                                        <input type="password" class="input w-input" maxlength="256" name="name-2" data-name="Name 2" id="name-2" />
+                                                        <label asp-for="ConfirmNewPassword" class="label"></label>
+                                                        <input asp-for="ConfirmNewPassword" class="input w-input" maxlength="256" />
+                                                        <span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
                                                     </div>
-                                                    <input type="submit" value="Update password" data-wait="Please wait..." class="button button-primary w-button" />
+                                                    <input type="submit" value="Change password" data-wait="Please wait..." class="button button-primary w-button" />
                                                 </form>
                                                 <div class="success-message w-form-done">
                                                     <div>Thank you! Your submission has been received!</div>
@@ -157,7 +162,13 @@
                                                 </div>
                                                 <div>
                                                     <a href="#" class="button-block button button-primary w-button">Cancel</a>
-                                                    <a href="#" class="button-block button button-outline w-button">Delete account</a>
+                                                    <form asp-controller="User" asp-action="DeleteAccount" method="post">
+                                                    <div class="form-group">
+                                                        <label asp-for="CurrentPassword" class="label"></label>
+                                                        <input asp-for="CurrentPassword" class="input w-input" maxlength="256" />
+                                                        <input type="submit" value="Confirm Delete" data-wait="Please wait..." class="button-block button button-primary w-button" />
+                                                    </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -165,6 +176,8 @@
                                 </td>
                             </tr>
                         </table>
+
+
 
                     </div>
                 </div>
