@@ -1,9 +1,10 @@
 ﻿@model Dictionary<DateTime, List<CRMSystem.Models.Order>>
-
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer localizer
 <div class="app-main-layout">
     <div class="app-main-layout-header">
         <div class="app-main-layout-wrapper header">
-            <div class="page-heading"><h2>Контракты</h2></div>
+            <div class="page-heading"><h2>@localizer["ContractHeading"].Value.ToString()</h2></div>
         </div>
     </div>
 
@@ -19,18 +20,19 @@
                                 {
                                     <div class="mb-4">
                                         <h4 class="text-primary">
-                                            @group.Key.ToString("dd.MM.yyyy") г.: Заказы
+                                            @group.Key.ToString("dd.MM.yyyy") г.: @localizer["Orders"].Value.ToString()
                                         </h4>
                                         <table class="table">
                                             <thead>
                                                 <tr>
-                                                    <th>Номер контракта</th>
-                                                    <th>Цветы</th>
-                                                    <th>Количество</th>
-                                                    <th>Цена</th>
-                                                    <th>Клиент</th>
-                                                    <th>Телефон</th>
-                                                    <th>Флорист</th>
+
+                                                    <th>@localizer["ContractNumber"].Value.ToString()</th>
+                                                    <th>@localizer["Flowers"].Value.ToString()</th>
+                                                    <th>@localizer["Count"].Value.ToString()</th>
+                                                    <th>@localizer["Price"].Value.ToString()</th>
+                                                    <th>@localizer["Client"].Value.ToString()</th>
+                                                    <th>@localizer["PhoneNumber"].Value.ToString()</th>
+                                                    <th>@localizer["Florist"].Value.ToString()</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
