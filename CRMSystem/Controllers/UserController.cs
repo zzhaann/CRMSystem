@@ -50,7 +50,7 @@ namespace CRMSystem.Controllers
             if (!ModelState.IsValid)
             {
                 _logger.LogWarning("Change password model state is invalid.");
-                return View(model);
+                return RedirectToAction("Login", "Account");
             }
 
             var user = await _userManager.GetUserAsync(User);

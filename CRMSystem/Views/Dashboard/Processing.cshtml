@@ -1,6 +1,9 @@
 ﻿@model List<CRMSystem.Models.Order>
- @using Microsoft.AspNetCore.Mvc.Localization
-@inject IViewLocalizer localizer
+
+@{
+    ViewData["Title"] = localizer["Processing"].Value.ToString();
+}
+
 <div class="app-main-layout">
     <div class="app-main-layout-header">
         <div class="app-main-layout-wrapper header">

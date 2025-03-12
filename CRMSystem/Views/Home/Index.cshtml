@@ -1,4 +1,8 @@
-﻿<div class="app-main-layout-container">
+﻿@{
+    ViewData["Title"] = localizer["Title"].Value.ToString();
+}
+
+<div class="app-main-layout-container">
     <div class="app-main-layout-mask"></div>
     <div class="app-main-layout">
 
@@ -7,10 +11,12 @@
         <div class="app-main-layout-header">
             <div class="app-main-layout-wrapper header">
                 <div class="page-heading">
-                    <h2>Welcome to FloraCRM!</h2>
+                    <h2>@localizer["Title"].Value.ToString()</h2>
                     <p class="mt-20 text-large">
-                        Our Flower Shop CRM System is designed specifically for florists and flower shop owners. <br />
-                        It helps streamline order management, customer relations, and business operations to increase efficiency and sales.
+                        @localizer["P1"].Value.ToString()
+                        <br />
+                        @localizer["P11"].Value.ToString()
+                        
                     </p>
                 </div>
             </div>
@@ -24,19 +30,15 @@
             <div class="app-main-layout-content">
                 <div class="section-inner">
                     <div class="card">
-                        <h4>Overview</h4>
+                        <h4>@localizer["Overview"].Value.ToString()</h4>
                         <p>FloraCRM</p>
                         <p>
-                            Why Florists Need Our CRM?
-                            Many flower shops still rely on manual processes
-                            Direct messaging via WhatsApp & Instagram increases customer engagement
-                            CRM helps manage repeat customers and build loyalty
-                            Saves 5+ hours per week on administrative tasks
-                            Helps increase 20-30% more sales by retaining returning customers
+                            @localizer["P2"].Value.ToString()
+                            
                         </p>
                         <p>
-                            If you’re launching this business, start by testing with 10-20 shops, gather feedback, and scale accordingly. This SaaS (Software as a Service) 
-                            model ensures a steady revenue stream and a strong market position!
+                            @localizer["P21"].Value.ToString()
+                            
                         </p>
                     </div>
                 </div>
