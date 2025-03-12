@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer localizer
+<!DOCTYPE html>
 <html data-wf-page="5f146505df90aa45d5c1befa" data-wf-site="5d2f26e24904ea2ed96c0fac" data-wf-status="1">
 
 <head>
@@ -28,7 +30,24 @@
 </head>
 
 <body>
+
+    <div> @Html.Partial("_Langs")</div>
     @RenderBody()
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        function ChangeCulture(culture){
+            $.ajax({
+                url: '/Home/ChangeCulture',
+                data: {culture: culture},
+                dataType: 'json',
+                method: 'POST',
+                success: function(){
+                    location.reload();
+                }
+            })
+        }
+    </script>
 </body>
 
 </html>
