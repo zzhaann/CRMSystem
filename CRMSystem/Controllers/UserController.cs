@@ -1,16 +1,21 @@
-﻿using CRMSystem.Models;
+﻿using CRMSystem.Migrations;
+using CRMSystem.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace CRMSystem.Controllers
 {
+    [Route("[controller]/[action]")]
     public class UserController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<UserController> _logger;
+        private const string DefaultProfilePhotoUrl = "/images/default-avatar.png";
 
         public UserController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<UserController> logger) // Modify constructor
         {
@@ -19,15 +24,28 @@ namespace CRMSystem.Controllers
             _logger = logger;
         }
 
+        [Authorize]
         [HttpGet]
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
-            _logger.LogInformation("Accessing profile page.");
-            return View();
-        }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await _userManager.FindByIdAsync(userId);
 
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var model = new UserProfileModel
+            {
+                Name = user.UserName,
+                Email = user.Email,
+            };
+
+            return View(model);
+        }
         [HttpPost]
-        public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
+        public async Task<IActionResult> ChangePassword(UserProfileModel model)
         {
             if (!ModelState.IsValid)
             {

@@ -1,5 +1,5 @@
 ﻿
-@model CRMSystem.Models.ChangePasswordModel
+@model CRMSystem.Models.UserProfileModel
 
 
     <div class="app-main-layout-container">
@@ -22,54 +22,29 @@
                         <table width="100%">
                             <tr>
                                 <!-- Профиль пользователя -->
-                                <td width="55%" valign="top">
-                                    <div class="card profile-card">
-                                        <div class="profile-bg">
-                                            <a href="#" class="edit-profile-bg w-inline-block"></a>
+                            <td width="55%" valign="top">
+                                <div class="card profile-card">
+                                    <div class="profile-bg">
+                                        <a href="#" class="edit-profile-bg w-inline-block"></a>
+                                    </div>
+                                    <div class="profile-info">
+                                        <img src="/images/default-avatar.png" class="avatar big">
+                                        <div class="profile-details">
+                                            <h5 class="profile-name">@Model.Name</h5>
+                                            <div>@Model.Email</div>
                                         </div>
-                                        <div class="profile-info">
-                                            <img src="~/profile-photo.jpg" class="avatar big" >
-                                            <div class="profile-details">
-                                                <h5 class="profile-name">Mark Roster</h5>
-                                                <div>markroster</div>
-                                            </div>
-                                            <div class="profile-follow">
-                                                <a href="#" class="button button-small button-primary w-button">Follow</a>
-                                            </div>
-                                        </div>
-                                        <div class="profile-about">
-                                            <div class="profile-info-row">
-                                                <div>
-                                                    <strong>Phone</strong>
-                                                    <div>+35278953712</div>
-                                                </div>
-                                                <div>
-                                                    <strong>Date of Birth</strong>
-                                                    <div>25.04.1992</div>
-                                                </div>
-                                            </div>
-                                            <div class="profile-info-row">
-                                                <div>
-                                                    <strong>Email</strong>
-                                                    <div>petrovdz91@gmail.com</div>
-                                                </div>
-                                                <div>
-                                                    <strong>Location</strong>
-                                                    <div>Ukraine, Kyiv</div>
-                                                </div>
-                                            </div>
+                                    </div>
+                                    <div class="profile-about">
+                                        <div class="profile-info-row">
                                             <div>
-                                                <strong>Position</strong>
-                                                <p>Template designer at <strong>Webflow Inc</strong>.</p>
-                                            </div>
-                                            <div>
-                                                <strong>Bio</strong>
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius enim in eros elementum tristique.</p>
+                                                <strong>Email</strong>
+                                                <div>@Model.Email</div>
                                             </div>
                                         </div>
                                     </div>
-                                </td>
-                            <td width="5%" valign="top"> <div ></div></td>
+                                </div>
+                            </td>
+                            <td width="5%" valign="top"> <div></div></td>
                                 <!-- Блок Change Password -->
                                 <td width="40%" valign="top">
                                     <div class="card">

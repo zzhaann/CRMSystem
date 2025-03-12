@@ -2,8 +2,11 @@
 
 namespace CRMSystem.Models
 {
-    public class ChangePasswordModel
+    public class UserProfileModel
     {
+        public string Name { get; set; }
+        public string Email { get; set; }
+
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Current Password")]
