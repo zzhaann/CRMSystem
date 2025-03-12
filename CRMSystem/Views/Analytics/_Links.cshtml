@@ -1,0 +1,12 @@
+﻿
+<div class="app-main-layout-header">
+    <div class="app-main-layout-wrapper header">
+        <div class="page-heading"><h2>@localizer["Analytics"].Value.ToString()</h2></div>
+        <div class="page-tabs-menu">
+            <li class="page-tab-link revenue">@Html.ActionLink(localizer["AFT"].Value.ToString(), "AnalyzeDay", "Analytics")</li>
+            <li class="page-tab-link revenue">@Html.ActionLink(localizer["AFW"].Value.ToString(), "AnalyzeWeek", "Analytics")</li>
+            <li class="page-tab-link revenue">@Html.ActionLink(localizer["AFM"].Value.ToString(), "AnalyzeMonth", "Analytics")</li>
+            <li class="page-tab-link revenue">@Html.ActionLink(localizer["AFY"].Value.ToString(), "AnalyzeYear", "Analytics")</li>
+        </div>
+    </div>
+</div>

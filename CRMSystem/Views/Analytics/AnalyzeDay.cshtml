@@ -1,22 +1,11 @@
 ﻿
+@{
+    ViewData["Title"] = localizer["Title"].Value.ToString();
+}
+
+
 <div class="app-main-layout">
-    <div class="app-main-layout-header">
-        <div class="app-main-layout-wrapper header">
-            <div class="page-heading"><h2>Analytics</h2></div>
-            <div class="page-tabs-menu">
-                <li class="page-tab-link revenue">@Html.ActionLink("Analyze for today", "AnalyzeDay", "Analytics")</li>
-                <li class="page-tab-link revenue">@Html.ActionLink("Analyze for week", "AnalyzeWeek", "Analytics")</li>
-                <li class="page-tab-link revenue">@Html.ActionLink("Analyze for month", "AnalyzeMonth", "Analytics")</li>
-                <li class="page-tab-link revenue">@Html.ActionLink("Analyze for year", "AnalyzeYear", "Analytics")</li>
-
-
-                @*  <a href="/" class="page-tab-link revenue">Incoming</a>
-                        <a href="/dashboards/projects" class="page-tab-link projects">Processing</a>
-                        <a href="/dashboards/cryptocurrency" class="page-tab-link crypto">Completed</a> *@
-
-            </div>
-        </div>
-    </div>
+    @Html.Partial("_Links")
     <div class="app-main-layout-wrapper">
         <div class="app-main-layout-content">
             <div class="page-tabs-content">
@@ -28,7 +17,7 @@
                                 <!-- График количества заказов и выручки -->
                                 <div class="col-lg-6 col-md-12 mb-4">
                                     <div class="card shadow-lg p-4">
-                                        <h5 class="text-center fw-bold"> Количество заказов и выручка</h5>
+                                        <h5 class="text-center fw-bold"> @localizer["OrderCount"].Value.ToString() </h5>
                                         <div style="height: 350px;">
                                             <canvas id="ordersChart"></canvas>
                                         </div>
@@ -38,7 +27,7 @@
                                 <!-- Круговая диаграмма популярных цветов -->
                                 <div class="col-lg-6 col-md-12 mb-4">
                                     <div class="card shadow-lg p-4">
-                                        <h5 class="text-center fw-bold"> Самые популярные цветы</h5>
+                                        <h5 class="text-center fw-bold">@localizer["FlowerPop"].Value.ToString()  </h5>
                                         <div style="height: 350px;">
                                             <canvas id="flowersChart"></canvas>
                                         </div>
@@ -50,7 +39,7 @@
                                 <!-- Столбчатая диаграмма ТОП флористов -->
                                 <div class="col-lg-12 col-md-12">
                                     <div class="card shadow-lg p-4">
-                                        <h5 class="text-center fw-bold"> Топ флористов</h5>
+                                        <h5 class="text-center fw-bold">@localizer["TopFlorists"].Value.ToString()  </h5>
                                         <div style="height: 350px;">
                                             <canvas id="floristsChart"></canvas>
                                         </div>
@@ -65,7 +54,7 @@
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
-            
+
                     var ctxOrders = document.getElementById("ordersChart").getContext("2d");
                     new Chart(ctxOrders, {
                         type: "bar",
@@ -73,12 +62,12 @@
                             labels: @Html.Raw(Json.Serialize(Model.Labels)),
                             datasets: [
                                 {
-                                    label: "Количество заказов",
+                                    label: @Html.Raw(Json.Serialize(localizer["OrderCountSC"].Value.ToString())),
                                     data: @Html.Raw(Json.Serialize(Model.OrderCounts)),
                                     backgroundColor: "rgba(54, 162, 235, 0.7)"
                                 },
                                 {
-                                    label: "Выручка (₸)",
+                                    label: @Html.Raw(Json.Serialize(localizer["Revenue"].Value.ToString())),
                                     data: @Html.Raw(Json.Serialize(Model.TotalRevenue)),
                                     backgroundColor: "rgba(75, 192, 192, 0.7)"
                                 }
@@ -119,7 +108,7 @@
                         data: {
                             labels: @Html.Raw(Json.Serialize(Model.TopFlorists)),
                             datasets: [{
-                                label: "Заказы",
+                                label: @Html.Raw(Json.Serialize(localizer["Orders"].Value.ToString())),
                                 data: @Html.Raw(Json.Serialize(Model.FloristOrders)),
                                 backgroundColor: "rgba(255, 159, 64, 0.7)"
                             }]
@@ -135,6 +124,7 @@
                     });
                 });
             </script>
+
         </div>
     </div>
 </div>

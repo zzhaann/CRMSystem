@@ -1,22 +1,11 @@
 ﻿@model CRMSystem.Models.AnalyticsViewModel
 
 @{
-    ViewData["Title"] = "Анализ заказов за год";
+    ViewData["Title"] = localizer["Title"].Value.ToString();
 }
 
 <div class="app-main-layout">
-    <div class="app-main-layout-header">
-        <div class="app-main-layout-wrapper header">
-            <div class="page-heading"><h2>Analytics</h2></div>
-            <div class="page-tabs-menu">
-                <li class="page-tab-link revenue">@Html.ActionLink("Analyze for today", "AnalyzeDay", "Analytics")</li>
-                <li class="page-tab-link revenue">@Html.ActionLink("Analyze for week", "AnalyzeWeek", "Analytics")</li>
-                <li class="page-tab-link revenue">@Html.ActionLink("Analyze for month", "AnalyzeMonth", "Analytics")</li>
-                <li class="page-tab-link revenue">@Html.ActionLink("Analyze for year", "AnalyzeYear", "Analytics")</li>
-            </div>
-        </div>
-    </div>
-
+	@Html.Partial("_Links")
     <div class="app-main-layout-wrapper">
         <div class="app-main-layout-content">
             <div class="page-tabs-content">
@@ -26,7 +15,7 @@
                             <!-- График заказов и выручки по месяцам -->
                             <div class="col-lg-12 col-md-12 mb-4">
                                 <div class="card shadow-lg p-4">
-                                    <h5 class="text-center fw-bold">Количество заказов и выручка (по месяцам)</h5>
+                                    <h5 class="text-center fw-bold">@localizer["OrderCount"].Value.ToString()</h5>
                                     @if (Model.Labels.Any())
                                     {
                                         <div style="height: 350px;">
@@ -35,7 +24,7 @@
                                     }
                                     else
                                     {
-                                        <p class="text-center text-muted">Нет данных за этот год</p>
+                                        <p class="text-center text-muted">@localizer["noData"].Value.ToString()</p>
                                     }
                                 </div>
                             </div>
@@ -45,7 +34,7 @@
                             <!-- ТОП-5 самых популярных цветов -->
                             <div class="col-lg-6 col-md-12 mb-4">
                                 <div class="card shadow-lg p-4">
-                                    <h5 class="text-center fw-bold"> ТОП-5 самых популярных цветов года</h5>
+                                    <h5 class="text-center fw-bold"> @localizer["TopFlowers"].Value.ToString()</h5>
                                     @if (Model.TopFlowers.Any())
                                     {
                                         <div style="height: 350px;">
@@ -54,7 +43,7 @@
                                     }
                                     else
                                     {
-                                        <p class="text-center text-muted">Нет данных</p>
+                                        <p class="text-center text-muted">@localizer["noData"].Value.ToString()</p>
                                     }
                                 </div>
                             </div>
@@ -62,7 +51,7 @@
                             <!-- ТОП-5 флористов года -->
                             <div class="col-lg-6 col-md-12 mb-4">
                                 <div class="card shadow-lg p-4">
-                                    <h5 class="text-center fw-bold"> ТОП-5 флористов года</h5>
+                                    <h5 class="text-center fw-bold">@localizer["TopFlorists"].Value.ToString() </h5>
                                     @if (Model.TopFlorists.Any())
                                     {
                                         <div style="height: 350px;">
@@ -71,7 +60,7 @@
                                     }
                                     else
                                     {
-                                        <p class="text-center text-muted">Нет данных</p>
+                                        <p class="text-center text-muted">@localizer["noData"].Value.ToString()</p>
                                     }
                                 </div>
                             </div>
@@ -95,14 +84,14 @@
                     labels: @Html.Raw(Json.Serialize(Model.Labels)),
                     datasets: [
                         {
-                            label: "Количество заказов",
+                            label: @Html.Raw(Json.Serialize(localizer["OrderCount"].Value.ToString())),
                             data: @Html.Raw(Json.Serialize(Model.OrderCounts)),
                             backgroundColor: "rgba(153, 102, 255, 0.7)",
                             borderColor: "rgba(153, 102, 255, 1)",
                             borderWidth: 2
                         },
                         {
-                            label: "Выручка (₸)",
+                            label: @Html.Raw(Json.Serialize(localizer["Revenue"].Value.ToString())),
                             data: @Html.Raw(Json.Serialize(Model.TotalRevenue)),
                             backgroundColor: "rgba(75, 192, 192, 0.7)",
                             borderColor: "rgba(75, 192, 192, 1)",
@@ -138,7 +127,7 @@
                 data: {
                     labels: @Html.Raw(Json.Serialize(Model.TopFlorists)),
                     datasets: [{
-                        label: "Заказы",
+                        label: @Html.Raw(Json.Serialize(localizer["Orders"].Value.ToString())),
                         data: @Html.Raw(Json.Serialize(Model.FloristOrders)),
                         backgroundColor: "rgba(255, 159, 64, 0.7)"
                     }]
@@ -147,3 +136,4 @@
         }
     });
 </script>
+
