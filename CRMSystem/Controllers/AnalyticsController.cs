@@ -5,21 +5,25 @@ using CRMSystem.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace CRMSystem.Controllers
 {
     public class AnalyticsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<AnalyticsController> _logger;
 
-        public AnalyticsController(ApplicationDbContext context)
+        public AnalyticsController(ApplicationDbContext context, ILogger<AnalyticsController> logger) 
         {
             _context = context;
+            _logger = logger;
         }
 
-        
         public async Task<IActionResult> AnalyzeDay()
         {
+            _logger.LogInformation("Analyzing data for today.");
+
             var today = DateTime.Today;
             var ordersData = await _context.Orders
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date == today)
@@ -27,6 +31,11 @@ namespace CRMSystem.Controllers
                 .Select(g => new { Hour = g.Key, OrderCount = g.Count(), TotalRevenue = g.Sum(o => o.Price) })
                 .OrderBy(g => g.Hour)
                 .ToListAsync();
+
+            if (ordersData == null || !ordersData.Any())
+            {
+                _logger.LogWarning("No completed orders found for today.");
+            }
 
             var topFlowers = await _context.Orders
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date == today)
@@ -55,11 +64,15 @@ namespace CRMSystem.Controllers
                 FloristOrders = topFlorists.Select(f => f.Count).ToList()
             };
 
+            _logger.LogInformation("Data for today analyzed successfully.");
+
             return View(viewModel);
         }
 
         public async Task<IActionResult> AnalyzeWeek()
         {
+            _logger.LogInformation("Analyzing data for the week.");
+
             var startOfWeek = DateTime.Today.AddDays(-7);
             var endOfWeek = DateTime.Today.AddDays(1);
 
@@ -70,7 +83,11 @@ namespace CRMSystem.Controllers
                 .OrderBy(g => g.Date)
                 .ToListAsync();
 
-          
+            if (ordersData == null || !ordersData.Any())
+            {
+                _logger.LogWarning("No completed orders found for the week.");
+            }
+
             var topFlowers = await _context.Orders
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date >= startOfWeek && o.CreatedAt.Date < endOfWeek)
                 .GroupBy(o => o.FlowerName)
@@ -98,13 +115,15 @@ namespace CRMSystem.Controllers
                 FloristOrders = topFlorists.Select(f => f.Count).ToList()
             };
 
+            _logger.LogInformation("Data for the week analyzed successfully.");
+
             return View(viewModel); 
         }
 
-
-  
         public async Task<IActionResult> AnalyzeMonth()
         {
+            _logger.LogInformation("Analyzing data for the month.");
+
             var startOfMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
             var ordersData = await _context.Orders
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date >= startOfMonth)
@@ -112,6 +131,11 @@ namespace CRMSystem.Controllers
                 .Select(g => new { Date = g.Key, OrderCount = g.Count(), TotalRevenue = g.Sum(o => o.Price) })
                 .OrderBy(g => g.Date)
                 .ToListAsync();
+
+            if (ordersData == null || !ordersData.Any())
+            {
+                _logger.LogWarning("No completed orders found for the month.");
+            }
 
             var topFlowers = await _context.Orders
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date >= startOfMonth)
@@ -140,12 +164,15 @@ namespace CRMSystem.Controllers
                 FloristOrders = topFlorists.Select(f => f.Count).ToList()
             };
 
+            _logger.LogInformation("Data for the month analyzed successfully.");
+
             return View(viewModel);
         }
 
-        
         public async Task<IActionResult> AnalyzeYear()
         {
+            _logger.LogInformation("Analyzing data for the year.");
+
             var startOfYear = new DateTime(DateTime.Today.Year, 1, 1);
             var ordersData = await _context.Orders
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date >= startOfYear)
@@ -153,6 +180,11 @@ namespace CRMSystem.Controllers
                 .Select(g => new { Month = g.Key, OrderCount = g.Count(), TotalRevenue = g.Sum(o => o.Price) })
                 .OrderBy(g => g.Month)
                 .ToListAsync();
+
+            if (ordersData == null || !ordersData.Any())
+            {
+                _logger.LogWarning("No completed orders found for the year.");
+            }
 
             var topFlowers = await _context.Orders
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date >= startOfYear)
@@ -180,6 +212,8 @@ namespace CRMSystem.Controllers
                 TopFlorists = topFlorists.Select(f => f.Florist).ToList(),
                 FloristOrders = topFlorists.Select(f => f.Count).ToList()
             };
+
+            _logger.LogInformation("Data for the year analyzed successfully.");
 
             return View(viewModel);
         }
