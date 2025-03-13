@@ -170,28 +170,27 @@
                         <div class="sidebar-navbar-body">
                             <ul class="sidebar-navbar-body-container">
                                 <li class="sidebar-navbar-link link-home w-nav-link w--current" style="color: white; text-decoration: none;">
-                                    @Html.ActionLink("Home", "Index", "Home", null, new { style = "color: inherit; text-decoration: none;" })
+                                    @Html.ActionLink(localizer["Home"].Value.ToString(), "Index", "Home", null, new { style = "color: inherit; text-decoration: none;" })
                                 </li>
                                 <li class="sidebar-navbar-link w-nav-link" style="color: white; text-decoration: none;">
-                                    @Html.ActionLink("Dachboard", "Incoming", "Dashboard", null, new { style = "color: inherit; text-decoration: none;" })
+                                    @Html.ActionLink(localizer["Dashboard"].Value.ToString(), "Incoming", "Dashboard", null, new { style = "color: inherit; text-decoration: none;" })
                                 </li>
                                 <li class="sidebar-navbar-link link-setting w-nav-link" style="color: white; text-decoration: none;">
-                                    @Html.ActionLink("Account Settings", "Profile", "User", null, new { style = "color: inherit; text-decoration: none;" })
+                                    @Html.ActionLink(localizer["AccountSettings"].Value.ToString(), "Profile", "User", null, new { style = "color: inherit; text-decoration: none;" })
                                 </li>
                                 <li class="sidebar-navbar-link link-payment w-nav-link" style="color: white; text-decoration: none;">
-                                    @Html.ActionLink("Contracts", "Index", "Contracts", null, new { style = "color: inherit; text-decoration: none;" })
+                                    @Html.ActionLink(localizer["Contracts"].Value.ToString(), "Index", "Contracts", null, new { style = "color: inherit; text-decoration: none;" })
                                 </li>
                                 <li class="sidebar-navbar-link link-inbox w-nav-link" style="color: white; text-decoration: none;">
-                                    @Html.ActionLink("Inbox", "Index", "Inbox", null, new { style = "color: inherit; text-decoration: none;" })
+                                    @Html.ActionLink(localizer["Inbox"].Value.ToString(), "Index", "Inbox", null, new { style = "color: inherit; text-decoration: none;" })
                                 </li>
                                 <li class="sidebar-navbar-link link-projects w-nav-link" style="color: white; text-decoration: none;">
-                                    @Html.ActionLink("Analytics", "AnalyzeDay", "Analytics", null, new { style = "color: inherit; text-decoration: none;" })
+                                    @Html.ActionLink(localizer["Analytics"].Value.ToString(), "AnalyzeDay", "Analytics", null, new { style = "color: inherit; text-decoration: none;" })
                                 </li>
                             </ul>
                         </div>
                         <div class="sidebar-navbar-footer">
                             <div class="sidebar-navbar-link" >@Html.Partial("_Langs")</div>
-                            <a href="/style-guide" class="sidebar-navbar-link link-help w-nav-link">Help</a>
                             <a href="/account/logout" class="sidebar-navbar-link link-logout w-nav-link">Logout</a>
                         </div>
                         <div class="sidebar-navbar-footer nav-toggle">
