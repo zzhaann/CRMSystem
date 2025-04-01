@@ -1,29 +1,46 @@
 ﻿@model Dictionary<DateTime, List<CRMSystem.Models.Order>>
-<div class="app-main-layout">
-    <div class="app-main-layout-header">
-        <div class="app-main-layout-wrapper header">
-            <div class="page-heading"><h2>@localizer["ContractHeading"].Value.ToString()</h2></div>
+@inject IViewLocalizer localizer
+
+@{
+    ViewData["Title"] = localizer["ContractHeading"].Value.ToString();
+}
+
+<div class="app-main-layout-container">
+    <div class="app-main-layout-mask"></div>
+    <div class="app-main-layout">
+
+        <!-- Header -->
+        <div class="app-main-layout-header">
+            <div class="app-main-layout-wrapper header">
+                <div class="page-heading">
+                    <h2>@localizer["ContractHeading"].Value.ToString()</h2>
+                </div>
+            </div>
         </div>
-    </div>
+        <!-- Header END -->
+        <!-- Main content -->
+        <div class="app-main-layout-wrapper">
+            <div class="app-main-layout-content">
+                <div class="section-inner">
+                    <div class="card p-4 shadow">
 
-    <div class="app-main-layout-wrapper">
-        <div class="app-main-layout-content">
-            <div class="page-tabs-content">
-                <div class="section">
-                    <div class="flex row w-row">
-                        <div class="col w-col w-col-12">
-                            <div class="card">
+                        @if (!Model.Any())
+                        {
+                            <p class="text-muted">@localizer["NoOrders"].Value.ToString()</p>
+                        }
+                        else
+                        {
+                            foreach (var group in Model.OrderByDescending(x => x.Key))
+                            {
+                                <div class="mb-5">
+                                    <h5 class="text-primary mb-3">
+                                        @group.Key.ToString("dd.MM.yyyy") – @localizer["Orders"].Value.ToString()
+                                    </h5>
 
-                                @foreach (var group in Model)
-                                {
-                                    <div class="mb-4">
-                                        <h4 class="text-primary">
-                                            @group.Key.ToString("dd.MM.yyyy") г.: @localizer["Orders"].Value.ToString()
-                                        </h4>
-                                        <table class="table">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
                                             <thead>
                                                 <tr>
-
                                                     <th>@localizer["ContractNumber"].Value.ToString()</th>
                                                     <th>@localizer["Flowers"].Value.ToString()</th>
                                                     <th>@localizer["Count"].Value.ToString()</th>
@@ -41,7 +58,7 @@
                                                         <td>@order.FlowerName</td>
                                                         <td>@order.Quantity</td>
                                                         <td>@order.Price</td>
-                                                        <td>@(order.CustomerName ?? "Не указан")</td>
+                                                        <td>@(order.CustomerName ?? "—")</td>
                                                         <td>@order.CustomerPhone</td>
                                                         <td>@order.Florist.FullName</td>
                                                     </tr>
@@ -49,18 +66,15 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                }
+                                </div>
+                            }
+                        }
 
-                                @if (!Model.Any())
-                                {
-                                    <p class="text-muted">Нет завершённых заказов.</p>
-                                }
-
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Main content END -->
+
     </div>
 </div>

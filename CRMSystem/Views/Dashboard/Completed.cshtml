@@ -1,31 +1,51 @@
 ﻿@model List<CRMSystem.Models.Order>
+@inject IViewLocalizer localizer
+
 @{
     ViewData["Title"] = localizer["Completed"].Value.ToString();
 }
-<div class="app-main-layout">
-    <div class="app-main-layout-header">
-        <div class="app-main-layout-wrapper header">
-            <div class="page-heading"><h2>@localizer["CompletedOrders"].Value.ToString()</h2></div>
-            <div class="page-tabs-menu">
-                <li class="page-tab-link revenue">@Html.ActionLink(@localizer["Incoming"].Value.ToString(), "Incoming", "Dashboard")</li>
-                <li class="page-tab-link projects">@Html.ActionLink(@localizer["Processing"].Value.ToString(), "Processing", "Dashboard")</li>
-                <li class="page-tab-link crypto">@Html.ActionLink(@localizer["Completed"].Value.ToString(), "Completed", "Dashboard")</li>
+
+<div class="app-main-layout-container">
+    <div class="app-main-layout-mask"></div>
+    <div class="app-main-layout">
+
+        <!-- Header -->
+        <div class="app-main-layout-header">
+            <div class="app-main-layout-wrapper header">
+                <div class="page-heading">
+                    <h2>@localizer["CompletedOrders"].Value.ToString()</h2>
+                </div>
+                <div class="page-tabs-menu">
+                    <li class="page-tab-link revenue">
+                        @Html.ActionLink(localizer["Incoming"].Value.ToString(), "Incoming", "Dashboard")
+                    </li>
+                    <li class="page-tab-link projects">
+                        @Html.ActionLink(localizer["Processing"].Value.ToString(), "Processing", "Dashboard")
+                    </li>
+                    <li class="page-tab-link crypto">
+                        @Html.ActionLink(localizer["Completed"].Value.ToString(), "Completed", "Dashboard")
+                    </li>
+                </div>
             </div>
         </div>
-    </div>
+        <!-- Header END -->
+        <!-- Main content -->
+        <div class="app-main-layout-wrapper">
+            <div class="app-main-layout-content">
+                <div class="section-inner">
+                    <div class="card p-4 shadow">
+                        <div class="card-heading mb-3">
+                            <h4>@localizer["CompletedOrders"].Value.ToString()</h4>
+                        </div>
 
-    <div class="app-main-layout-wrapper">
-        <div class="app-main-layout-content">
-            <div class="page-tabs-content">
-                <div class="section">
-                    <div class="flex row w-row">
-                        <div class="col w-col w-col-12">
-                            <div class="card">
-                                <div class="card-heading">
-                                    <h4 class="mb-0">@localizer["CompletedOrders"].Value.ToString()</h4>
-                                </div>
-
-                                <table class="table">
+                        @if (!Model.Any())
+                        {
+                            <div class="alert alert-info">@localizer["NoOrders"].Value.ToString()</div>
+                        }
+                        else
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-bordered">
                                     <thead>
                                         <tr>
                                             <th>@localizer["ContractNumber"].Value.ToString()</th>
@@ -46,7 +66,7 @@
                                                 <td>@order.FlowerName</td>
                                                 <td>@order.Quantity</td>
                                                 <td>@order.Price</td>
-                                                <td>@(order.CustomerName ?? "Не указан")</td>
+                                                <td>@(order.CustomerName ?? "—")</td>
                                                 <td>@order.CustomerPhone</td>
                                                 <td>@order.Florist.FullName</td>
                                                 <td>@order.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
@@ -54,12 +74,14 @@
                                         }
                                     </tbody>
                                 </table>
-
                             </div>
-                        </div>
+                        }
+
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Main content END -->
+
     </div>
 </div>

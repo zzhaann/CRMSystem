@@ -4,19 +4,22 @@
     ViewData["Title"] = localizer["Title"].Value.ToString();
 }
 
-<div class="app-main-layout">
-	@Html.Partial("_Links")
-    <div class="app-main-layout-wrapper">
-        <div class="app-main-layout-content">
-            <div class="page-tabs-content">
-                <div class="section">
+<div class="app-main-layout-container">
+    <div class="app-main-layout-mask"></div>
+    <div class="app-main-layout">
+        @Html.Partial("_Links")
+
+        <div class="app-main-layout-wrapper">
+            <div class="app-main-layout-content">
+                <div class="section-inner">
+
                     <div class="container-fluid">
                         <div class="row">
                             <!-- График заказов и выручки по месяцам -->
                             <div class="col-lg-12 col-md-12 mb-4">
                                 <div class="card shadow-lg p-4">
                                     <h5 class="text-center fw-bold">@localizer["OrderCount"].Value.ToString()</h5>
-                                    @if (Model.Labels.Any())
+                                    @if (Model.Labels != null && Model.Labels.Any())
                                     {
                                         <div style="height: 350px;">
                                             <canvas id="ordersChart"></canvas>
@@ -34,8 +37,8 @@
                             <!-- ТОП-5 самых популярных цветов -->
                             <div class="col-lg-6 col-md-12 mb-4">
                                 <div class="card shadow-lg p-4">
-                                    <h5 class="text-center fw-bold"> @localizer["TopFlowers"].Value.ToString()</h5>
-                                    @if (Model.TopFlowers.Any())
+                                    <h5 class="text-center fw-bold">@localizer["TopFlowers"].Value.ToString()</h5>
+                                    @if (Model.TopFlowers != null && Model.TopFlowers.Any())
                                     {
                                         <div style="height: 350px;">
                                             <canvas id="flowersChart"></canvas>
@@ -48,11 +51,11 @@
                                 </div>
                             </div>
 
-                            <!-- ТОП-5 флористов года -->
+                            <!-- ТОП-5 флористов -->
                             <div class="col-lg-6 col-md-12 mb-4">
                                 <div class="card shadow-lg p-4">
-                                    <h5 class="text-center fw-bold">@localizer["TopFlorists"].Value.ToString() </h5>
-                                    @if (Model.TopFlorists.Any())
+                                    <h5 class="text-center fw-bold">@localizer["TopFlorists"].Value.ToString()</h5>
+                                    @if (Model.TopFlorists != null && Model.TopFlorists.Any())
                                     {
                                         <div style="height: 350px;">
                                             <canvas id="floristsChart"></canvas>
@@ -65,78 +68,77 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
-                </div>
-            </div>
-        </div>
+
+                </div> <!-- section-inner -->
+            </div> <!-- app-main-layout-content -->
+        </div> <!-- app-main-layout-wrapper -->
+
+        @section Scripts {
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+
+                    if (@Model.Labels.Count > 0) {
+                        const ctxOrders = document.getElementById("ordersChart").getContext("2d");
+                        new Chart(ctxOrders, {
+                            type: "line",
+                            data: {
+                                labels: @Html.Raw(Json.Serialize(Model.Labels)),
+                                datasets: [
+                                    {
+                                        label: @Html.Raw(Json.Serialize(localizer["OrderCount"].Value.ToString())),
+                                        data: @Html.Raw(Json.Serialize(Model.OrderCounts)),
+                                        backgroundColor: "rgba(153, 102, 255, 0.7)",
+                                        borderColor: "rgba(153, 102, 255, 1)",
+                                        borderWidth: 2
+                                    },
+                                    {
+                                        label: @Html.Raw(Json.Serialize(localizer["Revenue"].Value.ToString())),
+                                        data: @Html.Raw(Json.Serialize(Model.TotalRevenue)),
+                                        backgroundColor: "rgba(75, 192, 192, 0.7)",
+                                        borderColor: "rgba(75, 192, 192, 1)",
+                                        borderWidth: 2
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false
+                            }
+                        });
+                    }
+
+                    if (@Model.TopFlowers.Count > 0) {
+                        const ctxFlowers = document.getElementById("flowersChart").getContext("2d");
+                        new Chart(ctxFlowers, {
+                            type: "pie",
+                            data: {
+                                labels: @Html.Raw(Json.Serialize(Model.TopFlowers)),
+                                datasets: [{
+                                    data: @Html.Raw(Json.Serialize(Model.FlowerCounts)),
+                                    backgroundColor: ["#ff6384", "#36a2eb", "#ffce56", "#4bc0c0", "#9966ff"]
+                                }]
+                            }
+                        });
+                    }
+
+                    if (@Model.TopFlorists.Count > 0) {
+                        const ctxFlorists = document.getElementById("floristsChart").getContext("2d");
+                        new Chart(ctxFlorists, {
+                            type: "bar",
+                            data: {
+                                labels: @Html.Raw(Json.Serialize(Model.TopFlorists)),
+                                datasets: [{
+                                    label: @Html.Raw(Json.Serialize(localizer["Orders"].Value.ToString())),
+                                    data: @Html.Raw(Json.Serialize(Model.FloristOrders)),
+                                    backgroundColor: "rgba(255, 159, 64, 0.7)"
+                                }]
+                            }
+                        });
+                    }
+                });
+            </script>
+        }
     </div>
 </div>
-
-@section Scripts{
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        if (@Model.Labels.Count > 0) {
-            var ctxOrders = document.getElementById("ordersChart").getContext("2d");
-            new Chart(ctxOrders, {
-                type: "line",
-                data: {
-                    labels: @Html.Raw(Json.Serialize(Model.Labels)),
-                    datasets: [
-                        {
-                            label: @Html.Raw(Json.Serialize(localizer["OrderCount"].Value.ToString())),
-                            data: @Html.Raw(Json.Serialize(Model.OrderCounts)),
-                            backgroundColor: "rgba(153, 102, 255, 0.7)",
-                            borderColor: "rgba(153, 102, 255, 1)",
-                            borderWidth: 2
-                        },
-                        {
-                            label: @Html.Raw(Json.Serialize(localizer["Revenue"].Value.ToString())),
-                            data: @Html.Raw(Json.Serialize(Model.TotalRevenue)),
-                            backgroundColor: "rgba(75, 192, 192, 0.7)",
-                            borderColor: "rgba(75, 192, 192, 1)",
-                            borderWidth: 2
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false
-                }
-            });
-        }
-
-        if (@Model.TopFlowers.Count > 0) {
-            var ctxFlowers = document.getElementById("flowersChart").getContext("2d");
-            new Chart(ctxFlowers, {
-                type: "pie",
-                data: {
-                    labels: @Html.Raw(Json.Serialize(Model.TopFlowers)),
-                    datasets: [{
-                        data: @Html.Raw(Json.Serialize(Model.FlowerCounts)),
-                        backgroundColor: ["#ff6384", "#36a2eb", "#ffce56", "#4bc0c0", "#9966ff"]
-                    }]
-                }
-            });
-        }
-
-        if (@Model.TopFlorists.Count > 0) {
-            var ctxFlorists = document.getElementById("floristsChart").getContext("2d");
-            new Chart(ctxFlorists, {
-                type: "bar",
-                data: {
-                    labels: @Html.Raw(Json.Serialize(Model.TopFlorists)),
-                    datasets: [{
-                        label: @Html.Raw(Json.Serialize(localizer["Orders"].Value.ToString())),
-                        data: @Html.Raw(Json.Serialize(Model.FloristOrders)),
-                        backgroundColor: "rgba(255, 159, 64, 0.7)"
-                    }]
-                }
-            });
-        }
-    });
-</script>
-
-            }
