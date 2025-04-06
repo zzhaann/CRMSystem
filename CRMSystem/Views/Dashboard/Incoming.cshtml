@@ -76,9 +76,9 @@
                                                     {
                                                         <tr id="order-@order.Id">
                                                             <td>@order.ContractNumber</td>
-                                                            <td>@order.FlowerName</td>
+                                                            <td>@order.Flower?.Name</td>
                                                             <td>@order.Quantity</td>
-                                                            <td>@order.Price</td>
+                                                            <td>@(order.Quantity * order.Flower?.ClientPrice ?? 0)</td>
                                                             <td>@(order.CustomerName ?? "Не указан")</td>
                                                             <td>@order.CustomerPhone</td>
                                                             <td>@order.Florist?.FullName</td>
@@ -114,15 +114,22 @@
                                                                 </div>
                                                                 <div class="mb-3">
                                                                     <label class="form-label">@localizer["Flowers"].Value.ToString()</label>
-                                                                    <input type="text" class="form-control" name="FlowerName" required />
+                                                                    <select class="form-select" name="FlowerId" id="flowerSelect" required>
+                                                                        @foreach (var flower in ViewBag.Flowers as List<CRMSystem.Models.Flower>)
+                                                                        {
+                                                                            <option value="@flower.Id" data-price="@flower.ClientPrice" data-quantity="@flower.Quantity">
+                                                                                @flower.Name (остаток: @flower.Quantity)
+                                                                            </option>
+                                                                        }
+                                                                    </select>
                                                                 </div>
                                                                 <div class="mb-3">
                                                                     <label class="form-label">@localizer["Count"].Value.ToString()</label>
-                                                                    <input type="number" class="form-control" name="Quantity" required />
+                                                                    <input type="number" class="form-control" name="Quantity" id="orderQuantity" min="1" required />
                                                                 </div>
                                                                 <div class="mb-3">
                                                                     <label class="form-label">@localizer["Price"].Value.ToString()</label>
-                                                                    <input type="number" step="0.01" class="form-control" name="Price" required />
+                                                                    <input type="number" class="form-control" name="Price" id="orderPrice" step="0.01" readonly />
                                                                 </div>
                                                                 <div class="mb-3">
                                                                     <label class="form-label">@localizer["Client"].Value.ToString()</label>
@@ -160,9 +167,29 @@
     </div>
 </div>
 
-<!-- Script for animation delete-->
+<!-- Script for animation delete and dynamic price update -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
+        const flowerSelect = document.getElementById("flowerSelect");
+        const quantityInput = document.getElementById("orderQuantity");
+        const priceInput = document.getElementById("orderPrice");
+
+        function updatePrice() {
+            const selectedOption = flowerSelect.options[flowerSelect.selectedIndex];
+            const clientPrice = parseFloat(selectedOption.dataset.price);
+            const maxQuantity = parseInt(selectedOption.dataset.quantity);
+            const quantity = parseInt(quantityInput.value);
+
+            if (quantity > maxQuantity) {
+                quantityInput.value = maxQuantity;
+            }
+
+            priceInput.value = (clientPrice * quantityInput.value).toFixed(2);
+        }
+
+        flowerSelect.addEventListener("change", updatePrice);
+        quantityInput.addEventListener("input", updatePrice);
+
         document.querySelectorAll(".delete-order-btn").forEach(button => {
             button.addEventListener("click", function () {
                 let orderId = this.getAttribute("data-id");

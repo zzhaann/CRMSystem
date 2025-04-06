@@ -14,7 +14,7 @@ namespace CRMSystem.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ILogger<AnalyticsController> _logger;
 
-        public AnalyticsController(ApplicationDbContext context, ILogger<AnalyticsController> logger) 
+        public AnalyticsController(ApplicationDbContext context, ILogger<AnalyticsController> logger)
         {
             _context = context;
             _logger = logger;
@@ -26,26 +26,24 @@ namespace CRMSystem.Controllers
 
             var today = DateTime.Today;
             var ordersData = await _context.Orders
+                .Include(o => o.Flower)
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date == today)
                 .GroupBy(o => o.CreatedAt.Hour)
-                .Select(g => new { Hour = g.Key, OrderCount = g.Count(), TotalRevenue = g.Sum(o => o.Price) })
+                .Select(g => new { Hour = g.Key, OrderCount = g.Count(), TotalRevenue = g.Sum(o => o.Flower.Price) })
                 .OrderBy(g => g.Hour)
                 .ToListAsync();
 
-            if (ordersData == null || !ordersData.Any())
-            {
-                _logger.LogWarning("No completed orders found for today.");
-            }
-
             var topFlowers = await _context.Orders
+                .Include(o => o.Flower)
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date == today)
-                .GroupBy(o => o.FlowerName)
+                .GroupBy(o => o.Flower.Name)
                 .Select(g => new { Flower = g.Key, Count = g.Count() })
                 .OrderByDescending(g => g.Count)
                 .Take(5)
                 .ToListAsync();
 
             var topFlorists = await _context.Orders
+                .Include(o => o.Florist)
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date == today)
                 .GroupBy(o => o.Florist.FullName)
                 .Select(g => new { Florist = g.Key, Count = g.Count() })
@@ -64,44 +62,38 @@ namespace CRMSystem.Controllers
                 FloristOrders = topFlorists.Select(f => f.Count).ToList()
             };
 
-            _logger.LogInformation("Data for today analyzed successfully.");
-
             return View(viewModel);
         }
 
         public async Task<IActionResult> AnalyzeWeek()
         {
-            _logger.LogInformation("Analyzing data for the week.");
-
             var startOfWeek = DateTime.Today.AddDays(-7);
             var endOfWeek = DateTime.Today.AddDays(1);
 
             var ordersData = await _context.Orders
+                .Include(o => o.Flower)
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date >= startOfWeek && o.CreatedAt.Date < endOfWeek)
-                .GroupBy(o => o.CreatedAt.Date.Date)
-                .Select(g => new { Date = g.Key, OrderCount = g.Count(), TotalRevenue = g.Sum(o => o.Price) })
+                .GroupBy(o => o.CreatedAt.Date)
+                .Select(g => new { Date = g.Key, OrderCount = g.Count(), TotalRevenue = g.Sum(o => o.Flower.Price) })
                 .OrderBy(g => g.Date)
                 .ToListAsync();
 
-            if (ordersData == null || !ordersData.Any())
-            {
-                _logger.LogWarning("No completed orders found for the week.");
-            }
-
             var topFlowers = await _context.Orders
+                .Include(o => o.Flower)
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date >= startOfWeek && o.CreatedAt.Date < endOfWeek)
-                .GroupBy(o => o.FlowerName)
+                .GroupBy(o => o.Flower.Name)
                 .Select(g => new { Flower = g.Key, Count = g.Count() })
                 .OrderByDescending(g => g.Count)
                 .Take(5)
                 .ToListAsync();
 
             var topFlorists = await _context.Orders
+                .Include(o => o.Florist)
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date >= startOfWeek && o.CreatedAt.Date < endOfWeek)
                 .GroupBy(o => o.Florist.FullName)
                 .Select(g => new { Florist = g.Key, Count = g.Count() })
                 .OrderByDescending(g => g.Count)
-                .Take(3) 
+                .Take(5)
                 .ToListAsync();
 
             var viewModel = new AnalyticsViewModel
@@ -115,37 +107,32 @@ namespace CRMSystem.Controllers
                 FloristOrders = topFlorists.Select(f => f.Count).ToList()
             };
 
-            _logger.LogInformation("Data for the week analyzed successfully.");
-
-            return View(viewModel); 
+            return View(viewModel);
         }
 
         public async Task<IActionResult> AnalyzeMonth()
         {
-            _logger.LogInformation("Analyzing data for the month.");
-
             var startOfMonth = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+
             var ordersData = await _context.Orders
+                .Include(o => o.Flower)
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date >= startOfMonth)
                 .GroupBy(o => o.CreatedAt.Date)
-                .Select(g => new { Date = g.Key, OrderCount = g.Count(), TotalRevenue = g.Sum(o => o.Price) })
+                .Select(g => new { Date = g.Key, OrderCount = g.Count(), TotalRevenue = g.Sum(o => o.Flower.Price) })
                 .OrderBy(g => g.Date)
                 .ToListAsync();
 
-            if (ordersData == null || !ordersData.Any())
-            {
-                _logger.LogWarning("No completed orders found for the month.");
-            }
-
             var topFlowers = await _context.Orders
+                .Include(o => o.Flower)
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date >= startOfMonth)
-                .GroupBy(o => o.FlowerName)
+                .GroupBy(o => o.Flower.Name)
                 .Select(g => new { Flower = g.Key, Count = g.Count() })
                 .OrderByDescending(g => g.Count)
                 .Take(5)
                 .ToListAsync();
 
             var topFlorists = await _context.Orders
+                .Include(o => o.Florist)
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date >= startOfMonth)
                 .GroupBy(o => o.Florist.FullName)
                 .Select(g => new { Florist = g.Key, Count = g.Count() })
@@ -163,38 +150,33 @@ namespace CRMSystem.Controllers
                 TopFlorists = topFlorists.Select(f => f.Florist).ToList(),
                 FloristOrders = topFlorists.Select(f => f.Count).ToList()
             };
-
-            _logger.LogInformation("Data for the month analyzed successfully.");
 
             return View(viewModel);
         }
 
         public async Task<IActionResult> AnalyzeYear()
         {
-            _logger.LogInformation("Analyzing data for the year.");
-
             var startOfYear = new DateTime(DateTime.Today.Year, 1, 1);
+
             var ordersData = await _context.Orders
+                .Include(o => o.Flower)
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date >= startOfYear)
                 .GroupBy(o => o.CreatedAt.Month)
-                .Select(g => new { Month = g.Key, OrderCount = g.Count(), TotalRevenue = g.Sum(o => o.Price) })
+                .Select(g => new { Month = g.Key, OrderCount = g.Count(), TotalRevenue = g.Sum(o => o.Flower.Price) })
                 .OrderBy(g => g.Month)
                 .ToListAsync();
 
-            if (ordersData == null || !ordersData.Any())
-            {
-                _logger.LogWarning("No completed orders found for the year.");
-            }
-
             var topFlowers = await _context.Orders
+                .Include(o => o.Flower)
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date >= startOfYear)
-                .GroupBy(o => o.FlowerName)
+                .GroupBy(o => o.Flower.Name)
                 .Select(g => new { Flower = g.Key, Count = g.Count() })
                 .OrderByDescending(g => g.Count)
                 .Take(5)
                 .ToListAsync();
 
             var topFlorists = await _context.Orders
+                .Include(o => o.Florist)
                 .Where(o => o.Status == "Completed" && o.CreatedAt.Date >= startOfYear)
                 .GroupBy(o => o.Florist.FullName)
                 .Select(g => new { Florist = g.Key, Count = g.Count() })
@@ -212,8 +194,6 @@ namespace CRMSystem.Controllers
                 TopFlorists = topFlorists.Select(f => f.Florist).ToList(),
                 FloristOrders = topFlorists.Select(f => f.Count).ToList()
             };
-
-            _logger.LogInformation("Data for the year analyzed successfully.");
 
             return View(viewModel);
         }

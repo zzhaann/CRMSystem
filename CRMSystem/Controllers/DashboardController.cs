@@ -25,8 +25,11 @@ namespace CRMSystem.Controllers
 
             var orders = await _context.Orders
                 .Include(o => o.Florist)
+                .Include(o => o.Flower)
                 .Where(o => o.Status == "Incoming")
                 .ToListAsync();
+
+            ViewBag.Flowers = await _context.Flowers.ToListAsync();
 
             if (orders == null || !orders.Any())
             {
@@ -42,6 +45,7 @@ namespace CRMSystem.Controllers
 
             var orders = await _context.Orders
                 .Include(o => o.Florist)
+                .Include(o => o.Flower)
                 .Where(o => o.Status == "Processing")
                 .ToListAsync();
 
@@ -59,6 +63,7 @@ namespace CRMSystem.Controllers
 
             var orders = await _context.Orders
                 .Include(o => o.Florist)
+                .Include(o => o.Flower)
                 .Where(o => o.Status == "Completed")
                 .ToListAsync();
 
@@ -76,14 +81,31 @@ namespace CRMSystem.Controllers
             _logger.LogInformation("Creating a new order with contract number: {ContractNumber}", order.ContractNumber);
 
             var florist = await _context.Florists.FindAsync(order.FloristId);
-            if (florist == null)
+            var flower = await _context.Flowers.FindAsync(order.FlowerId);
+
+            if (florist == null || flower == null)
             {
-                _logger.LogWarning("Florist with ID {FloristId} not found.", order.FloristId);
-                TempData["ErrorMessage"] = "Флорист не найден!";
+                _logger.LogWarning("Florist or Flower not found. FloristId: {FloristId}, FlowerId: {FlowerId}", order.FloristId, order.FlowerId);
+                TempData["ErrorMessage"] = "Флорист или цветок не найден!";
                 return RedirectToAction("Incoming");
             }
 
-            order.Status = "Incoming"; // статусты орнатамыз
+
+            if (order.Quantity > flower.Quantity)
+            {
+                _logger.LogWarning("Недостаточно цветов: запрошено {Requested}, доступно {Available}", order.Quantity, flower.Quantity);
+                TempData["ErrorMessage"] = $"Недостаточно цветов. Остаток: {flower.Quantity}";
+                return RedirectToAction("Incoming");
+            }
+
+
+            flower.Quantity -= order.Quantity;
+
+            // Устанавливаем цену от клиента
+            order.Price = order.Quantity * flower.ClientPrice;
+
+
+            order.Status = "Incoming";
             _context.Orders.Add(order);
             await _context.SaveChangesAsync();
 

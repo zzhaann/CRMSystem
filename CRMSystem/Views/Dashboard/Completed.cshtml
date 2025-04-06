@@ -16,13 +16,13 @@
                     <h2>@localizer["CompletedOrders"].Value.ToString()</h2>
                 </div>
                 <div class="page-tabs-menu">
-                    <li class="page-tab-link revenue">
+                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Incoming" ? "w--current" : "")">
                         @Html.ActionLink(localizer["Incoming"].Value.ToString(), "Incoming", "Dashboard")
                     </li>
-                    <li class="page-tab-link projects">
+                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Processing" ? "w--current" : "")">
                         @Html.ActionLink(localizer["Processing"].Value.ToString(), "Processing", "Dashboard")
                     </li>
-                    <li class="page-tab-link crypto">
+                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Completed" ? "w--current" : "")">
                         @Html.ActionLink(localizer["Completed"].Value.ToString(), "Completed", "Dashboard")
                     </li>
                 </div>
@@ -63,12 +63,12 @@
                                         {
                                             <tr>
                                                 <td>@order.ContractNumber</td>
-                                                <td>@order.FlowerName</td>
-                                                <td>@order.Quantity</td>
-                                                <td>@order.Price</td>
+                                                <td>@order.Flower?.Name</td>
+                                                <td>@order.Flower?.Quantity</td>
+                                                <td>@order.Flower?.Price</td>
                                                 <td>@(order.CustomerName ?? "—")</td>
                                                 <td>@order.CustomerPhone</td>
-                                                <td>@order.Florist.FullName</td>
+                                                <td>@order.Florist?.FullName</td>
                                                 <td>@order.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
                                             </tr>
                                         }

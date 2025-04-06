@@ -9,10 +9,11 @@ using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using Microsoft.Extensions.Options;
 
+//string connectionstring=builder.Configuration.GetConnectionString("DefaultConnection");
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))); //connectionstring 
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()

@@ -55,12 +55,12 @@
                                                 {
                                                     <tr>
                                                         <td>@order.ContractNumber</td>
-                                                        <td>@order.FlowerName</td>
-                                                        <td>@order.Quantity</td>
-                                                        <td>@order.Price</td>
+                                                        <td>@order.Flower?.Name</td>
+                                                        <td>@order.Flower?.Quantity</td>
+                                                        <td>@order.Flower?.Price</td>
                                                         <td>@(order.CustomerName ?? "—")</td>
                                                         <td>@order.CustomerPhone</td>
-                                                        <td>@order.Florist.FullName</td>
+                                                        <td>@order.Florist?.FullName</td>
                                                     </tr>
                                                 }
                                             </tbody>
