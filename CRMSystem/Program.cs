@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using CRMSystem.Services;
 using CRMSystem.Hubs;
 using System.Text.Json.Serialization;
+using CRMSystem.Filters;
 
 //string connectionstring=builder.Configuration.GetConnectionString("DefaultConnection");
 var builder = WebApplication.CreateBuilder(args);
@@ -39,8 +40,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
            options.LogoutPath = "/Account/Logout";
        });
 
-// Add services to the container.
-builder.Services.AddControllersWithViews()
+
+builder.Services.AddScoped<BrowserCheckResourceFilter>();
+builder.Services.AddScoped<GlobalExceptionFilter>();
+
+
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<BrowserCheckResourceFilter>(); 
+})
     .AddViewLocalization()
     .AddDataAnnotationsLocalization()
     .AddJsonOptions(options =>
@@ -103,7 +111,9 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Добавьте локализацию в конвейер обработки запросов
+
+
+
 var localizationOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>().Value;
 app.UseRequestLocalization(localizationOptions);
 

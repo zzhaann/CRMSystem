@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Ошибка";
+}
+
+<div class="app-main-layout-container">
+    <div class="app-main-layout-mask"></div>
+    <div class="app-main-layout">
+
+<h1>Произошла ошибка</h1>
+
+<div style="margin-top:20px; padding:20px; border:1px solid red; border-radius:8px; background-color:#ffe6e6;">
+    <p><strong>Сообщение об ошибке:</strong></p>
+    <p>@ViewBag.ErrorMessage</p>
+</div>
+
+<div style="margin-top:30px;">
+
+    @Html.ActionLink(localizer["BackToMainPage"].Value.ToString(), "Index", "Home")
+    
+</div>
+</div>
+</div>
