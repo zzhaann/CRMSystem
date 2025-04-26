@@ -10,7 +10,8 @@ using CRMSystem.Filters;
 namespace CRMSystem.Controllers
 {
 
-    
+    [ServiceFilter(typeof(CustomResultFilter))]
+
     public class DashboardController : Controller
     {
         private readonly ApplicationDbContext _context;
