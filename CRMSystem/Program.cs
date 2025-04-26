@@ -43,6 +43,9 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddScoped<BrowserCheckResourceFilter>();
 builder.Services.AddScoped<GlobalExceptionFilter>();
+builder.Services.AddScoped<LoggingActionFilter>();
+builder.Services.AddScoped<CustomResultFilter>();
+
 
 
 builder.Services.AddControllersWithViews(options =>

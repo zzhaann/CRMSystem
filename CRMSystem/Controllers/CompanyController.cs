@@ -4,9 +4,12 @@ using CRMSystem.Data;
 using CRMSystem.Models;
 using System.Threading.Tasks;
 using System.Linq;
+using CRMSystem.Filters;
 
 namespace CRMSystem.Controllers
 {
+
+    [ServiceFilter(typeof(LoggingActionFilter))]
     public class CompanyController : Controller
     {
         private readonly ApplicationDbContext _context;
