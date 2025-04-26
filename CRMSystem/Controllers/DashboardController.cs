@@ -5,9 +5,12 @@ using CRMSystem.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using CRMSystem.Filters;
 
 namespace CRMSystem.Controllers
 {
+
+    
     public class DashboardController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,8 +22,11 @@ namespace CRMSystem.Controllers
             _logger = logger;
         }
 
+        
         public async Task<IActionResult> Incoming()
         {
+
+            
             _logger.LogInformation("Fetching incoming orders.");
 
             var orders = await _context.Orders
@@ -38,9 +44,12 @@ namespace CRMSystem.Controllers
 
             return View(orders);
         }
-
+        [ServiceFilter(typeof(GlobalExceptionFilter))]
         public async Task<IActionResult> Processing()
         {
+
+
+            //throw new Exception("Тестовая ошибка в Incoming!");
             _logger.LogInformation("Fetching processing orders.");
 
             var orders = await _context.Orders

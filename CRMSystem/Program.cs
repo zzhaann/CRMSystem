@@ -8,6 +8,10 @@ using Serilog.Context;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using Microsoft.Extensions.Options;
+using CRMSystem.Services;
+using CRMSystem.Hubs;
+using System.Text.Json.Serialization;
+using CRMSystem.Filters;
 
 //string connectionstring=builder.Configuration.GetConnectionString("DefaultConnection");
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +23,16 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
+
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
        .AddCookie(options =>
        {
@@ -26,10 +40,32 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
            options.LogoutPath = "/Account/Logout";
        });
 
-// Add services to the container.
-builder.Services.AddControllersWithViews()
+
+builder.Services.AddScoped<BrowserCheckResourceFilter>();
+builder.Services.AddScoped<GlobalExceptionFilter>();
+
+
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<BrowserCheckResourceFilter>(); 
+})
     .AddViewLocalization()
-    .AddDataAnnotationsLocalization();
+    .AddDataAnnotationsLocalization()
+    .AddJsonOptions(options =>
+ {
+     options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+ });
+
+
+
+
+//Integration with GreenApi
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<GreenApiService>();
+builder.Services.AddSingleton<MessageStore>();
+
+
 
 // Локализация через файлы ресурсов
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
@@ -75,12 +111,16 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Добавьте локализацию в конвейер обработки запросов
+
+
+
 var localizationOptions = app.Services.GetService<IOptions<RequestLocalizationOptions>>().Value;
 app.UseRequestLocalization(localizationOptions);
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<ChatHub>("/chatHub");
 
 app.Run();

@@ -1,18 +1,300 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model CRMSystem.Models.WhatsAppMessage
+@using CRMSystem.Models
+
 @{
+    ViewData["Title"] = "WhatsApp Chat";
+    var messages = ViewBag.Messages as List<WhatsAppMessage>;
+    var contacts = ViewBag.Contacts as List<string>;
 }
+
+<style>
+    /* Задаём фиксированную высоту и прокрутку для сообщений */
+    #chatMessages {
+        height: calc(100vh - 200px);
+        overflow-y: auto;
+    }
+    /* Задаём фиксированную высоту и прокрутку для списка контактов */
+    .contacts-list {
+        height: calc(100vh - 150px);
+        overflow-y: auto;
+    }
+</style>
+
 <div class="app-main-layout-container">
     <div class="app-main-layout-mask"></div>
     <div class="app-main-layout">
         <div class="app-main-layout-header">
             <div class="app-main-layout-wrapper header">
-                <div class="page-heading">
-                    <h2>chat</h2>
+                <div class="container-fluid vh-100 d-flex flex-column">
+                    <h2 class="p-3 bg-success text-white mb-0">WhatsApp Чат</h2>
+                    <div class="row flex-grow-1 overflow-hidden">
+                        <div class="col-md-3 p-0 bg-white border-end">
+                            <div class="p-3 border-bottom">
+                                <h5>Контакты</h5>
+                            </div>
+                            <ul class="list-group list-group-flush contacts-list">
+                                @if (contacts != null && contacts.Any())
+                                {
+                                    foreach (var contact in contacts)
+                                    {
+                                        <li class="list-group-item list-group-item-action contact-item" data-chatid="@contact">
+                                            @contact
+                                        </li>
+                                    }
+                                }
+                                else
+                                {
+                                    <li class="list-group-item text-muted">Нет контактов</li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="col-md-9 d-flex flex-column p-0">
+                            <div id="chatMessages" class="p-3 bg-light border-start">
+                                @if (string.IsNullOrEmpty(Model?.ChatId))
+                                {
+                                    <p class="text-muted text-center">Выберите контакт, чтобы начать чат</p>
+                                }
+                                else if (messages != null && messages.Any())
+                                {
+                                    foreach (var msg in messages)
+                                    {
+                                        <div class="@(msg.IsIncoming ? "text-left" : "text-right") mb-2" data-messageId="@msg.IdMessage">
+                                            <div class="p-2 rounded d-inline-block @(msg.IsIncoming ? "bg-white border" : "bg-success text-white")">
+                                                <small class="d-block text-muted">@msg.Timestamp.ToLocalTime().ToString("HH:mm")</small>
+                                                @msg.Message
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="text-muted text-center">Нет сообщений</p>
+                                }
+                            </div>
+                            <!-- Форма ввода закреплена снизу -->
+                            <form id="messageForm" class="flex-shrink-0 p-3 bg-white border-top" style="position: sticky; bottom: 0; z-index: 1;">
+                                <div class="row g-2">
+                                    <div class="col-md-8">
+                                        <input type="hidden" id="ChatId" name="ChatId" value="@Model?.ChatId" />
+                                        <textarea id="Message" name="Message" class="form-control" rows="2" placeholder="Введите сообщение"></textarea>
+                                        <span class="text-danger" id="MessageError"></span>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <button type="submit" class="btn btn-success w-100">Отправить</button>
+                                    </div>
+                                </div>
+                                <div id="errorMessage" class="alert alert-danger mt-2" style="display: none;"></div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                
             </div>
         </div>
+    </div>
 </div>
-</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
+    <script>
+        "use strict";
+
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/chatHub")
+            .configureLogging(signalR.LogLevel.Information)
+            .withAutomaticReconnect()
+            .build();
+
+        const displayedMessageIds = new Set();
+        let lastMessageTimestamp = null;
+
+        connection.on("ReceiveMessage", function (message) {
+            console.log("Получено сообщение:", message);
+            const chatMessages = document.getElementById("chatMessages");
+            const currentChatId = document.getElementById("ChatId").value;
+
+            if (displayedMessageIds.has(message.idMessage)) {
+                console.log("Сообщение уже отображено, пропускаем:", message.idMessage);
+                return;
+            }
+
+            if (message.chatId === currentChatId) {
+                const div = document.createElement("div");
+                div.className = message.isIncoming ? "text-left mb-2" : "text-right mb-2";
+                div.dataset.messageId = message.idMessage;
+                div.innerHTML = `
+                    <div class="p-2 rounded d-inline-block ${message.isIncoming ? "bg-white border" : "bg-success text-white"}">
+                        <small class="d-block text-muted">${new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
+                        ${message.message}
+                    </div>`;
+                if(chatMessages.innerHTML.includes("Нет сообщений")) {
+                    chatMessages.innerHTML = "";
+                }
+                chatMessages.appendChild(div);
+                // Прокручиваем последний элемент в видимую область
+                div.scrollIntoView({ behavior: "auto" });
+
+                displayedMessageIds.add(message.idMessage);
+                lastMessageTimestamp = new Date(message.timestamp).getTime();
+            }
+        });
+
+        connection.on("NewContact", function (chatId) {
+            console.log("Новый контакт:", chatId);
+            const contactList = document.querySelector(".contacts-list");
+            if (!contactList.querySelector(`[data-chatid="${chatId}"]`)) {
+                const li = document.createElement("li");
+                li.className = "list-group-item list-group-item-action contact-item";
+                li.dataset.chatid = chatId;
+                li.textContent = chatId;
+                contactList.appendChild(li);
+
+                li.addEventListener("click", async () => {
+                    const chatId = li.dataset.chatid;
+                    document.getElementById("ChatId").value = chatId;
+
+                    document.querySelectorAll(".contact-item").forEach(i => i.classList.remove("active"));
+                    li.classList.add("active");
+
+                    try {
+                        const response = await fetch(`/Inbox/GetMessages?chatId=${chatId}`);
+                        const messages = await response.json();
+                        const chatMessages = document.getElementById("chatMessages");
+                        chatMessages.innerHTML = "";
+                        displayedMessageIds.clear();
+                        lastMessageTimestamp = null;
+                        if (messages.length > 0) {
+                            messages.forEach(message => {
+                                const div = document.createElement("div");
+                                div.className = message.isIncoming ? "text-left mb-2" : "text-right mb-2";
+                                div.dataset.messageId = message.idMessage;
+                                div.innerHTML = `
+                                    <div class="p-2 rounded d-inline-block ${message.isIncoming ? "bg-white border" : "bg-success text-white"}">
+                                        <small class="d-block text-muted">${new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
+                                        ${message.message}
+                                    </div>`;
+                                chatMessages.appendChild(div);
+                                displayedMessageIds.add(message.idMessage);
+                                lastMessageTimestamp = new Date(message.timestamp).getTime();
+                            });
+                            chatMessages.lastElementChild.scrollIntoView({ behavior: "auto" });
+                        } else {
+                            chatMessages.innerHTML = '<p class="text-muted text-center">Нет сообщений</p>';
+                        }
+                    } catch (err) {
+                        console.error("Ошибка загрузки сообщений:", err);
+                    }
+                });
+            }
+        });
+
+        async function startConnection() {
+            try {
+                await connection.start();
+                console.log("SignalR успешно подключен");
+            } catch (err) {
+                console.error("Ошибка подключения SignalR:", err);
+                setTimeout(startConnection, 5248);
+            }
+        }
+
+        connection.onclose(err => {
+            console.error("SignalR отключен:", err);
+            startConnection();
+        });
+
+        startConnection();
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const chatMessages = document.getElementById("chatMessages");
+
+            // Если в контейнере уже есть сообщения, прокручиваем вниз
+            if (chatMessages.querySelector("p") === null) {
+                chatMessages.lastElementChild && chatMessages.lastElementChild.scrollIntoView({ behavior: "auto" });
+            }
+
+            document.querySelectorAll(".contact-item").forEach(item => {
+                item.addEventListener("click", async () => {
+                    const chatId = item.dataset.chatid;
+                    document.getElementById("ChatId").value = chatId;
+
+                    document.querySelectorAll(".contact-item").forEach(i => i.classList.remove("active"));
+                    item.classList.add("active");
+
+                    try {
+                        const response = await fetch(`/Inbox/GetMessages?chatId=${chatId}`);
+                        const messages = await response.json();
+                        chatMessages.innerHTML = "";
+                        displayedMessageIds.clear();
+                        lastMessageTimestamp = null;
+                        if (messages.length > 0) {
+                            messages.forEach(message => {
+                                const div = document.createElement("div");
+                                div.className = message.isIncoming ? "text-left mb-2" : "text-right mb-2";
+                                div.dataset.messageId = message.idMessage;
+                                div.innerHTML = `
+                                    <div class="p-2 rounded d-inline-block ${message.isIncoming ? "bg-white border" : "bg-success text-white"}">
+                                        <small class="d-block text-muted">${new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</small>
+                                        ${message.message}
+                                    </div>`;
+                                chatMessages.appendChild(div);
+                                displayedMessageIds.add(message.idMessage);
+                                lastMessageTimestamp = new Date(message.timestamp).getTime();
+                            });
+                            chatMessages.lastElementChild.scrollIntoView({ behavior: "auto" });
+                        } else {
+                            chatMessages.innerHTML = '<p class="text-muted text-center">Нет сообщений</p>';
+                        }
+                    } catch (err) {
+                        console.error("Ошибка загрузки сообщений:", err);
+                    }
+                });
+            });
+
+            document.getElementById("messageForm").addEventListener("submit", async (e) => {
+                e.preventDefault();
+
+                const chatId = document.getElementById("ChatId").value;
+                const message = document.getElementById("Message").value;
+                const errorMessageDiv = document.getElementById("errorMessage");
+
+                document.getElementById("MessageError").textContent = "";
+                errorMessageDiv.style.display = "none";
+
+                if (!chatId) {
+                    errorMessageDiv.textContent = "Выберите контакт";
+                    errorMessageDiv.style.display = "block";
+                    return;
+                }
+                if (!message) {
+                    document.getElementById("MessageError").textContent = "Введите сообщение";
+                    return;
+                }
+
+                try {
+                    console.log("Отправка сообщения:", { chatId, message });
+                    const response = await fetch("/Inbox/SendMessage", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({ chatId, message })
+                    });
+
+                    const result = await response.json();
+                    console.log("Результат отправки:", result);
+                    if (result.success) {
+                        document.getElementById("Message").value = "";
+                    } else {
+                        errorMessageDiv.textContent = result.error || "Ошибка при отправке сообщения";
+                        errorMessageDiv.style.display = "block";
+                    }
+                } catch (err) {
+                    console.error("Ошибка отправки:", err);
+                    errorMessageDiv.textContent = "Ошибка сети. Попробуйте снова.";
+                    errorMessageDiv.style.display = "block";
+                }
+            });
+        });
+    </script>
+}

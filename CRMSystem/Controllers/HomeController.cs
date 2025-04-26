@@ -19,6 +19,13 @@ namespace CRMSystem.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult Exception(string message)
+        {
+            ViewBag.ErrorMessage = message;
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();
@@ -29,6 +36,7 @@ namespace CRMSystem.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
 
         [HttpPost]
         public JsonResult ChangeCulture(string culture)
