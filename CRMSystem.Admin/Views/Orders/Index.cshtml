@@ -1,0 +1,51 @@
+﻿@model List<Order>
+
+@{
+    ViewData["Title"] = "Список Контрактов";
+}
+<table class="table table-striped table-bordered table-advance table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Create At</th>
+            <th>Greated By</th>
+            <th>ContractNumber</th>
+            <th>Quantity</th>
+            <th>CustomerName</th>
+            <th>CustomerPhone</th>
+            <th>Price</th>
+            <th>Florist</th>
+			<th>Flower</th>
+			<th>Status</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.CreatedAt</td>
+                <td>@item.CreatedBy</td>
+                <td>@item.ContractNumber</td>
+                <td>@item.Quantity</td>
+                <td>@item.CustomerName</td>
+                <td>@item.CustomerPhone</td>
+                <td>@item.Price</td>
+                <td>@item.Florist?.FullName</td>
+				<td>@item.Flower?.Name</td>
+				<td>@item.Status</td>
+                <td>
+                    <a href="@Url.Action("Edit", "Orders", new{id=item.Id})">edit</a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Delete", "Orders", new{id=item.Id})">delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+<a href="@Url.Action("Edit", "Orders")" class="btn btn-default">Add Order</a>

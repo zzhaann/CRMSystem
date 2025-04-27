@@ -1,0 +1,111 @@
+﻿@model FlowerViewModel
+
+@{
+	ViewData["Title"] = "Список Цветов";
+}
+
+<div class="portlet light bordered">
+	<div class="portlet-title">
+		<div class="caption">
+			<i class="icon-equalizer font-red-sunglo"></i>
+			<span class="caption-subject font-red-sunglo bold uppercase">Add Flower</span>
+			<span class="caption-helper">form actions without bg color</span>
+		</div>
+		<div class="actions">
+			<div class="portlet-input input-inline input-small">
+				<div class="input-icon right">
+					<i class="icon-magnifier"></i>
+					<input type="text" class="form-control input-circle" placeholder="search...">
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="portlet-body form">
+		<!-- BEGIN FORM-->
+		<form asp-action="Edit" asp-controller="Flowers"
+			  class="form-horizontal" method="post" enctype="multipart/form-data">
+			<div class="form-body">
+				<div class="form-group">
+					<label class="col-md-3 control-label">Name</label>
+					<div class="col-md-4">
+						<input type="text" class="form-control" placeholder="Enter text"
+							   asp-for="Flower.Name">
+						<span class="help-block">
+							Enter Name flower.
+						</span>
+					</div>
+				</div>
+				<div class="form-group last">
+					<label class="col-md-3 control-label">Price</label>
+					<div class="col-md-4">
+						<input type="text" class="form-control" placeholder="Enter text"
+							   asp-for="Flower.Price">
+						<span class="help-block">
+							Enter Price flower.
+						</span>
+					</div>
+				</div>
+				<div class="form-group last">
+					<label class="col-md-3 control-label">Quantity</label>
+					<div class="col-md-4">
+						<input type="text" class="form-control" placeholder="Enter text"
+							   asp-for="Flower.Quantity">
+						<span class="help-block">
+							Enter Quantity flower.
+						</span>
+					</div>
+				</div>
+				<div class="form-group last">
+					<label class="col-md-3 control-label">InitialQuantity</label>
+					<div class="col-md-4">
+						<input type="text" class="form-control" placeholder="Enter text"
+							   asp-for="Flower.InitialQuantity">
+						<span class="help-block">
+							Enter InitialQuantity flower.
+						</span>
+					</div>
+				</div>
+				<div class="form-group last">
+					<label class="col-md-3 control-label">ClientPrice</label>
+					<div class="col-md-4">
+						<input type="text" class="form-control" placeholder="Enter text"
+							   asp-for="Flower.ClientPrice">
+						<span class="help-block">
+							Enter Client Price flower.
+						</span>
+					</div>
+				</div>
+
+				<hr />
+
+				<div class="form-group last">
+					<label class="col-md-3 control-label">Company</label>
+					<div class="col-md-4">
+
+						<select asp-for="Flower.CompanyId" class="form-control input-medium select2me" data-placeholder="Select...">
+							<option value=""></option>
+							@foreach (Company company in Model.Companies)
+							{
+								<option value="@company.Id">@company.Name</option>
+							}
+						</select>
+
+						<span class="help-block">
+							Select Company.
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="form-actions">
+				<div class="row">
+					<div class="col-md-offset-3 col-md-9">
+						<button type="submit" class="btn green">Submit</button>
+						<a href="@Url.Action("Index", "Flowers")" class="btn default">Cancel</a>
+						<!--<button type="button" class="btn default">Cancel</button>-->
+					</div>
+				</div>
+			</div>
+		</form>
+		<!-- END FORM-->
+	</div>
+</div>

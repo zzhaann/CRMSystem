@@ -23,6 +23,8 @@ namespace CRMSystem.Models
         [Required]
         [Column(TypeName = "decimal(18,2)")]
         public decimal ClientPrice { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public string CreatedBy { get; set; } = "admin";
 
 
         [Required]

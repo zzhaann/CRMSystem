@@ -1,0 +1,47 @@
+﻿@model List<Flower>
+
+@{
+    ViewData["Title"] = "Список Цветов";
+}
+<table class="table table-striped table-bordered table-advance table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Create At</th>
+            <th>Greated By</th>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>InitialQuantity</th>
+            <th>Price</th>
+            <th>ClientPrice</th>
+            <th>Company</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.CreatedAt</td>
+                <td>@item.CreatedBy</td>
+                <td>@item.Name</td>
+                <td>@item.Quantity</td>
+                <td>@item.InitialQuantity</td>
+                <td>@item.Price</td>
+				<td>@item.ClientPrice</td>
+                <td>@item.Company?.Name</td>
+                <td>
+                    <a href="@Url.Action("Edit", "Flowers", new{id=item.Id})">edit</a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Delete", "Flowers", new{id=item.Id})">delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+<a href="@Url.Action("Edit", "Flowers")" class="btn btn-default">Add Flower</a>

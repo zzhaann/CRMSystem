@@ -13,5 +13,7 @@ namespace CPM.Models
 
         [Required]
         public string Phone { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public string CreatedBy { get; set; } = "admin";
     }
 }

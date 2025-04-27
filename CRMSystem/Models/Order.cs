@@ -42,8 +42,7 @@ namespace CRMSystem.Models
         public string Status { get; set; } = "Incoming";
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-
+        public string CreatedBy { get; set; } = "admin";
     }
 }
 
