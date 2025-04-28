@@ -12,6 +12,7 @@ using CRMSystem.Services;
 using CRMSystem.Hubs;
 using System.Text.Json.Serialization;
 using CRMSystem.Filters;
+using CRMSystem.AppMiddleware;
 
 //string connectionstring=builder.Configuration.GetConnectionString("DefaultConnection");
 var builder = WebApplication.CreateBuilder(args);
@@ -97,6 +98,11 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 var app = builder.Build();
+
+
+//app.UseWorkTime();      
+app.UseLogRequest();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
