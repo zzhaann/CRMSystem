@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using CRMSystem.Filters;
+using System.Net.Http.Headers;
 
 namespace CRMSystem.Controllers
 {
@@ -36,7 +37,28 @@ namespace CRMSystem.Controllers
                 .Where(o => o.Status == "Incoming")
                 .ToListAsync();
 
-            ViewBag.Flowers = await _context.Flowers.ToListAsync();
+            //ViewBag.Flowers = await _context.Flowers.ToListAsync();
+            ViewBag.Flowers = new List<Flower>();
+            using (var client = new HttpClient())
+            {
+                var token = Request.Cookies["jwtToken"];
+                client.DefaultRequestHeaders.Authorization = 
+                    new AuthenticationHeaderValue("Bearer", token);
+
+                using ( var response = await client.GetAsync("http://localhost:5053/api/flowers"))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var json = await response.Content.ReadAsStringAsync();
+                        ViewBag.Flowers = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Flower>>(json);
+                    }
+                    else
+                    {
+                        _logger.LogError("Failed to fetch flowers. Status code: {StatusCode}", response.StatusCode);
+                    }
+                }
+            }
+
 
             if (orders == null || !orders.Any())
             {

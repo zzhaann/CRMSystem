@@ -11,12 +11,14 @@ namespace CRMSystem.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<AccountController> _logger;
+        private readonly TokenService _tokenService;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<AccountController> logger)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ILogger<AccountController> logger, TokenService tokenService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _tokenService = tokenService;
         }
 
         [HttpGet]
@@ -42,6 +44,8 @@ namespace CRMSystem.Controllers
                 var result = await _signInManager.PasswordSignInAsync(user.UserName, password, false, false);
                 if (result.Succeeded)
                 {
+                    var jwtToken = await _tokenService.GenerateAccessToken(user);
+                    Response.Cookies.Append("jwtToken", jwtToken);
                     _logger.LogInformation("User {Email} logged in successfully.", email);
                     return RedirectToAction("Index", "Home");
                 }
