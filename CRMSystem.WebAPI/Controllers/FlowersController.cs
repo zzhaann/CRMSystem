@@ -3,12 +3,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CRMSystem.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+   
     public class FlowersController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -20,43 +23,67 @@ namespace CRMSystem.WebAPI.Controllers
             _logger = logger;
         }
 
+        // GET: api/flowers
         [HttpGet]
-        public List<Flower> Get()
+        public IActionResult Get()
         {
             _logger.LogInformation("Fetching all flowers.");
-            return _context.Flowers.ToList();
+            var flowers = _context.Flowers.ToList();
+            if (flowers == null || !flowers.Any())
+            {
+                return NotFound(new { message = "No flowers found." });
+            }
+            return Ok(flowers);
         }
 
+        // GET: api/flowers/{id}
         [HttpGet("{id}")]
-        public Flower Get(int id)
+        public IActionResult Get(int id)
         {
             _logger.LogInformation("Fetching flower with ID {Id}.", id);
-            return _context.Flowers.FirstOrDefault(x => x.Id == id);
+            var flower = _context.Flowers.FirstOrDefault(x => x.Id == id);
+            if (flower == null)
+            {
+                return NotFound(new { message = "Flower not found." });
+            }
+            return Ok(flower);
         }
 
+        // POST: api/flowers
         [HttpPost]
-        public IActionResult Post([FromForm] Flower flower)
+        public IActionResult Post([FromBody] Flower flower)
         {
+            if (flower == null)
+            {
+                return BadRequest(new { message = "Flower data is required." });
+            }
+
             try
             {
                 flower.CreatedAt = DateTime.Now;
-                flower.CreatedBy = "Admin";
+                flower.CreatedBy = "Admin"; // Можно заменить на текущего пользователя
                 _context.Flowers.Add(flower);
                 _context.SaveChanges();
                 _logger.LogInformation("Flower created successfully: {@Flower}", flower);
-                return Ok(new { message = "Flower created successfully", flower });
+                return CreatedAtAction(nameof(Get), new { id = flower.Id }, flower);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while creating a flower.");
                 var innerMessage = ex.InnerException?.Message;
-                return BadRequest(ex.Message + "innerMessage: " + innerMessage);
+                return BadRequest(new { message = ex.Message, innerMessage });
             }
         }
 
+        // PUT: api/flowers/{id}
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromForm] Flower flower)
+        public IActionResult Put(int id, [FromBody] Flower flower)
         {
+            if (flower == null)
+            {
+                return BadRequest(new { message = "Flower data is required." });
+            }
+
             try
             {
                 var existingFlower = _context.Flowers.FirstOrDefault(x => x.Id == id);
@@ -68,6 +95,7 @@ namespace CRMSystem.WebAPI.Controllers
                     existingFlower.Price = flower.Price;
                     existingFlower.ClientPrice = flower.ClientPrice;
                     existingFlower.CompanyId = flower.CompanyId;
+
                     _context.SaveChanges();
                     _logger.LogInformation("Flower with ID {Id} updated successfully: {@Flower}", id, flower);
                     return Ok(new { message = "Flower updated successfully", flower });
@@ -82,10 +110,11 @@ namespace CRMSystem.WebAPI.Controllers
             {
                 _logger.LogError(ex, "Error occurred while updating flower with ID {Id}.", id);
                 var innerMessage = ex.InnerException?.Message;
-                return BadRequest(ex.Message + "innerMessage: " + innerMessage);
+                return BadRequest(new { message = ex.Message, innerMessage });
             }
         }
 
+        // DELETE: api/flowers/{id}
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -109,7 +138,7 @@ namespace CRMSystem.WebAPI.Controllers
             {
                 _logger.LogError(ex, "Error occurred while deleting flower with ID {Id}.", id);
                 var innerMessage = ex.InnerException?.Message;
-                return BadRequest(ex.Message + "innerMessage: " + innerMessage);
+                return BadRequest(new { message = ex.Message, innerMessage });
             }
         }
     }

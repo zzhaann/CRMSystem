@@ -13,6 +13,9 @@ using CRMSystem.Hubs;
 using System.Text.Json.Serialization;
 using CRMSystem.Filters;
 using CRMSystem.AppMiddleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 //string connectionstring=builder.Configuration.GetConnectionString("DefaultConnection");
 var builder = WebApplication.CreateBuilder(args);
@@ -33,6 +36,22 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader();
     });
 });
+
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
+
+
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
        .AddCookie(options =>

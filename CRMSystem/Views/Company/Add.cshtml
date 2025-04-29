@@ -109,17 +109,26 @@
                                 <tbody>
                                     @foreach (var company in ViewBag.Companies as List<CRMSystem.Models.Company>)
                                     {
-                                        foreach (var flower in company.Flowers)
+                                        if (company.Flowers != null && company.Flowers.Any())
+                                        {
+                                            foreach (var flower in company.Flowers)
+                                            {
+                                                <tr>
+                                                    <td>@company.Name</td>
+                                                    <td>@company.ContactPhone</td>
+                                                    <td>@company.Address</td>
+                                                    <td>@flower.Name</td>
+                                                    <td>@flower.InitialQuantity</td>
+                                                    <td>@flower.Quantity</td>
+                                                    <td>@flower.Price ₸</td>
+                                                    <td>@flower.ClientPrice ₸</td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
                                         {
                                             <tr>
-                                                <td>@company.Name</td>
-                                                <td>@company.ContactPhone</td>
-                                                <td>@company.Address</td>
-                                                <td>@flower.Name</td>
-                                                <td>@flower.InitialQuantity</td>
-                                                <td>@flower.Quantity</td>
-                                                <td>@flower.Price ₸</td>
-                                                <td>@flower.ClientPrice ₸</td>
+                                                <td colspan="8" class="text-center">Нет доступных цветов для этой компании.</td>
                                             </tr>
                                         }
                                     }

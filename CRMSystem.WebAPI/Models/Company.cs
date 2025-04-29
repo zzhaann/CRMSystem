@@ -15,7 +15,7 @@ namespace CRMSystem.WebAPI.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public string CreatedBy { get; set; } = "admin";
 
-        //public ICollection<Flower> Flowers { get; set; }
+        public ICollection<Flower> Flowers { get; set; } = new List<Flower>();
 
     }
 }
