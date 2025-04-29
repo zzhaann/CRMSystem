@@ -4,6 +4,7 @@ using CRMSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRMSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250429170716_fixorder2")]
+    partial class fixorder2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -212,7 +215,7 @@ namespace CRMSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("FloristId")
+                    b.Property<int?>("FloristId")
                         .HasColumnType("int");
 
                     b.Property<int?>("FlowerId")
@@ -385,9 +388,7 @@ namespace CRMSystem.Migrations
                 {
                     b.HasOne("CRMSystem.Models.Florist", "Florist")
                         .WithMany()
-                        .HasForeignKey("FloristId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("FloristId");
 
                     b.HasOne("CRMSystem.Models.Flower", "Flower")
                         .WithMany()

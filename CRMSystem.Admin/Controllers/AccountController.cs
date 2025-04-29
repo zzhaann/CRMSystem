@@ -9,12 +9,14 @@ namespace CRMSystem.Admin.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ILogger<AccountController> _logger;
+        private readonly TokenService _tokenService;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ILogger<AccountController> logger)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ILogger<AccountController> logger, TokenService tokenService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _tokenService = tokenService;
         }
         public IActionResult Index()
         {
@@ -36,6 +38,8 @@ namespace CRMSystem.Admin.Controllers
                 var result = await _signInManager.PasswordSignInAsync(user.UserName, password, false, false);
                 if (result.Succeeded)
                 {
+                    var jwtToken = await _tokenService.GenerateAccessToken(user);
+                    Response.Cookies.Append("jwtToken", jwtToken);
                     _logger.LogInformation("User {Email} logged in successfully.", email);
                     return RedirectToAction("Index", "Home");
                 }

@@ -39,12 +39,10 @@ namespace CRMSystem.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromForm] Florist florist)
+        public IActionResult Post([FromBody] Florist florist)
         {
             try
             {
-                florist.CreatedAt = DateTime.Now;
-                florist.CreatedBy = "Admin";
                 _context.Florists.Add(florist);
                 _context.SaveChanges();
                 _logger.LogInformation("Florist created successfully: {@Florist}", florist);
@@ -59,7 +57,7 @@ namespace CRMSystem.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromForm] Florist florist)
+        public IActionResult Put(int id, [FromBody] Florist florist)
         {
             try
             {

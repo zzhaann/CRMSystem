@@ -35,12 +35,10 @@ namespace CRMSystem.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromForm] Flower flower)
+        public IActionResult Post([FromBody] Flower flower)
         {
             try
             {
-                flower.CreatedAt = DateTime.Now;
-                flower.CreatedBy = "Admin";
                 _context.Flowers.Add(flower);
                 _context.SaveChanges();
                 _logger.LogInformation("Flower created successfully: {@Flower}", flower);
@@ -55,7 +53,7 @@ namespace CRMSystem.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromForm] Flower flower)
+        public IActionResult Put(int id, [FromBody] Flower flower)
         {
             try
             {

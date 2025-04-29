@@ -1,4 +1,5 @@
 ﻿using CRMSystem.WebAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -33,12 +34,10 @@ namespace CRMSystem.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromForm] Order order)
+        public IActionResult Post([FromBody] Order order)
         {
             try
             {
-                order.CreatedAt = DateTime.Now;
-                order.CreatedBy = "Admin";
                 _context.Orders.Add(order);
                 _context.SaveChanges();
                 _logger.LogInformation("Order created successfully: {@Order}", order);
@@ -53,7 +52,7 @@ namespace CRMSystem.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put([FromForm] Order order)
+        public IActionResult Put([FromBody] Order order)
         {
             try
             {

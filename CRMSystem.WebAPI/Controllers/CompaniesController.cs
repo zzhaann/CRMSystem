@@ -1,4 +1,5 @@
 ﻿using CRMSystem.WebAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ namespace CRMSystem.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CompaniesController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -39,12 +41,10 @@ namespace CRMSystem.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromForm] Company company)
+        public IActionResult Post([FromBody] Company company)
         {
             try
             {
-                company.CreatedAt = DateTime.Now;
-                company.CreatedBy = "Admin";
                 _context.Companies.Add(company);
                 _context.SaveChanges();
                 _logger.LogInformation("Company created successfully: {@Company}", company);
@@ -59,7 +59,7 @@ namespace CRMSystem.WebAPI.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromForm] Company company)
+        public IActionResult Put(int id, [FromBody] Company company)
         {
             try
             {

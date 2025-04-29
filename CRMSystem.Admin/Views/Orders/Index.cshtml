@@ -33,8 +33,8 @@
                 <td>@item.CustomerName</td>
                 <td>@item.CustomerPhone</td>
                 <td>@item.Price</td>
-                <td>@item.Florist?.FullName</td>
-				<td>@item.Flower?.Name</td>
+                <td>@item.FloristId</td>
+				<td>@item.FlowerId</td>
 				<td>@item.Status</td>
                 <td>
                     <a href="@Url.Action("Edit", "Orders", new{id=item.Id})">edit</a>
