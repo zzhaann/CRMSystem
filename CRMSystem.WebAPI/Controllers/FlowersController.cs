@@ -51,17 +51,12 @@ namespace CRMSystem.WebAPI.Controllers
 
         // POST: api/flowers
         [HttpPost]
-        public IActionResult Post([FromBody] Flower flower)
+        public IActionResult Post([FromForm] Flower flower)
         {
-            if (flower == null)
-            {
-                return BadRequest(new { message = "Flower data is required." });
-            }
-
             try
             {
                 flower.CreatedAt = DateTime.Now;
-                flower.CreatedBy = "Admin"; // Можно заменить на текущего пользователя
+                flower.CreatedBy = "Admin";
                 _context.Flowers.Add(flower);
                 _context.SaveChanges();
                 _logger.LogInformation("Flower created successfully: {@Flower}", flower);
@@ -79,11 +74,6 @@ namespace CRMSystem.WebAPI.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Flower flower)
         {
-            if (flower == null)
-            {
-                return BadRequest(new { message = "Flower data is required." });
-            }
-
             try
             {
                 var existingFlower = _context.Flowers.FirstOrDefault(x => x.Id == id);

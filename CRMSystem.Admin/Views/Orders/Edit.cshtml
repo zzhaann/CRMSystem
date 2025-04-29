@@ -1,144 +1,143 @@
 ﻿@model OrderViewModel
 
 @{
-	ViewData["Title"] = "Список Контрактов";
+    ViewData["Title"] = "Список Контрактов";
 }
 
 <div class="portlet light bordered">
-	<div class="portlet-title">
-		<div class="caption">
-			<i class="icon-equalizer font-red-sunglo"></i>
-			<span class="caption-subject font-red-sunglo bold uppercase">Add Order</span>
-			<span class="caption-helper">form actions without bg color</span>
-		</div>
-		<div class="actions">
-			<div class="portlet-input input-inline input-small">
-				<div class="input-icon right">
-					<i class="icon-magnifier"></i>
-					<input type="text" class="form-control input-circle" placeholder="search...">
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="portlet-body form">
-		<!-- BEGIN FORM-->
-		<form asp-action="Edit" asp-controller="Orders"
-			  class="form-horizontal" method="post" enctype="multipart/form-data">
-			<div class="form-body">
-				<div class="form-group">
-					<label class="col-md-3 control-label">ContactNumber</label>
-					<div class="col-md-4">
-						<input type="text" class="form-control" placeholder="Enter text"
-							   asp-for="Order.ContractNumber">
-						<span class="help-block">
-							Enter ContactNumber order.
-						</span>
-					</div>
-				</div>
-				<div class="form-group last">
-					<label class="col-md-3 control-label">Quantity</label>
-					<div class="col-md-4">
-						<input type="text" class="form-control" placeholder="Enter text"
-							   asp-for="Order.Quantity">
-						<span class="help-block">
-							Enter Quantity order.
-						</span>
-					</div>
-				</div>
-				<div class="form-group last">
-					<label class="col-md-3 control-label">CustomerName</label>
-					<div class="col-md-4">
-						<input type="text" class="form-control" placeholder="Enter text"
-							   asp-for="Order.CustomerName">
-						<span class="help-block">
-							Enter CustomerName order.
-						</span>
-					</div>
-				</div>
-				<div class="form-group last">
-					<label class="col-md-3 control-label">ContractNumber</label>
-					<div class="col-md-4">
-						<input type="text" class="form-control" placeholder="Enter text"
-							   asp-for="Order.ContractNumber">
-						<span class="help-block">
-							Enter ContractNumber order.
-						</span>
-					</div>
-				</div>
-				<div class="form-group last">
-					<label class="col-md-3 control-label">Price</label>
-					<div class="col-md-4">
-						<input type="text" class="form-control" placeholder="Enter text"
-							   asp-for="Order.Price">
-						<span class="help-block">
-							Enter Price order.
-						</span>
-					</div>
-				</div>
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-equalizer font-red-sunglo"></i>
+            <span class="caption-subject font-red-sunglo bold uppercase">Add Order</span>
+            <span class="caption-helper">form actions without bg color</span>
+        </div>
+        <div class="actions">
+            <div class="portlet-input input-inline input-small">
+                <div class="input-icon right">
+                    <i class="icon-magnifier"></i>
+                    <input type="text" class="form-control input-circle" placeholder="search...">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="portlet-body form">
+        <!-- BEGIN FORM-->
+        <form asp-action="Edit" asp-controller="Orders"
+              class="form-horizontal" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Order.Id" />
+            <div class="form-body">
+                <div class="form-group">
+                    <label class="col-md-3 control-label">ContractNumber</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" placeholder="Enter text"
+                               asp-for="Order.ContractNumber">
+                        <span class="help-block">
+                            Enter ContractNumber order.
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group last">
+                    <label class="col-md-3 control-label">Quantity</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" placeholder="Enter text"
+                               asp-for="Order.Quantity">
+                        <span class="help-block">
+                            Enter Quantity order.
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group last">
+                    <label class="col-md-3 control-label">CustomerName</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" placeholder="Enter text"
+                               asp-for="Order.CustomerName">
+                        <span class="help-block">
+                            Enter CustomerName order.
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group last">
+                    <label class="col-md-3 control-label">Customer phone</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" placeholder="Enter text"
+                               asp-for="Order.CustomerPhone">
+                        <span class="help-block">
+                            Enter Customer Phone order.
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group last">
+                    <label class="col-md-3 control-label">Price</label>
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" placeholder="Enter text"
+                               asp-for="Order.Price">
+                        <span class="help-block">
+                            Enter Price order.
+                        </span>
+                    </div>
+                </div>
 
-				<hr />
+                <hr />
 
-				<div class="form-group last">
-					<label class="col-md-3 control-label">Florist</label>
-					<div class="col-md-4">
-
-						<select asp-for="Order.FloristId" class="form-control input-medium select2me" data-placeholder="Select...">
-							<option value=""></option>
-							@foreach (Florist florist in Model.Florists)
-							{
-								<option value="@florist.Id">@florist.FullName</option>
-							}
-						</select>
-
-						<span class="help-block">
-							Select Florist.
-						</span>
-					</div>
-				</div>
-				<div class="form-group last">
-					<label class="col-md-3 control-label">Flower</label>
-					<div class="col-md-4">
-
-						<select asp-for="Order.FlowerId" class="form-control input-medium select2me" data-placeholder="Select...">
-							<option value=""></option>
-							@foreach (Flower flower in Model.Flowers)
-							{
-								<option value="@flower.Id">@flower.Name</option>
-							}
-						</select>
-
-						<span class="help-block">
-							Select Flower.
-						</span>
-					</div>
-				</div>
-				<div class="form-group last">
-					<label class="col-md-3 control-label">Status</label>
-					<div class="col-md-4">
-
-						<select asp-for="Order.Status" class="form-control input-medium select2me" data-placeholder="Select...">
-							<option value="Incoming">Incoming</option>
-							<option value="Processing">Processing</option>
-							<option value="Completed">Completed</option>
-						</select>
-
-						<span class="help-block">
-							Select Status.
-						</span>
-					</div>
-				</div>
-				
-			</div>
-			<div class="form-actions">
-				<div class="row">
-					<div class="col-md-offset-3 col-md-9">
-						<button type="submit" class="btn green">Submit</button>
-						<a href="@Url.Action("Index", "Orders")" class="btn default">Cancel</a>
-						<!--<button type="button" class="btn default">Cancel</button>-->
-					</div>
-				</div>
-			</div>
-		</form>
-		<!-- END FORM-->
-	</div>
+                <div class="form-group last">
+                    <label class="col-md-3 control-label">Florist</label>
+                    <div class="col-md-4">
+                        <select asp-for="Order.FloristId" class="form-control input-medium select2me" data-placeholder="Select...">
+                            <option value=""></option>
+                            @if (Model.Florists != null)
+                            {
+                                @foreach (var florist in Model.Florists)
+                                {
+                                    <option value="@florist.Id">@florist.FullName</option>
+                                }
+                            }
+                        </select>
+                        <span class="help-block">
+                            Select Florist.
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group last">
+                    <label class="col-md-3 control-label">Flower</label>
+                    <div class="col-md-4">
+                        <select asp-for="Order.FlowerId" class="form-control input-medium select2me" data-placeholder="Select...">
+                            <option value=""></option>
+                            @if (Model.Flowers != null)
+                            {
+                                @foreach (var flower in Model.Flowers)
+                                {
+                                    <option value="@flower.Id">@flower.Name</option>
+                                }
+                            }
+                        </select>
+                        <span class="help-block">
+                            Select Flower.
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group last">
+                    <label class="col-md-3 control-label">Status</label>
+                    <div class="col-md-4">
+                        <select asp-for="Order.Status" class="form-control input-medium select2me" data-placeholder="Select...">
+                            <option value="Incoming">Incoming</option>
+                            <option value="Processing">Processing</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                        <span class="help-block">
+                            Select Status.
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <div class="row">
+                    <div class="col-md-offset-3 col-md-9">
+                        <button type="submit" class="btn green">Submit</button>
+                        <a href="@Url.Action("Index", "Orders")" class="btn default">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- END FORM-->
+    </div>
 </div>

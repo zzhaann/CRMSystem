@@ -1,4 +1,5 @@
 ﻿using CRMSystem.WebAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,7 @@ namespace CRMSystem.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CompaniesController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -62,7 +64,7 @@ namespace CRMSystem.WebAPI.Controllers
 
         // POST: api/companies
         [HttpPost]
-        public IActionResult Post([FromBody] CompanyWithFlowerViewModel model)
+        public IActionResult Post([FromBody] Company company)
         {
             if (model == null)
             {
@@ -72,39 +74,12 @@ namespace CRMSystem.WebAPI.Controllers
 
             try
             {
-                if (ModelState.IsValid)
-                {
-                    var company = new Company
-                    {
-                        Name = model.Name,
-                        Address = model.Address,
-                        ContactPhone = model.ContactPhone
-                    };
-
-                    _context.Companies.Add(company);
-                    _context.SaveChanges();
-
-                    var flower = new Flower
-                    {
-                        Name = model.FlowerName,
-                        Quantity = model.Quantity,
-                        Price = model.Price,
-                        ClientPrice = model.ClientPrice,
-                        InitialQuantity = model.Quantity,
-                        CompanyId = company.Id
-                    };
-
-                    _context.Flowers.Add(flower);
-                    _context.SaveChanges();
-
-                    _logger.LogInformation("Company and flower created successfully.");
-                    return Ok(new { message = "Company and flower created successfully", company });
-                }
-                else
-                {
-                    _logger.LogError("Model is invalid.");
-                    return BadRequest(new { message = "Invalid data" });
-                }
+                company.CreatedAt = DateTime.Now;
+                company.CreatedBy = "Admin";
+                _context.Companies.Add(company);
+                _context.SaveChanges();
+                _logger.LogInformation("Company created successfully: {@Company}", company);
+                return Ok(new { message = "Company created successfully", company });
             }
             catch (Exception ex)
             {
@@ -115,14 +90,8 @@ namespace CRMSystem.WebAPI.Controllers
 
         // PUT: api/companies/{id}
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] CompanyWithFlowerViewModel model)
+        public IActionResult Put(int id, [FromForm] Company company)
         {
-            if (model == null)
-            {
-                _logger.LogError("Model is null.");
-                return BadRequest(new { message = "Invalid data" });
-            }
-
             try
             {
                 var existingCompany = _context.Companies.FirstOrDefault(c => c.Id == id);

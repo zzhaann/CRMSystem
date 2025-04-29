@@ -1,5 +1,6 @@
 ﻿using CRMSystem.WebAPI.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -57,9 +58,6 @@ namespace CRMSystem.WebAPI.Controllers
         {
             try
             {
-                order.CreatedAt = DateTime.Now;
-                order.CreatedBy = "Admin";
-
                 _context.Orders.Add(order);
                 _context.SaveChanges();
 

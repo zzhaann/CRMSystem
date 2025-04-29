@@ -28,7 +28,7 @@ namespace CRMSystem.Admin.Models
         public int FloristId { get; set; }
 
         [ForeignKey("FloristId")]
-        public Florist Florist { get; set; }
+        public Florist? Florist { get; set; }
 
         public int? FlowerId { get; set; }
 

@@ -26,11 +26,11 @@ namespace CRMSystem.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
 
-        [Required]
+
         public int FloristId { get; set; }
 
         [ForeignKey("FloristId")]
-        public Florist Florist { get; set; }
+        public Florist? Florist { get; set; }
 
         public int? FlowerId { get; set; }
 

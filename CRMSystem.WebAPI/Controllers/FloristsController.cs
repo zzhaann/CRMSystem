@@ -76,8 +76,6 @@ namespace CRMSystem.WebAPI.Controllers
 
             try
             {
-                florist.CreatedAt = DateTime.Now;
-                florist.CreatedBy = "Admin";
                 _context.Florists.Add(florist);
                 _context.SaveChanges();
                 _logger.LogInformation("Florist created successfully: {@Florist}", florist);
