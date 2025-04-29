@@ -43,6 +43,19 @@ builder.Services.AddAuthentication(options =>
 });
 
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", builder =>
+    {
+        builder.AllowAnyOrigin() // Разрешить запросы с любого источника
+               .AllowAnyMethod() // Разрешить все HTTP методы
+               .AllowAnyHeader(); // Разрешить все заголовки
+    });
+});
+
+
+
 var cultureInfo = new CultureInfo("en-US");
 CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
 CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
@@ -60,6 +73,8 @@ builder.Host.UseSerilog();
 
 var app = builder.Build();
 
+
+app.UseCors("AllowAllOrigins");
 
 if (app.Environment.IsDevelopment())
 {

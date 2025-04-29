@@ -129,9 +129,6 @@
   <data name="Email" xml:space="preserve">
     <value>Электронная почта</value>
   </data>
-  <data name="DeleteAccount" xml:space="preserve">
-    <value />
-  </data>
   <data name="EnterYourEmail" xml:space="preserve">
     <value>Введите электронную почту</value>
   </data>
@@ -170,5 +167,17 @@
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Отмена</value>
+  </data>
+  <data name="FloristsList" xml:space="preserve">
+    <value>Список флористов</value>
+  </data>
+  <data name="FloristName" xml:space="preserve">
+    <value>Имя флориста</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Номер телефона</value>
+  </data>
+  <data name="CreatedBy" xml:space="preserve">
+    <value>Создано</value>
   </data>
 </root>

@@ -118,6 +118,7 @@ Log.Logger = new LoggerConfiguration()
 builder.Host.UseSerilog();
 
 var app = builder.Build();
+app.UseCors("AllowAllOrigins");
 
 
 //app.UseWorkTime();      
