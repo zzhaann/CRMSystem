@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 
-namespace CPM.Models
+namespace CRMSystem.Models
 {
     public class Florist
     {

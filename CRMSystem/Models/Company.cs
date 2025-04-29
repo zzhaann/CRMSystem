@@ -17,7 +17,6 @@ namespace CRMSystem.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public string CreatedBy { get; set; } = "admin";
 
-        [NotMapped]
         public ICollection<Flower> Flowers { get; set; }
     }
 }

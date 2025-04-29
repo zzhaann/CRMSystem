@@ -117,31 +117,46 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AccountSettings" xml:space="preserve">
-    <value>Баптамалар</value>
+  <data name="AddCompany" xml:space="preserve">
+    <value>Add Company</value>
   </data>
-  <data name="Analytics" xml:space="preserve">
-    <value>Аналитика</value>
+  <data name="AddNewCompany" xml:space="preserve">
+    <value>Add new company</value>
   </data>
-  <data name="Company" xml:space="preserve">
-    <value>Компания</value>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
   </data>
-  <data name="Contracts" xml:space="preserve">
-    <value>Келісімшарттар</value>
+  <data name="ClientPrice" xml:space="preserve">
+    <value>Client price</value>
   </data>
-  <data name="Dashboard" xml:space="preserve">
-    <value>Басқару тақтасы</value>
+  <data name="CompanyDetails" xml:space="preserve">
+    <value>Company details</value>
   </data>
-  <data name="Home" xml:space="preserve">
-    <value>Басты бет</value>
+  <data name="CompanyList" xml:space="preserve">
+    <value>Company list</value>
   </data>
-  <data name="Inbox" xml:space="preserve">
-    <value>Хабарламалар</value>
+  <data name="CompanyName" xml:space="preserve">
+    <value>Company name</value>
   </data>
-  <data name="Logout" xml:space="preserve">
-    <value>Шығу</value>
+  <data name="ContactPhone" xml:space="preserve">
+    <value>Contact phone</value>
   </data>
-  <data name="Title" xml:space="preserve">
-    <value>Қош келдіңіз</value>
+  <data name="FlowerInfo" xml:space="preserve">
+    <value>Flower Info</value>
+  </data>
+  <data name="FlowerName" xml:space="preserve">
+    <value>Flower name</value>
+  </data>
+  <data name="NoCompanies" xml:space="preserve">
+    <value>No companies</value>
+  </data>
+  <data name="PurchasePrice" xml:space="preserve">
+    <value>Purchase price</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="Stock" xml:space="preserve">
+    <value>Stock</value>
   </data>
 </root>

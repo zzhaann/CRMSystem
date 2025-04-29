@@ -123,6 +123,9 @@
   <data name="Analytics" xml:space="preserve">
     <value>Analytics</value>
   </data>
+  <data name="Company" xml:space="preserve">
+    <value>Company</value>
+  </data>
   <data name="Contracts" xml:space="preserve">
     <value>Contracts</value>
   </data>

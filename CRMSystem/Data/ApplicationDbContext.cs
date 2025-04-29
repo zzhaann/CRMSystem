@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using CRMSystem.Models;
-using CPM.Models;
 
 namespace CRMSystem.Data
 {

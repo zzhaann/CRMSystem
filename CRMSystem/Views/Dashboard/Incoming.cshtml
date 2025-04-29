@@ -142,8 +142,10 @@
                                                                 <div class="mb-3">
                                                                     <label class="form-label">@localizer["Florist"].Value.ToString()</label>
                                                                     <select class="form-select" name="FloristId" required>
-                                                                        <option value="7">Флорист 1</option>
-                                                                        <option value="8">Флорист 2</option>
+                                                                        @foreach(var florist in ViewBag.Florists as List<CRMSystem.Models.Florist>)
+                                                                        {
+                                                                            <option value="@florist.Id"> @florist.FullName</option>
+                                                                        }
                                                                     </select>
                                                                 </div>
                                                                 <button type="submit" class="btn btn-primary">

@@ -1,5 +1,4 @@
-﻿using CPM.Models;
-using CRMSystem.Models;
+﻿using CRMSystem.Models;
 using System;
 using System.ComponentModel.DataAnnotations; //рекуайред, кей ушын колданылып тур
 using System.ComponentModel.DataAnnotations.Schema; //Форейн кей, калам
