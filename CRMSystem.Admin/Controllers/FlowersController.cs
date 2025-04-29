@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
 
 namespace CRMSystem.Admin.Controllers
 {
@@ -9,11 +10,13 @@ namespace CRMSystem.Admin.Controllers
     public class FlowersController : Controller
     {
         private readonly ILogger<FlowersController> _logger;
+        private readonly string _apiBaseUrl;
         private readonly HttpClient client = new HttpClient();
 
-        public FlowersController(ILogger<FlowersController> logger)
+        public FlowersController(ILogger<FlowersController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _apiBaseUrl = configuration["ApiSettings:BaseUrl"];
         }
 
         public async Task<IActionResult> Index()
@@ -24,7 +27,7 @@ namespace CRMSystem.Admin.Controllers
 
             try
             {
-                using (var response = await client.GetAsync("http://localhost:5053/api/flowers"))
+                using (var response = await client.GetAsync($"{_apiBaseUrl}/api/flowers"))
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -58,7 +61,7 @@ namespace CRMSystem.Admin.Controllers
 
             try
             {
-                using (var companiesResponse = await client.GetAsync("http://localhost:5053/api/companies"))
+                using (var companiesResponse = await client.GetAsync($"{_apiBaseUrl}/api/companies"))
                 {
                     if (companiesResponse.IsSuccessStatusCode)
                     {
@@ -73,7 +76,7 @@ namespace CRMSystem.Admin.Controllers
 
                 if (id != 0)
                 {
-                    using (var flowerResponse = await client.GetAsync($"http://localhost:5053/api/flowers/{id}"))
+                    using (var flowerResponse = await client.GetAsync($"{_apiBaseUrl}/api/flowers/{id}"))
                     {
                         if (flowerResponse.IsSuccessStatusCode)
                         {
@@ -113,7 +116,7 @@ namespace CRMSystem.Admin.Controllers
                         "application/json"
                     );
 
-                    using (var response = await client.PutAsync($"http://localhost:5053/api/flowers/{flower.Id}", content))
+                    using (var response = await client.PutAsync($"{_apiBaseUrl}/api/flowers/{flower.Id}", content))
                     {
                         if (!response.IsSuccessStatusCode)
                         {
@@ -141,7 +144,7 @@ namespace CRMSystem.Admin.Controllers
                         "application/json"
                     );
 
-                    using (var response = await client.PostAsync("http://localhost:5053/api/flowers", content))
+                    using (var response = await client.PostAsync($"{_apiBaseUrl}/api/flowers", content))
                     {
                         if (!response.IsSuccessStatusCode)
                         {
@@ -160,7 +163,6 @@ namespace CRMSystem.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-
         public async Task<IActionResult> Delete(int id)
         {
             var token = Request.Cookies["jwtToken"];
@@ -168,7 +170,7 @@ namespace CRMSystem.Admin.Controllers
 
             try
             {
-                using (var response = await client.DeleteAsync($"http://localhost:5053/api/flowers/{id}"))
+                using (var response = await client.DeleteAsync($"{_apiBaseUrl}/api/flowers/{id}"))
                 {
                     if (response.IsSuccessStatusCode)
                     {

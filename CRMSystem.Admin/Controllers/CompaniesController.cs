@@ -1,9 +1,7 @@
 ﻿using CRMSystem.Admin.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System.Net.Http.Headers;
-using System.Runtime.InteropServices;
 
 namespace CRMSystem.Admin.Controllers
 {
@@ -11,41 +9,45 @@ namespace CRMSystem.Admin.Controllers
     public class CompaniesController : Controller
     {
         private readonly ILogger<FloristsController> _logger;
+        private readonly string _apiBaseUrl;
         private HttpClient client = new HttpClient();
-        public CompaniesController(ILogger<FloristsController> logger)
+
+        public CompaniesController(ILogger<FloristsController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _apiBaseUrl = configuration["ApiSettings:BaseUrl"];
         }
+
         public async Task<IActionResult> Index()
         {
             var companies = new List<Company>();
             var token = Request.Cookies["jwtToken"];
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
-            using (var response = await client.GetAsync("http://localhost:5053/api/companies"))
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            using (var response = await client.GetAsync($"{_apiBaseUrl}/api/companies"))
             {
                 var json = await response.Content.ReadAsStringAsync();
                 companies = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Company>>(json);
             }
             return View(companies);
         }
+
         public async Task<IActionResult> Edit(int id)
         {
             if (id != 0)
             {
                 var company = new Company();
                 var token = Request.Cookies["jwtToken"];
-                client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue("Bearer", token);
-                using (var response = client.GetAsync($"http://localhost:5053/api/companies/{id}").Result)
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                using (var response = await client.GetAsync($"{_apiBaseUrl}/api/companies/{id}"))
                 {
-                    var json = response.Content.ReadAsStringAsync().Result;
+                    var json = await response.Content.ReadAsStringAsync();
                     company = Newtonsoft.Json.JsonConvert.DeserializeObject<Company>(json);
                 }
                 return View(company);
             }
             return View(new Company());
         }
+
         [HttpPost]
         public async Task<IActionResult> Edit(Company company)
         {
@@ -57,7 +59,7 @@ namespace CRMSystem.Admin.Controllers
                 try
                 {
                     // Получение существующей компании
-                    using (var response = await client.GetAsync($"http://localhost:5053/api/companies/{company.Id}"))
+                    using (var response = await client.GetAsync($"{_apiBaseUrl}/api/companies/{company.Id}"))
                     {
                         if (response.IsSuccessStatusCode)
                         {
@@ -76,7 +78,7 @@ namespace CRMSystem.Admin.Controllers
                                     "application/json"
                                 );
 
-                                using (var updateResponse = await client.PutAsync($"http://localhost:5053/api/companies/{company.Id}", content))
+                                using (var updateResponse = await client.PutAsync($"{_apiBaseUrl}/api/companies/{company.Id}", content))
                                 {
                                     if (!updateResponse.IsSuccessStatusCode)
                                     {
@@ -112,7 +114,7 @@ namespace CRMSystem.Admin.Controllers
                         "application/json"
                     );
 
-                    using (var createResponse = await client.PostAsync("http://localhost:5053/api/companies", content))
+                    using (var createResponse = await client.PostAsync($"{_apiBaseUrl}/api/companies", content))
                     {
                         if (!createResponse.IsSuccessStatusCode)
                         {
@@ -131,14 +133,13 @@ namespace CRMSystem.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        public async  Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var token = Request.Cookies["jwtToken"];
-            client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
             try
             {
-                using (var response = client.DeleteAsync($"http://localhost:5053/api/companies/{id}").Result)
+                using (var response = await client.DeleteAsync($"{_apiBaseUrl}/api/companies/{id}"))
                 {
                     if (response.IsSuccessStatusCode)
                     {

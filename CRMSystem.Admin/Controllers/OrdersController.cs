@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
 
 namespace CRMSystem.Admin.Controllers
 {
@@ -9,11 +10,14 @@ namespace CRMSystem.Admin.Controllers
     public class OrdersController : Controller
     {
         private readonly ILogger<OrdersController> _logger;
-        private readonly HttpClient client = new HttpClient();
+        private readonly HttpClient client;
+        private readonly string _apiBaseUrl;
 
-        public OrdersController(ILogger<OrdersController> logger)
+        public OrdersController(ILogger<OrdersController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _apiBaseUrl = configuration["ApiSettings:BaseUrl"];
+            client = new HttpClient();
         }
 
         public async Task<IActionResult> Index()
@@ -24,7 +28,7 @@ namespace CRMSystem.Admin.Controllers
 
             try
             {
-                using (var response = await client.GetAsync("http://localhost:5053/api/orders"))
+                using (var response = await client.GetAsync($"{_apiBaseUrl}/api/orders"))
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -59,8 +63,7 @@ namespace CRMSystem.Admin.Controllers
 
             try
             {
-                // Получение списка цветов
-                using (var flowersResponse = await client.GetAsync("http://localhost:5053/api/flowers"))
+                using (var flowersResponse = await client.GetAsync($"{_apiBaseUrl}/api/flowers"))
                 {
                     if (flowersResponse.IsSuccessStatusCode)
                     {
@@ -73,8 +76,7 @@ namespace CRMSystem.Admin.Controllers
                     }
                 }
 
-                // Получение списка флористов
-                using (var floristsResponse = await client.GetAsync("http://localhost:5053/api/florists"))
+                using (var floristsResponse = await client.GetAsync($"{_apiBaseUrl}/api/florists"))
                 {
                     if (floristsResponse.IsSuccessStatusCode)
                     {
@@ -87,10 +89,9 @@ namespace CRMSystem.Admin.Controllers
                     }
                 }
 
-                // Если редактируем существующий заказ
                 if (id != 0)
                 {
-                    using (var orderResponse = await client.GetAsync($"http://localhost:5053/api/orders/{id}"))
+                    using (var orderResponse = await client.GetAsync($"{_apiBaseUrl}/api/orders/{id}"))
                     {
                         if (orderResponse.IsSuccessStatusCode)
                         {
@@ -117,7 +118,6 @@ namespace CRMSystem.Admin.Controllers
         {
             var token = Request.Cookies["jwtToken"];
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
             var order = viewModel.Order;
 
             if (order.Id != 0)
@@ -130,7 +130,7 @@ namespace CRMSystem.Admin.Controllers
                         "application/json"
                     );
 
-                    using (var response = await client.PutAsync($"http://localhost:5053/api/orders/{order.Id}", content))
+                    using (var response = await client.PutAsync($"{_apiBaseUrl}/api/orders/{order.Id}", content))
                     {
                         if (!response.IsSuccessStatusCode)
                         {
@@ -158,7 +158,7 @@ namespace CRMSystem.Admin.Controllers
                         "application/json"
                     );
 
-                    using (var response = await client.PostAsync("http://localhost:5053/api/orders", content))
+                    using (var response = await client.PostAsync($"{_apiBaseUrl}/api/orders", content))
                     {
                         if (!response.IsSuccessStatusCode)
                         {
@@ -184,7 +184,7 @@ namespace CRMSystem.Admin.Controllers
 
             try
             {
-                using (var response = await client.DeleteAsync($"http://localhost:5053/api/orders/{id}"))
+                using (var response = await client.DeleteAsync($"{_apiBaseUrl}/api/orders/{id}"))
                 {
                     if (response.IsSuccessStatusCode)
                     {

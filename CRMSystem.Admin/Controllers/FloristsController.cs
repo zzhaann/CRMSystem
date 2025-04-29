@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.Http.Headers;
+using Microsoft.Extensions.Configuration;
 
 namespace CRMSystem.Admin.Controllers
 {
@@ -10,37 +11,38 @@ namespace CRMSystem.Admin.Controllers
     public class FloristsController : Controller
     {
         private readonly ILogger<FloristsController> _logger;
-        private readonly AppDbContext _context;
+        private readonly string _apiBaseUrl;
         private HttpClient client = new HttpClient();
-        public FloristsController(ILogger<FloristsController> logger, AppDbContext context)
+
+        public FloristsController(ILogger<FloristsController> logger, IConfiguration configuration)
         {
             _logger = logger;
-            _context = context;
+            _apiBaseUrl = configuration["ApiSettings:BaseUrl"];
         }
+
         public IActionResult Index()
         {
-            //var florists = _context.Florists.ToList();
             var florists = new List<Florist>();
             var token = Request.Cookies["jwtToken"];
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
-            using(var response = client.GetAsync("http://localhost:5053/api/florists").Result)
+            using (var response = client.GetAsync($"{_apiBaseUrl}/api/florists").Result)
             {
                 var json = response.Content.ReadAsStringAsync().Result;
                 florists = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Florist>>(json);
             }
             return View(florists);
         }
+
         public IActionResult Edit(int id)
         {
             if (id != 0)
             {
-                //var florist = _context.Florists.Find(id);
                 var florist = new Florist();
                 var token = Request.Cookies["jwtToken"];
                 client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
-                using (var response = client.GetAsync($"http://localhost:5053/api/florists/{id}").Result)
+                using (var response = client.GetAsync($"{_apiBaseUrl}/api/florists/{id}").Result)
                 {
                     var json = response.Content.ReadAsStringAsync().Result;
                     florist = Newtonsoft.Json.JsonConvert.DeserializeObject<Florist>(json);
@@ -49,6 +51,7 @@ namespace CRMSystem.Admin.Controllers
             }
             return View(new Florist());
         }
+
         [HttpPost]
         public async Task<IActionResult> Edit(Florist florist)
         {
@@ -59,31 +62,29 @@ namespace CRMSystem.Admin.Controllers
             {
                 try
                 {
-                    // Обновление существующего флориста
                     var content = new StringContent(
                         Newtonsoft.Json.JsonConvert.SerializeObject(florist),
                         System.Text.Encoding.UTF8,
                         "application/json"
                     );
 
-                    using (var response = await client.PutAsync($"http://localhost:5053/api/florists/{florist.Id}", content))
+                    using (var response = await client.PutAsync($"{_apiBaseUrl}/api/florists/{florist.Id}", content))
                     {
                         if (!response.IsSuccessStatusCode)
                         {
                             _logger.LogError("Failed to update florist with ID {Id}. Status code: {StatusCode}", florist.Id, response.StatusCode);
-                            return View(florist); // Возврат на форму с ошибкой
+                            return View(florist);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError("Error occurred while updating florist {Id}: {Message}", florist.Id, ex.Message);
-                    return View(florist); // Возврат на форму с ошибкой
+                    return View(florist);
                 }
             }
             else
             {
-                // Создание нового флориста
                 florist.CreatedAt = DateTime.Now;
                 florist.CreatedBy = User.Identity.Name;
 
@@ -95,22 +96,21 @@ namespace CRMSystem.Admin.Controllers
                         "application/json"
                     );
 
-                    using (var response = await client.PostAsync("http://localhost:5053/api/florists", content))
+                    using (var response = await client.PostAsync($"{_apiBaseUrl}/api/florists", content))
                     {
                         if (!response.IsSuccessStatusCode)
                         {
                             _logger.LogError("Failed to create florist. Status code: {StatusCode}", response.StatusCode);
-                            return View(florist); // Возврат на форму с ошибкой
+                            return View(florist);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError("Error occurred while creating florist: {Message}", ex.Message);
-                    return View(florist); // Возврат на форму с ошибкой
+                    return View(florist);
                 }
             }
-
             return RedirectToAction("Index");
         }
 
@@ -121,7 +121,7 @@ namespace CRMSystem.Admin.Controllers
                 new AuthenticationHeaderValue("Bearer", token);
             try
             {
-                using(var response = client.DeleteAsync($"http://localhost:5053/api/florists/{id}").Result)
+                using (var response = client.DeleteAsync($"{_apiBaseUrl}/api/florists/{id}").Result)
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -133,7 +133,7 @@ namespace CRMSystem.Admin.Controllers
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError("Error occurred while deleting florist with ID {Id}: {Message}", id, ex.Message);
             }
