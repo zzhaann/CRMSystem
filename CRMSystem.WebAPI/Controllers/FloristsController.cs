@@ -91,12 +91,6 @@ namespace CRMSystem.WebAPI.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Florist florist)
         {
-            if (florist == null)
-            {
-                _logger.LogError("Florist data is null.");
-                return BadRequest(new { message = "Florist data is required" });
-            }
-
             try
             {
                 var existingFlorist = _context.Florists.FirstOrDefault(f => f.Id == id);
