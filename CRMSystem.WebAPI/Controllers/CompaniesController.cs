@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Linq;
-using System;
-using Microsoft.EntityFrameworkCore;
 
 namespace CRMSystem.WebAPI.Controllers
 {
@@ -23,59 +20,31 @@ namespace CRMSystem.WebAPI.Controllers
             _logger = logger;
         }
 
-        // GET: api/companies
         [HttpGet]
-        public IActionResult Get()
+        public List<Company> Get()
         {
-            try
-            {
-                var companies = _context.Companies.Include(c => c.Flowers).ToList(); // Включаем цветы в запрос
-                _logger.LogInformation("Fetching all companies.");
-                return Ok(companies);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error fetching companies.");
-                return StatusCode(500, new { message = "Internal server error" });
-            }
+            _logger.LogInformation("Fetching all companies.");
+            return _context.Companies.ToList();
         }
 
-        // GET: api/companies/{id}
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            try
+            _logger.LogInformation("Fetching company with ID {Id}.", id);
+            var company = _context.Companies.FirstOrDefault(c => c.Id == id);
+            if (company == null)
             {
-                var company = _context.Companies.Include(c => c.Flowers) // Включаем цветы в запрос
-                                                .FirstOrDefault(c => c.Id == id);
-                if (company == null)
-                {
-                    _logger.LogWarning("Company with ID {Id} not found.", id);
-                    return NotFound(new { message = "Company not found" });
-                }
-                return Ok(company);
+                _logger.LogWarning("Company with ID {Id} not found.", id);
+                return NotFound(new { message = "Company not found" });
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error fetching company by ID.");
-                return StatusCode(500, new { message = "Internal server error" });
-            }
+            return Ok(company);
         }
 
-        // POST: api/companies
         [HttpPost]
         public IActionResult Post([FromBody] Company company)
         {
-            if (model == null)
-            {
-                _logger.LogError("Model is null.");
-                return BadRequest(new { message = "Invalid data" });
-            }
-
             try
             {
-                company.CreatedAt = DateTime.Now;
-                company.CreatedBy = "Admin";
                 _context.Companies.Add(company);
                 _context.SaveChanges();
                 _logger.LogInformation("Company created successfully: {@Company}", company);
@@ -83,76 +52,61 @@ namespace CRMSystem.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while creating company and flower.");
-                return StatusCode(500, new { message = "Internal server error" });
+                _logger.LogError(ex, "Error occurred while creating a company.");
+                var innerMessage = ex.InnerException?.Message;
+                return BadRequest(ex.Message + "innerMessage: " + innerMessage);
             }
         }
 
-        // PUT: api/companies/{id}
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromForm] Company company)
+        public IActionResult Put(int id, [FromBody] Company company)
         {
             try
             {
-                var existingCompany = _context.Companies.FirstOrDefault(c => c.Id == id);
+                var existingCompany = _context.Companies.FirstOrDefault(f => f.Id == id);
                 if (existingCompany != null)
                 {
-                    existingCompany.Name = model.Name;
-                    existingCompany.Address = model.Address;
-                    existingCompany.ContactPhone = model.ContactPhone;
-
+                    existingCompany.Name = company.Name;
+                    existingCompany.Address = company.Address;
+                    existingCompany.ContactPhone = company.ContactPhone;
                     _context.SaveChanges();
-
-                    var existingFlower = _context.Flowers.FirstOrDefault(f => f.CompanyId == id);
-                    if (existingFlower != null)
-                    {
-                        existingFlower.Name = model.FlowerName;
-                        existingFlower.Quantity = model.Quantity;
-                        existingFlower.Price = model.Price;
-                        existingFlower.ClientPrice = model.ClientPrice;
-                        existingFlower.InitialQuantity = model.Quantity;
-
-                        _context.SaveChanges();
-                        _logger.LogInformation("Company and flower updated successfully.");
-                        return Ok(new { message = "Company and flower updated successfully", existingCompany });
-                    }
-
-                    _logger.LogWarning("Flower not found for company ID {Id}.", id);
-                    return NotFound(new { message = "Flower not found" });
+                    _logger.LogInformation("Company with ID {Id} updated successfully: {@Company}", id, company);
+                    return Ok(new { message = "Company updated successfully", company });
                 }
-
-                _logger.LogWarning("Company with ID {Id} not found.", id);
-                return NotFound(new { message = "Company not found" });
+                else
+                {
+                    _logger.LogWarning("Company with ID {Id} not found.", id);
+                    return NotFound(new { message = "Company not found" });
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while updating company and flower.");
-                return StatusCode(500, new { message = "Internal server error" });
+                _logger.LogError(ex, "Error occurred while updating company with ID {Id}.", id);
+                var innerMessage = ex.InnerException?.Message;
+                return BadRequest(ex.Message + "innerMessage: " + innerMessage);
             }
         }
 
-        // DELETE: api/companies/{id}
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             try
             {
-                var company = _context.Companies.FirstOrDefault(c => c.Id == id);
-                if (company != null)
+                var company = _context.Companies.FirstOrDefault(f => f.Id == id);
+                if (company == null)
                 {
-                    _context.Companies.Remove(company);
-                    _context.SaveChanges();
-                    _logger.LogInformation("Company with ID {Id} deleted successfully.", id);
-                    return Ok(new { message = "Company deleted successfully" });
+                    _logger.LogWarning("Company with ID {Id} not found.", id);
+                    return NotFound();
                 }
-
-                _logger.LogWarning("Company with ID {Id} not found for deletion.", id);
-                return NotFound(new { message = "Company not found" });
+                _context.Companies.Remove(company);
+                _context.SaveChanges();
+                _logger.LogInformation("Company with ID {Id} deleted successfully.", id);
+                return Ok(new { message = "Company deleted successfully" });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while deleting company.");
-                return StatusCode(500, new { message = "Internal server error" });
+                _logger.LogError(ex, "Error occurred while deleting company with ID {Id}.", id);
+                return BadRequest(ex.Message);
             }
         }
     }

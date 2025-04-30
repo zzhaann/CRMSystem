@@ -11,7 +11,7 @@ namespace CRMSystem.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-   
+    [Authorize]
     public class FlowersController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -23,7 +23,6 @@ namespace CRMSystem.WebAPI.Controllers
             _logger = logger;
         }
 
-        // GET: api/flowers
         [HttpGet]
         public IActionResult Get()
         {
@@ -36,7 +35,6 @@ namespace CRMSystem.WebAPI.Controllers
             return Ok(flowers);
         }
 
-        // GET: api/flowers/{id}
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
@@ -49,7 +47,6 @@ namespace CRMSystem.WebAPI.Controllers
             return Ok(flower);
         }
 
-        // POST: api/flowers
         [HttpPost]
         public IActionResult Post([FromForm] Flower flower)
         {
@@ -70,7 +67,6 @@ namespace CRMSystem.WebAPI.Controllers
             }
         }
 
-        // PUT: api/flowers/{id}
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Flower flower)
         {
@@ -104,7 +100,6 @@ namespace CRMSystem.WebAPI.Controllers
             }
         }
 
-        // DELETE: api/flowers/{id}
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

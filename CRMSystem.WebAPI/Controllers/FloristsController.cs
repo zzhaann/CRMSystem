@@ -1,4 +1,5 @@
 ﻿using CRMSystem.WebAPI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,7 @@ namespace CRMSystem.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class FloristsController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -21,7 +23,6 @@ namespace CRMSystem.WebAPI.Controllers
             _logger = logger;
         }
 
-        // GET: api/florists
         [HttpGet]
         public IActionResult Get()
         {
@@ -43,7 +44,6 @@ namespace CRMSystem.WebAPI.Controllers
             }
         }
 
-        // GET: api/florists/{id}
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
@@ -64,7 +64,6 @@ namespace CRMSystem.WebAPI.Controllers
             }
         }
 
-        // POST: api/florists
         [HttpPost]
         public IActionResult Post([FromBody] Florist florist)
         {
@@ -89,7 +88,6 @@ namespace CRMSystem.WebAPI.Controllers
             }
         }
 
-        // PUT: api/florists/{id}
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] Florist florist)
         {
@@ -124,7 +122,6 @@ namespace CRMSystem.WebAPI.Controllers
             }
         }
 
-        // DELETE: api/florists/{id}
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
