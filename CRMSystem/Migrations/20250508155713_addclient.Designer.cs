@@ -4,6 +4,7 @@ using CRMSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CRMSystem.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250508155713_addclient")]
+    partial class addclient
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,6 +225,9 @@ namespace CRMSystem.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ContractNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -233,8 +239,12 @@ namespace CRMSystem.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("CustomerId")
-                        .HasColumnType("int");
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CustomerPhone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("FloristId")
                         .HasColumnType("int");
@@ -254,7 +264,7 @@ namespace CRMSystem.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
+                    b.HasIndex("ClientId");
 
                     b.HasIndex("FloristId");
 
@@ -409,9 +419,9 @@ namespace CRMSystem.Migrations
 
             modelBuilder.Entity("CRMSystem.Models.Order", b =>
                 {
-                    b.HasOne("CRMSystem.Models.Client", "Customer")
+                    b.HasOne("CRMSystem.Models.Client", null)
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerId");
+                        .HasForeignKey("ClientId");
 
                     b.HasOne("CRMSystem.Models.Florist", "Florist")
                         .WithMany()
@@ -422,8 +432,6 @@ namespace CRMSystem.Migrations
                     b.HasOne("CRMSystem.Models.Flower", "Flower")
                         .WithMany()
                         .HasForeignKey("FlowerId");
-
-                    b.Navigation("Customer");
 
                     b.Navigation("Florist");
 

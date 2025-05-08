@@ -11,12 +11,12 @@
             <th>Greated By</th>
             <th>ContractNumber</th>
             <th>Quantity</th>
-            <th>CustomerName</th>
-            <th>CustomerPhone</th>
+            <th>Клиент</th>
+            <th>Телефон клиента</th>
             <th>Price</th>
             <th>Florist</th>
-			<th>Flower</th>
-			<th>Status</th>
+            <th>Flower</th>
+            <th>Status</th>
             <th></th>
             <th></th>
         </tr>
@@ -30,12 +30,12 @@
                 <td>@item.CreatedBy</td>
                 <td>@item.ContractNumber</td>
                 <td>@item.Quantity</td>
-                <td>@item.CustomerName</td>
-                <td>@item.CustomerPhone</td>
+                <td>@(item.Customer?.Name ?? "-")</td>
+                <td>@(item.Customer?.Phone ?? "-")</td>
                 <td>@item.Price</td>
-                <td>@item.FloristId</td>
-				<td>@item.FlowerId</td>
-				<td>@item.Status</td>
+                <td>@(item.Florist?.FullName ?? $"{item.FloristId}")</td>
+                <td>@(item.Flower?.Name ?? $"{item.FlowerId}")</td>
+                <td>@item.Status</td>
                 <td>
                     <a href="@Url.Action("Edit", "Orders", new{id=item.Id})">edit</a>
                 </td>

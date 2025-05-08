@@ -1,12 +1,10 @@
-﻿@model List<CRMSystem.Models.Order>
-@using Microsoft.AspNetCore.Mvc.Localization
+﻿
 @inject IViewLocalizer localizer
 
 @{
-    ViewData["Title"] = localizer["Incoming"].Value.ToString();
+    ViewData["Title"] = localizer["MyCompany"].Value.ToString();
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <div class="app-main-layout-container">
     <div class="app-main-layout-mask"></div>
     <div class="app-main-layout">
@@ -15,7 +13,7 @@
         <div class="app-main-layout-header">
             <div class="app-main-layout-wrapper header">
                 <div class="page-heading">
-                    <h2>@localizer["IncomingOrders"].Value.ToString()</h2>
+                    <h2>@localizer["Inventory"].Value.ToString()</h2>
                 </div>
                 <div class="page-tabs-menu">
                     <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Incoming" ? "w--current" : "")">
@@ -79,8 +77,8 @@
                                                             <td>@order.Flower?.Name</td>
                                                             <td>@order.Quantity</td>
                                                             <td>@(order.Quantity * order.Flower?.ClientPrice ?? 0)</td>
-                                                            <td>@(order.Customer?.Name ?? "Не указан")</td>
-                                                            <td>@(order.Customer?.Phone ?? "Не указан")</td>
+                                                            <td>@(order.CustomerName ?? "Не указан")</td>
+                                                            <td>@order.CustomerPhone</td>
                                                             <td>@order.Florist?.FullName</td>
                                                             <td>
                                                                 <form asp-action="MoveToProcessing" asp-controller="Dashboard" method="post" class="d-inline">
@@ -131,33 +129,14 @@
                                                                     <label class="form-label">@localizer["Price"].Value.ToString()</label>
                                                                     <input type="number" class="form-control" name="Price" id="orderPrice" step="0.01" readonly />
                                                                 </div>
-
-                                                                <!-- Поля для клиента -->
                                                                 <div class="mb-3">
                                                                     <label class="form-label">@localizer["Client"].Value.ToString()</label>
-                                                                    <select class="form-select" id="clientSelect" onchange="handleClientSelection()">
-                                                                        <option value="">@localizer["NewClient"].Value.ToString()</option>
-                                                                        @foreach (var client in ViewBag.Clients as List<CRMSystem.Models.Client>)
-                                                                        {
-                                                                            <option value="@client.Id" data-phone="@client.Phone" data-name="@client.Name">
-                                                                                @client.Name (@client.Phone)
-                                                                            </option>
-                                                                        }
-                                                                    </select>
+                                                                    <input type="text" class="form-control" name="CustomerName" />
                                                                 </div>
-
-                                                                <div id="newClientFields">
-                                                                    <input type="hidden" name="CustomerId" id="customerId" />
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label">@localizer["ClientName"].Value.ToString()</label>
-                                                                        <input type="text" class="form-control" name="CustomerName" id="customerName" />
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label class="form-label">@localizer["PhoneNumber"].Value.ToString()</label>
-                                                                        <input type="text" class="form-control" name="CustomerPhone" id="customerPhone" required />
-                                                                    </div>
+                                                                <div class="mb-3">
+                                                                    <label class="form-label">@localizer["PhoneNumber"].Value.ToString()</label>
+                                                                    <input type="text" class="form-control" name="CustomerPhone" required />
                                                                 </div>
-
                                                                 <div class="mb-3">
                                                                     <label class="form-label">@localizer["Florist"].Value.ToString()</label>
                                                                     <select class="form-select" name="FloristId" required>
@@ -187,88 +166,3 @@
         </div>
     </div>
 </div>
-
-<!-- Script for animation delete and dynamic price update -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const flowerSelect = document.getElementById("flowerSelect");
-        const quantityInput = document.getElementById("orderQuantity");
-        const priceInput = document.getElementById("orderPrice");
-
-        function updatePrice() {
-            const selectedOption = flowerSelect.options[flowerSelect.selectedIndex];
-            const clientPrice = parseFloat(selectedOption.dataset.price);
-            const maxQuantity = parseInt(selectedOption.dataset.quantity);
-            const quantity = parseInt(quantityInput.value);
-
-            if (quantity > maxQuantity) {
-                quantityInput.value = maxQuantity;
-            }
-
-            priceInput.value = (clientPrice * quantityInput.value).toFixed(2);
-        }
-
-        flowerSelect.addEventListener("change", updatePrice);
-        quantityInput.addEventListener("input", updatePrice);
-
-        document.querySelectorAll(".delete-order-btn").forEach(button => {
-            button.addEventListener("click", function () {
-                let orderId = this.getAttribute("data-id");
-
-                if (confirm("Вы уверены, что хотите удалить этот заказ?")) {
-                    let row = document.getElementById("order-" + orderId);
-                    row.style.transition = "opacity 0.5s";
-                    row.style.opacity = "0";
-
-                    setTimeout(() => {
-                        fetch(`/Dashboard/Delete/${orderId}`, {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.message) {
-                                row.remove();
-                            } else {
-                                alert("Ошибка удаления заказа: " + data.error);
-                                row.style.opacity = "1";
-                            }
-                        })
-                        .catch(error => {
-                            alert("Ошибка соединения с сервером!");
-                            row.style.opacity = "1";
-                        });
-                    }, 500);
-                }
-            });
-        });
-    });
-
-    function handleClientSelection() {
-        const clientSelect = document.getElementById("clientSelect");
-        const customerId = document.getElementById("customerId");
-        const customerName = document.getElementById("customerName");
-        const customerPhone = document.getElementById("customerPhone");
-        const newClientFields = document.getElementById("newClientFields");
-
-        if (clientSelect.value === "") {
-            // Новый клиент
-            customerId.value = "";
-            customerName.value = "";
-            customerPhone.value = "";
-            newClientFields.style.display = "block";
-        } else {
-            // Существующий клиент
-            const selectedOption = clientSelect.options[clientSelect.selectedIndex];
-            customerId.value = clientSelect.value;
-            customerName.value = selectedOption.dataset.name || "";
-            customerPhone.value = selectedOption.dataset.phone || "";
-
-            // Поля заполнены, но всё равно отображаем для возможности редактирования
-            newClientFields.style.display = "block";
-            // В реальном сценарии можно скрыть поля: newClientFields.style.display = "none";
-        }
-    }
-</script>

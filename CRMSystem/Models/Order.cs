@@ -16,16 +16,13 @@ namespace CRMSystem.Models
         [Required]
         public int Quantity { get; set; }
 
-        public string? CustomerName { get; set; }
+        public int? CustomerId { get; set; }
 
-        [Required]
-        public string CustomerPhone { get; set; }
-
-
+        [ForeignKey("CustomerId")]
+        public Client? Customer { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
-
 
         public int FloristId { get; set; }
 

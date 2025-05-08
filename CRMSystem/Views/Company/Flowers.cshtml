@@ -1,0 +1,127 @@
+﻿@model IEnumerable<CRMSystem.Models.Flower>
+@inject IViewLocalizer localizer
+
+@{
+    ViewData["Title"] = localizer["Flowers"].Value.ToString();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="app-main-layout-container">
+    <div class="app-main-layout-mask"></div>
+    <div class="app-main-layout">
+        <!-- Header -->
+        <div class="app-main-layout-header">
+            <div class="app-main-layout-wrapper header">
+                <div class="page-heading">
+                    <h2>@localizer["Flowers"].Value.ToString()</h2>
+                </div>
+                <div class="page-tabs-menu">
+                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Clients" ? "w--current" : "")">
+                        @Html.ActionLink(localizer["Clients"].Value.ToString(), "Clients", "Company")
+                    </li>
+                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Florists" ? "w--current" : "")">
+                        @Html.ActionLink(localizer["Florists"].Value.ToString(), "Florists", "Company")
+                    </li>
+                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Companies" ? "w--current" : "")">
+                        @Html.ActionLink(localizer["Companies"].Value.ToString(), "Companies", "Company")
+                    </li>
+                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Flowers" ? "w--current" : "")">
+                        @Html.ActionLink(localizer["Flowers"].Value.ToString(), "Flowers", "Company")
+                    </li>
+                </div>
+            </div>
+        </div>
+        <!-- MAIN CONTENT -->
+        <div class="app-main-layout-wrapper">
+            <div class="app-main-layout-content">
+                <div class="section-inner">
+                    <div class="page-tabs-content">
+                        <div class="section">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col w-col w-col-12">
+                                        <div class="card p-4 shadow-lg">
+                                            <div class="card-heading">
+                                                <h4 class="mb-3">@localizer["FlowersList"].Value.ToString()</h4>
+                                            </div>
+
+                                            @if (TempData["ErrorMessage"] != null)
+                                            {
+                                                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                                            }
+                                            @if (TempData["SuccessMessage"] != null)
+                                            {
+                                                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                                            }
+
+                                            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addFlowerModal">
+                                                @localizer["AddFlower"].Value.ToString()
+                                            </button>
+
+                                            <div class="row">
+                                                @foreach (var flower in Model)
+                                                {
+                                                    <div class="col-md-4 mb-4">
+                                                        <div class="card shadow-sm h-100">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">@flower.Name</h5>
+                                                                <p class="card-text">
+                                                                    <strong>@localizer["Quantity"].Value.ToString():</strong> @flower.Quantity <br />
+                                                                    <strong>@localizer["Price"].Value.ToString():</strong> @flower.Price.ToString("C") <br />
+                                                                    <strong>@localizer["CreatedAt"].Value.ToString():</strong> @flower.CreatedAt.ToString("dd.MM.yyyy HH:mm")
+                                                                </p>
+                                                                <div class="d-flex justify-content-between">
+                                                                    <form asp-action="DeleteFlower" asp-controller="Company" method="post" class="d-inline">
+                                                                        <input type="hidden" name="id" value="@flower.Id" />
+                                                                        <button type="submit" class="btn btn-danger btn-sm">
+                                                                            @localizer["BtnDelete"].Value.ToString()
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+
+                                            <!-- Модальное окно добавления цветка -->
+                                            <div class="modal fade" id="addFlowerModal" tabindex="-1" aria-labelledby="addFlowerLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">@localizer["AddFlower"].Value.ToString()</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form asp-action="AddFlower" asp-controller="Company" method="post">
+                                                                <div class="mb-3">
+                                                                    <label class="form-label">@localizer["Name"].Value.ToString()</label>
+                                                                    <input type="text" class="form-control" name="Name" required />
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label class="form-label">@localizer["Quantity"].Value.ToString()</label>
+                                                                    <input type="number" class="form-control" name="Quantity" required />
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label class="form-label">@localizer["Price"].Value.ToString()</label>
+                                                                    <input type="number" step="0.01" class="form-control" name="Price" required />
+                                                                </div>
+                                                                <button type="submit" class="btn btn-primary">
+                                                                    @localizer["BtnAddFlower"].Value.ToString()
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Конец модального окна добавления цветка -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

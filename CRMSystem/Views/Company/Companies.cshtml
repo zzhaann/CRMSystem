@@ -1,0 +1,104 @@
+﻿@model IEnumerable<CRMSystem.Models.Company>
+@inject IViewLocalizer localizer
+
+@{
+    ViewData["Title"] = localizer["Companies"].Value.ToString();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="app-main-layout-container">
+    <div class="app-main-layout-mask"></div>
+    <div class="app-main-layout">
+        <!-- Header -->
+        <div class="app-main-layout-header">
+            <div class="app-main-layout-wrapper header">
+                <div class="page-heading">
+                    <h2>@localizer["Companies"].Value.ToString()</h2>
+                </div>
+                <div class="page-tabs-menu">
+                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Clients" ? "w--current" : "")">
+                        @Html.ActionLink(localizer["Clients"].Value.ToString(), "Clients", "Company")
+                    </li>
+                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Florists" ? "w--current" : "")">
+                        @Html.ActionLink(localizer["Florists"].Value.ToString(), "Florists", "Company")
+                    </li>
+                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Companies" ? "w--current" : "")">
+                        @Html.ActionLink(localizer["Companies"].Value.ToString(), "Companies", "Company")
+                    </li>
+                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Flowers" ? "w--current" : "")">
+                        @Html.ActionLink(localizer["Flowers"].Value.ToString(), "Flowers", "Company")
+                    </li>
+                </div>
+            </div>
+        </div>
+        <!-- MAIN CONTENT -->
+        <div class="app-main-layout-wrapper">
+            <div class="app-main-layout-content">
+                <div class="section-inner">
+                    <div class="page-tabs-content">
+                        <div class="section">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    @foreach (var company in Model)
+                                    {
+                                        <div class="col-md-4 mb-4">
+                                            <div class="card shadow-sm h-100">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">@company.Name</h5>
+                                                    <p class="card-text">
+                                                        <strong>@localizer["Address"].Value.ToString():</strong> @(company.Address ?? "Не указано")<br />
+                                                        <strong>@localizer["ContactPhone"].Value.ToString():</strong> @(company.ContactPhone ?? "Не указан")
+                                                    </p>
+                                                    <form asp-action="DeleteCompany" asp-controller="Company" method="post" class="d-inline">
+                                                        <input type="hidden" name="id" value="@company.Id" />
+                                                        <button type="submit" class="btn btn-danger btn-sm"
+                                                        @(company.Flowers.Any() ? "disabled" : "")>
+                                                            @localizer["BtnDelete"].Value.ToString()
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addCompanyModal">
+                                    @localizer["AddCompany"].Value.ToString()
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно добавления компании -->
+<div class="modal fade" id="addCompanyModal" tabindex="-1" aria-labelledby="addCompanyLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">@localizer["AddCompany"].Value.ToString()</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="AddCompany" asp-controller="Company" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">@localizer["Name"].Value.ToString()</label>
+                        <input type="text" class="form-control" name="Name" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">@localizer["Address"].Value.ToString()</label>
+                        <input type="text" class="form-control" name="Address" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">@localizer["ContactPhone"].Value.ToString()</label>
+                        <input type="text" class="form-control" name="ContactPhone" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        @localizer["BtnAddCompany"].Value.ToString()
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

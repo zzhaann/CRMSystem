@@ -14,10 +14,10 @@ namespace CRMSystem.Admin.Models
         [Required]
         public int Quantity { get; set; }
 
-        public string? CustomerName { get; set; }
+        public int? CustomerId { get; set; }
 
-        [Required]
-        public string CustomerPhone { get; set; }
+        [ForeignKey("CustomerId")]
+        public Client? Customer { get; set; }
 
 
 

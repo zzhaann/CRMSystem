@@ -49,13 +49,15 @@ namespace CRMSystem.Admin.Controllers
             return View(orders);
         }
 
+
         public async Task<IActionResult> Edit(int id)
         {
             var viewModel = new OrderViewModel
             {
                 Order = new Order(),
                 Flowers = new List<Flower>(),
-                Florists = new List<Florist>()
+                Florists = new List<Florist>(),
+                Clients = new List<Client>() // Добавление списка клиентов
             };
 
             var token = Request.Cookies["jwtToken"];
@@ -63,6 +65,7 @@ namespace CRMSystem.Admin.Controllers
 
             try
             {
+                // Загрузка списка цветов
                 using (var flowersResponse = await client.GetAsync($"{_apiBaseUrl}/api/flowers"))
                 {
                     if (flowersResponse.IsSuccessStatusCode)
@@ -76,6 +79,7 @@ namespace CRMSystem.Admin.Controllers
                     }
                 }
 
+                // Загрузка списка флористов
                 using (var floristsResponse = await client.GetAsync($"{_apiBaseUrl}/api/florists"))
                 {
                     if (floristsResponse.IsSuccessStatusCode)
@@ -89,6 +93,21 @@ namespace CRMSystem.Admin.Controllers
                     }
                 }
 
+                // Загрузка списка клиентов
+                using (var clientsResponse = await client.GetAsync($"{_apiBaseUrl}/api/clients"))
+                {
+                    if (clientsResponse.IsSuccessStatusCode)
+                    {
+                        var clientsJson = await clientsResponse.Content.ReadAsStringAsync();
+                        viewModel.Clients = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Client>>(clientsJson);
+                    }
+                    else
+                    {
+                        _logger.LogError("Failed to fetch clients. Status code: {StatusCode}", clientsResponse.StatusCode);
+                    }
+                }
+
+                // Если редактируем существующий заказ
                 if (id != 0)
                 {
                     using (var orderResponse = await client.GetAsync($"{_apiBaseUrl}/api/orders/{id}"))
@@ -112,6 +131,7 @@ namespace CRMSystem.Admin.Controllers
 
             return View(viewModel);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Edit(OrderViewModel viewModel)

@@ -45,15 +45,105 @@
                             <td width="5%" valign="top"> <div></div></td>
                             <td width="40%" valign="top">
                                 <div class="card">
+
                                     <div class="card-heading vertical">
                                         <h4>@localizer["ChangePassword"].Value.ToString()</h4>
+                                        <div class="heading-text">
+                                            <p class="hint inline">@localizer["ForgotYourPassword"].Value.ToString() <em><br /></em></p>
+                                            <a href="#" class="hint modal-action">@localizer["ResetPassword"].Value.ToString()</a>
+                                            <div class="modal">
+                                                <div class="modal-mask"></div>
+                                                <div class="modal-container">
+                                                    <a href="#" class="modal-close w-inline-block"></a>
+                                                    <div class="modal-title">
+                                                        <h4 class="text-center">@localizer["ResetPassword"].Value.ToString()</h4>
+                                                        <p class="text-center">@localizer["EnterEmail"].Value.ToString()</p>
+                                                    </div>
+                                                    <div class="w-form">
+                                                        <form id="email-form" name="email-form" data-name="Email Form">
+                                                            <div class="form-group">
+                                                                <label for="name-5" class="label">@localizer["Email"].Value.ToString()</label>
+                                                                <input type="email" class="input w-input" maxlength="256" name="name-3" data-name="Name 3" placeholder="@localizer["EnterYourEmail"].Value.ToString()" id="name-3" />
+                                                            </div>
+                                                            <input type="submit" value="@localizer["ResetPassword"].Value.ToString()" data-wait="Please wait..." class="button button-primary button-block w-button" />
+                                                        </form>
+                                                        <div class="success-message w-form-done">
+                                                            <div>Thank you! Your submission has been received!</div>
+                                                        </div>
+                                                        <div class="error-message w-form-fail">
+                                                            <div>Oops! Something went wrong while submitting the form.</div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Change Password Form -->
+                                            <div class="w-form">
+                                                <form asp-controller="User" asp-action="ChangePassword" method="post">
+                                                    <div class="form-group">
+                                                        <label asp-for="CurrentPassword" class="label">@localizer["CurrentPassword"].Value.ToString()</label>
+                                                        <input asp-for="CurrentPassword" class="input w-input" maxlength="256" placeholder="@localizer["EnterCurrentPassword"].Value.ToString()" />
+                                                        <span asp-validation-for="CurrentPassword" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label asp-for="NewPassword" class="label">@localizer["NewPassword"].Value.ToString()</label>
+                                                        <input asp-for="NewPassword" class="input w-input" maxlength="256" placeholder="@localizer["EnterNewPassword"].Value.ToString()" />
+                                                        <span asp-validation-for="NewPassword" class="text-danger"></span>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label asp-for="ConfirmNewPassword" class="label">@localizer["ConfirmNewPassword"].Value.ToString()</label>
+                                                        <input asp-for="ConfirmNewPassword" class="input w-input" maxlength="256" placeholder="@localizer["ConfirmNewPassword"].Value.ToString()" />
+                                                        <span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
+                                                    </div>
+                                                    <input type="submit" value="@localizer["ChangePassword"].Value.ToString()" data-wait="Please wait..." class="button button-primary w-button" />
+                                                </form>
+                                                <div class="success-message w-form-done">
+                                                    <div>Thank you! Your submission has been received!</div>
+                                                </div>
+                                                <div class="error-message w-form-fail">
+                                                    <div>Oops! Something went wrong while submitting the form.</div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                   
                                 </div>
                             </td>
                         </tr>
                     </table>
-
+                    <div class="card p-4 shadow mt-4">
+                        <table width="100%">
+                            <tr>
+                                <td width="50%" valign="top">
+                                    <div class="card">
+                                        <h4>@localizer["DeleteAccount"].Value.ToString()</h4>
+                                        <p>@localizer["DeleteDes"].Value.ToString()</p>
+                                        <a href="#" class="button button-outline modal-action w-button">@localizer["DeleteAccount"].Value.ToString()</a>
+                                        <div class="modal">
+                                            <div class="modal-mask"></div>
+                                            <div class="modal-container">
+                                                <a href="#" class="modal-close w-inline-block"></a>
+                                                <div class="modal-title">
+                                                    <h4 class="text-center">@localizer["DeleteAccount"].Value.ToString()</h4>
+                                                    <p class="text-center">@localizer["ARUSure"].Value.ToString()</p>
+                                                </div>
+                                                <div>
+                                                    <a href="#" class="button-block button button-primary w-button">@localizer["Cancel"].Value.ToString()</a>
+                                                    <form asp-controller="User" asp-action="DeleteAccount" method="post">
+                                                        <div class="form-group">
+                                                            <label asp-for="CurrentPassword" class="label">@localizer["CurrentPassword"].Value.ToString()</label>
+                                                            <input asp-for="CurrentPassword" class="input w-input" maxlength="256" placeholder="@localizer["EnterCurrentPassword"].Value.ToString()" />
+                                                            <input type="submit" value="@localizer["ConfirmDelete"].Value.ToString()" data-wait="Please wait..." class="button-block button button-primary w-button" />
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                   
                     <div class="card p-4 shadow mt-4">
                         <h4>@localizer["FloristsList"].Value.ToString()</h4>

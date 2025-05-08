@@ -66,8 +66,8 @@
                                                 <td>@order.Flower?.Name</td>
                                                 <td>@order.Flower?.Quantity</td>
                                                 <td>@order.Flower?.Price</td>
-                                                <td>@(order.CustomerName ?? "—")</td>
-                                                <td>@order.CustomerPhone</td>
+                                                <td>@(order.Customer?.Name ?? "Не указан")</td>
+                                                <td>@(order.Customer?.Phone ?? "Не указан")</td>
                                                 <td>@order.Florist?.FullName</td>
                                                 <td>
                                                     <form asp-action="MoveToCompleted" asp-controller="Dashboard" method="post" class="d-inline">

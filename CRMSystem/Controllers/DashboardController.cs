@@ -71,6 +71,20 @@ namespace CRMSystem.Controllers
                     ViewBag.Florists = new List<Florist>();
                     _logger.LogError("Ошибка при получении флористов. Код: {StatusCode}", floristsResponse.StatusCode);
                 }
+
+                // Получение списка клиентов
+                var clientsResponse = await client.GetAsync($"{_apiBaseUrl}/api/clients");
+                if (clientsResponse.IsSuccessStatusCode)
+                {
+                    var json = await clientsResponse.Content.ReadAsStringAsync();
+                    ViewBag.Clients = JsonConvert.DeserializeObject<List<Client>>(json);
+                    _logger.LogInformation("Получены данные для: клиенты");
+                }
+                else
+                {
+                    ViewBag.Clients = new List<Client>();
+                    _logger.LogError("Ошибка при получении клиентов. Код: {StatusCode}", clientsResponse.StatusCode);
+                }
             }
 
             return View(orders);
@@ -123,13 +137,55 @@ namespace CRMSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Order order)
+        public async Task<IActionResult> Create(Order order, string customerName, string customerPhone)
         {
             _logger.LogInformation("Создание заказа: ContractNumber={Contract}, Quantity={Quantity}, FloristId={FloristId}, FlowerId={FlowerId}",
                 order.ContractNumber, order.Quantity, order.FloristId, order.FlowerId);
 
             using (var client = CreateHttpClient())
             {
+                // Обработка информации о клиенте
+                if (order.CustomerId == null && !string.IsNullOrEmpty(customerPhone))
+                {
+                    // Поиск клиента по номеру телефона
+                    var clientResponse = await client.GetAsync($"{_apiBaseUrl}/api/clients/phone/{customerPhone}");
+
+                    if (clientResponse.IsSuccessStatusCode)
+                    {
+                        // Клиент найден - используем его ID
+                        var clientJson = await clientResponse.Content.ReadAsStringAsync();
+                        var existingClient = JsonConvert.DeserializeObject<Client>(clientJson);
+                        order.CustomerId = existingClient.Id;
+                        _logger.LogInformation("Найден существующий клиент с ID={Id}", existingClient.Id);
+                    }
+                    else if (clientResponse.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    {
+                        // Клиент не найден - создаем нового
+                        var newClient = new Client
+                        {
+                            Name = customerName ?? "",
+                            Phone = customerPhone
+                        };
+
+                        var clientJson = JsonConvert.SerializeObject(newClient);
+                        var clientContent = new StringContent(clientJson, Encoding.UTF8, "application/json");
+
+                        var createClientResponse = await client.PostAsync($"{_apiBaseUrl}/api/clients", clientContent);
+
+                        if (createClientResponse.IsSuccessStatusCode)
+                        {
+                            var createdClientJson = await createClientResponse.Content.ReadAsStringAsync();
+                            var createdClient = JsonConvert.DeserializeObject<Client>(createdClientJson);
+                            order.CustomerId = createdClient.Id;
+                            _logger.LogInformation("Создан новый клиент с ID={Id}", createdClient.Id);
+                        }
+                        else
+                        {
+                            _logger.LogError("Ошибка при создании клиента. Код: {StatusCode}", createClientResponse.StatusCode);
+                        }
+                    }
+                }
+
                 var json = JsonConvert.SerializeObject(order);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -149,6 +205,7 @@ namespace CRMSystem.Controllers
                 return RedirectToAction("Incoming");
             }
         }
+
 
         [HttpPost]
         public async Task<IActionResult> MoveToProcessing(int id)

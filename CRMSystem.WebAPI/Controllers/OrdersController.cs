@@ -21,19 +21,20 @@ namespace CRMSystem.WebAPI.Controllers
             _logger = logger;
         }
 
-        
+
         [HttpGet]
         public IActionResult Get()
         {
-            _logger.LogInformation("Получение всех заказов с флористами и цветами...");
+            _logger.LogInformation("Получение всех заказов с флористами, цветами и клиентами...");
             var orders = _context.Orders
                 .Include(o => o.Florist)
                 .Include(o => o.Flower)
+                .Include(o => o.Customer)
                 .ToList();
             return Ok(orders);
         }
 
-       
+
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
@@ -41,6 +42,7 @@ namespace CRMSystem.WebAPI.Controllers
             var order = _context.Orders
                 .Include(o => o.Florist)
                 .Include(o => o.Flower)
+                .Include(o => o.Customer)
                 .FirstOrDefault(x => x.Id == id);
 
             if (order == null)
@@ -52,7 +54,7 @@ namespace CRMSystem.WebAPI.Controllers
             return Ok(order);
         }
 
-        
+
         [HttpPost]
         public IActionResult Post([FromBody] Order order)
         {
@@ -72,7 +74,7 @@ namespace CRMSystem.WebAPI.Controllers
             }
         }
 
-        
+
         [HttpPut("{id}")]
         public IActionResult Put([FromBody] Order order)
         {
@@ -83,8 +85,7 @@ namespace CRMSystem.WebAPI.Controllers
                 {
                     existingOrder.ContractNumber = order.ContractNumber;
                     existingOrder.Quantity = order.Quantity;
-                    existingOrder.CustomerName = order.CustomerName;
-                    existingOrder.CustomerPhone = order.CustomerPhone;
+                    existingOrder.CustomerId = order.CustomerId;
                     existingOrder.Price = order.Price;
                     existingOrder.FloristId = order.FloristId;
                     existingOrder.FlowerId = order.FlowerId;
@@ -109,7 +110,7 @@ namespace CRMSystem.WebAPI.Controllers
             }
         }
 
-       
+
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
@@ -145,12 +146,13 @@ namespace CRMSystem.WebAPI.Controllers
             var orders = _context.Orders
                 .Include(o => o.Florist)
                 .Include(o => o.Flower)
+                .Include(o => o.Customer)
                 .Where(o => o.Status == "Incoming")
                 .ToList();
             return Ok(orders);
         }
 
-        
+
         [HttpGet("processing")]
         public IActionResult GetProcessingOrders()
         {
@@ -158,12 +160,13 @@ namespace CRMSystem.WebAPI.Controllers
             var orders = _context.Orders
                 .Include(o => o.Florist)
                 .Include(o => o.Flower)
+                .Include(o => o.Customer)
                 .Where(o => o.Status == "Processing")
                 .ToList();
             return Ok(orders);
         }
 
-        
+
         [HttpGet("completed")]
         public IActionResult GetCompletedOrders()
         {
@@ -171,6 +174,7 @@ namespace CRMSystem.WebAPI.Controllers
             var orders = _context.Orders
                 .Include(o => o.Florist)
                 .Include(o => o.Flower)
+                .Include(o => o.Customer)
                 .Where(o => o.Status == "Completed")
                 .ToList();
             return Ok(orders);

@@ -47,26 +47,6 @@
                     </div>
                 </div>
                 <div class="form-group last">
-                    <label class="col-md-3 control-label">CustomerName</label>
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" placeholder="Enter text"
-                               asp-for="Order.CustomerName">
-                        <span class="help-block">
-                            Enter CustomerName order.
-                        </span>
-                    </div>
-                </div>
-                <div class="form-group last">
-                    <label class="col-md-3 control-label">Customer phone</label>
-                    <div class="col-md-4">
-                        <input type="text" class="form-control" placeholder="Enter text"
-                               asp-for="Order.CustomerPhone">
-                        <span class="help-block">
-                            Enter Customer Phone order.
-                        </span>
-                    </div>
-                </div>
-                <div class="form-group last">
                     <label class="col-md-3 control-label">Price</label>
                     <div class="col-md-4">
                         <input type="text" class="form-control" placeholder="Enter text"
@@ -78,7 +58,24 @@
                 </div>
 
                 <hr />
-
+                <div class="form-group last">
+                    <label class="col-md-3 control-label">Клиент</label>
+                    <div class="col-md-4">
+                        <select asp-for="Order.CustomerId" class="form-control input-medium select2me" data-placeholder="Выберите...">
+                            <option value=""></option>
+                            @if (Model.Clients != null)
+                            {
+                                @foreach (var client in Model.Clients)
+                                {
+                                    <option value="@client.Id">@client.Name (@client.Phone)</option>
+                                }
+                            }
+                        </select>
+                        <span class="help-block">
+                            Выберите клиента.
+                        </span>
+                    </div>
+                </div>
                 <div class="form-group last">
                     <label class="col-md-3 control-label">Florist</label>
                     <div class="col-md-4">

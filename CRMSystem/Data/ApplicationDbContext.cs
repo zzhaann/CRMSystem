@@ -11,6 +11,7 @@ namespace CRMSystem.Data
         {
         }
 
+        public DbSet<Client> Clients { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Florist> Florists { get; set; }
         public DbSet<Company> Companies { get; set; }
