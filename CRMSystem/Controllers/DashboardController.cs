@@ -175,17 +175,35 @@ namespace CRMSystem.Controllers
                         if (createClientResponse.IsSuccessStatusCode)
                         {
                             var createdClientJson = await createClientResponse.Content.ReadAsStringAsync();
-                            var createdClient = JsonConvert.DeserializeObject<Client>(createdClientJson);
-                            order.CustomerId = createdClient.Id;
-                            _logger.LogInformation("Создан новый клиент с ID={Id}", createdClient.Id);
+                            _logger.LogInformation("Ответ API при создании клиента: {Response}", createdClientJson);
+
+                            // Десериализация с учетом структуры ответа
+                            var responseObject = JsonConvert.DeserializeObject<dynamic>(createdClientJson);
+                            var createdClient = JsonConvert.DeserializeObject<Client>(responseObject.client.ToString());
+
+                            if (createdClient != null && createdClient.Id > 0)
+                            {
+                                order.CustomerId = createdClient.Id;
+
+                                _logger.LogInformation("Создан новый клиент с ID={Id}", (int)createdClient.Id);
+                            }
+                            else
+                            {
+                                _logger.LogError("Ошибка: API вернул некорректный ID клиента.");
+                                TempData["ErrorMessage"] = "Ошибка создания клиента.";
+                                return RedirectToAction("Incoming");
+                            }
                         }
                         else
                         {
                             _logger.LogError("Ошибка при создании клиента. Код: {StatusCode}", createClientResponse.StatusCode);
+                            TempData["ErrorMessage"] = "Ошибка создания клиента.";
+                            return RedirectToAction("Incoming");
                         }
                     }
                 }
 
+                // Создание заказа
                 var json = JsonConvert.SerializeObject(order);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -205,7 +223,6 @@ namespace CRMSystem.Controllers
                 return RedirectToAction("Incoming");
             }
         }
-
 
         [HttpPost]
         public async Task<IActionResult> MoveToProcessing(int id)

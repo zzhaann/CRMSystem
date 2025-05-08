@@ -66,7 +66,6 @@
                                                                 <h5 class="card-title">@client.Name</h5>
                                                                 <p class="card-text">
                                                                     <strong>@localizer["PhoneNumber"].Value.ToString():</strong> @client.Phone <br />
-                                                                    <strong>@localizer["CreatedAt"].Value.ToString():</strong> @client.CreatedAt.ToString("dd.MM.yyyy HH:mm")
                                                                 </p>
                                                                 <div class="d-flex justify-content-between">
                                                                     <form asp-action="DeleteClient" asp-controller="Company" method="post" class="d-inline">

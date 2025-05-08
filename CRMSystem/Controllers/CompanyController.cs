@@ -160,6 +160,7 @@ namespace CRMSystem.Controllers
             var flowers = await _context.Flowers
                 .Include(f => f.Company)
                 .ToListAsync();
+            ViewBag.Companies = await _context.Companies.ToListAsync();
             return View(flowers);
         }
 
@@ -195,59 +196,6 @@ namespace CRMSystem.Controllers
 
             TempData["SuccessMessage"] = "Цветок успешно удалён!";
             return RedirectToAction("Flowers");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Add()
-        {
-            var companies = await _context.Companies
-                .Include(c => c.Flowers)
-                .ToListAsync();
-
-            ViewBag.Companies = companies;
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Add(CompanyWithFlowerViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                TempData["ErrorMessage"] = "Пожалуйста, заполните все обязательные поля.";
-
-                var companies = await _context.Companies
-                    .Include(c => c.Flowers)
-                    .ToListAsync();
-
-                ViewBag.Companies = companies;
-                return View(model);
-            }
-
-            var company = new Company
-            {
-                Name = model.Name,
-                Address = model.Address,
-                ContactPhone = model.ContactPhone
-            };
-
-            _context.Companies.Add(company);
-            await _context.SaveChangesAsync();
-
-            var flower = new Flower
-            {
-                Name = model.FlowerName,
-                Quantity = model.Quantity,
-                Price = model.Price,
-                CompanyId = company.Id,
-                ClientPrice = model.ClientPrice,
-                InitialQuantity = model.Quantity
-            };
-
-            _context.Flowers.Add(flower);
-            await _context.SaveChangesAsync();
-
-            TempData["SuccessMessage"] = "Компания и цветы успешно добавлены!";
-            return RedirectToAction("Add");
         }
     }
 }
