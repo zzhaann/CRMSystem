@@ -1,4 +1,11 @@
-﻿<div class="app-main-layout-container">
+﻿@model IEnumerable<CRMSystem.Models.Florist>
+@inject IViewLocalizer localizer
+
+@{
+    ViewData["Title"] = localizer["Florists"].Value.ToString();
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="app-main-layout-container">
     <div class="app-main-layout-mask"></div>
     <div class="app-main-layout">
         <!-- Header -->
@@ -31,26 +38,51 @@
                         <div class="section">
                             <div class="container-fluid">
                                 <div class="row">
-                                    @foreach (var florist in Model)
-                                    {
-                                            <div class="col-md-3 mb-4">
-                                                <div class="card shadow-sm h-100 text-center">
-                                                    <div class="card-body">
-                                                        <h5 class="card-title">@florist.FullName</h5>
-                                                        <form asp-action="DeleteFlorist" asp-controller="Company" method="post" class="mt-3">
-                                                            <input type="hidden" name="id" value="@florist.Id" />
-                                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                            @localizer["BtnDelete"].Value.ToString()
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </div>
+                                    <div class="col w-col w-col-12">
+                                        <div class="card p-4 shadow-lg">
+                                            <div class="card-heading">
+                                                <h4 class="mb-3">@localizer["FloristsList"].Value.ToString()</h4>
                                             </div>
-                                    }
+
+                                            @if (TempData["ErrorMessage"] != null)
+                                            {
+                                                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                                            }
+                                            @if (TempData["SuccessMessage"] != null)
+                                            {
+                                                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                                            }
+
+                                            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addFloristModal">
+                                                @localizer["AddFlorist"].Value.ToString()
+                                            </button>
+
+                                            <div class="row">
+                                                @foreach (var florist in Model)
+                                                {
+                                                    <div class="col-md-4 mb-4">
+                                                        <div class="card shadow-sm h-100">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">@florist.FullName</h5>
+                                                                <p class="card-text">
+                                                                    <strong>@localizer["PhoneNumber"].Value.ToString():</strong> @florist.Phone <br />
+                                                                </p>
+                                                                <div class="d-flex justify-content-between">
+                                                                    <form asp-action="DeleteFlorist" asp-controller="Company" method="post" class="d-inline">
+                                                                        <input type="hidden" name="id" value="@florist.Id" />
+                                                                        <button type="submit" class="btn btn-danger btn-sm">
+                                                                            @localizer["BtnDelete"].Value.ToString()
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addFloristModal">
-                                    @localizer["AddFlorist"].Value.ToString()
-                                </button>
                             </div>
                         </div>
                     </div>

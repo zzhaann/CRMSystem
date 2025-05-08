@@ -1,5 +1,4 @@
-﻿
-@inject IViewLocalizer localizer
+﻿@inject IViewLocalizer localizer
 
 @{
     ViewData["Title"] = localizer["MyCompany"].Value.ToString();
@@ -8,27 +7,28 @@
 <div class="app-main-layout-container">
     <div class="app-main-layout-mask"></div>
     <div class="app-main-layout">
-
         <!-- Header -->
         <div class="app-main-layout-header">
             <div class="app-main-layout-wrapper header">
                 <div class="page-heading">
-                    <h2>@localizer["Inventory"].Value.ToString()</h2>
+                    <h2>@localizer["MyCompany"].Value.ToString()</h2>
                 </div>
                 <div class="page-tabs-menu">
-                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Incoming" ? "w--current" : "")">
-                        @Html.ActionLink(localizer["Incoming"].Value.ToString(), "Incoming", "Dashboard")
+                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Clients" ? "w--current" : "")">
+                        @Html.ActionLink(localizer["Clients"].Value.ToString(), "Clients", "Company")
                     </li>
-                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Processing" ? "w--current" : "")">
-                        @Html.ActionLink(localizer["Processing"].Value.ToString(), "Processing", "Dashboard")
+                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Florists" ? "w--current" : "")">
+                        @Html.ActionLink(localizer["Florists"].Value.ToString(), "Florists", "Company")
                     </li>
-                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Completed" ? "w--current" : "")">
-                        @Html.ActionLink(localizer["Completed"].Value.ToString(), "Completed", "Dashboard")
+                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Companies" ? "w--current" : "")">
+                        @Html.ActionLink(localizer["Companies"].Value.ToString(), "Companies", "Company")
+                    </li>
+                    <li class="page-tab-link @(ViewContext.RouteData.Values["action"].ToString() == "Flowers" ? "w--current" : "")">
+                        @Html.ActionLink(localizer["Flowers"].Value.ToString(), "Flowers", "Company")
                     </li>
                 </div>
             </div>
         </div>
-
         <!-- MAIN CONTENT -->
         <div class="app-main-layout-wrapper">
             <div class="app-main-layout-content">
@@ -40,7 +40,7 @@
                                     <div class="col w-col w-col-12">
                                         <div class="card p-4 shadow-lg">
                                             <div class="card-heading">
-                                                <h4 class="mb-3">@localizer["IncomingOrders"].Value.ToString()</h4>
+                                                <h4 class="mb-3">@localizer["CompanyDashboard"].Value.ToString()</h4>
                                             </div>
 
                                             @if (TempData["ErrorMessage"] != null)
@@ -52,109 +52,155 @@
                                                 <div class="alert alert-success">@TempData["SuccessMessage"]</div>
                                             }
 
-                                            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addOrderModal">
-                                                @localizer["addingOrder"].Value.ToString()
-                                            </button>
-
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <th>@localizer["ContractNumber"].Value.ToString()</th>
-                                                        <th>@localizer["Flowers"].Value.ToString()</th>
-                                                        <th>@localizer["Count"].Value.ToString()</th>
-                                                        <th>@localizer["Price"].Value.ToString()</th>
-                                                        <th>@localizer["Client"].Value.ToString()</th>
-                                                        <th>@localizer["PhoneNumber"].Value.ToString()</th>
-                                                        <th>@localizer["Florist"].Value.ToString()</th>
-                                                        <th>@localizer["Action"].Value.ToString()</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach (var order in Model)
-                                                    {
-                                                        <tr id="order-@order.Id">
-                                                            <td>@order.ContractNumber</td>
-                                                            <td>@order.Flower?.Name</td>
-                                                            <td>@order.Quantity</td>
-                                                            <td>@(order.Quantity * order.Flower?.ClientPrice ?? 0)</td>
-                                                            <td>@(order.CustomerName ?? "Не указан")</td>
-                                                            <td>@order.CustomerPhone</td>
-                                                            <td>@order.Florist?.FullName</td>
-                                                            <td>
-                                                                <form asp-action="MoveToProcessing" asp-controller="Dashboard" method="post" class="d-inline">
-                                                                    <input type="hidden" name="id" value="@order.Id" />
-                                                                    <button type="submit" class="btn btn-warning btn-sm">
-                                                                        @localizer["BtnChangeStatus"].Value.ToString()
-                                                                    </button>
-                                                                </form>
-                                                                <button type="button" class="btn btn-danger btn-sm delete-order-btn" data-id="@order.Id">
-                                                                    @localizer["BtnDelete"].Value.ToString()
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    }
-                                                </tbody>
-                                            </table>
-
-                                            <!-- Модальное окно -->
-                                            <div class="modal fade" id="addOrderModal" tabindex="-1" aria-labelledby="addOrderLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">@localizer["addingOrder"].Value.ToString()</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            <div class="row mb-4">
+                                                <!-- Статистика по клиентам -->
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="card bg-primary text-white h-100">
+                                                        <div class="card-body py-5">
+                                                            <h5 class="card-title text-center">@localizer["Clients"].Value.ToString()</h5>
+                                                            <h2 class="display-4 text-center">@ViewBag.ClientsCount</h2>
                                                         </div>
-                                                        <div class="modal-body">
-                                                            <form asp-action="Create" asp-controller="Dashboard" method="post">
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">@localizer["ContractNumber"].Value.ToString()</label>
-                                                                    <input type="text" class="form-control" name="ContractNumber" required />
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">@localizer["Flowers"].Value.ToString()</label>
-                                                                    <select class="form-select" name="FlowerId" id="flowerSelect" required>
-                                                                        @foreach (var flower in ViewBag.Flowers as List<CRMSystem.Models.Flower>)
-                                                                        {
-                                                                            <option value="@flower.Id" data-price="@flower.ClientPrice" data-quantity="@flower.Quantity">
-                                                                                @flower.Name (остаток: @flower.Quantity)
-                                                                            </option>
-                                                                        }
-                                                                    </select>
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">@localizer["Count"].Value.ToString()</label>
-                                                                    <input type="number" class="form-control" name="Quantity" id="orderQuantity" min="1" required />
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">@localizer["Price"].Value.ToString()</label>
-                                                                    <input type="number" class="form-control" name="Price" id="orderPrice" step="0.01" readonly />
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">@localizer["Client"].Value.ToString()</label>
-                                                                    <input type="text" class="form-control" name="CustomerName" />
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">@localizer["PhoneNumber"].Value.ToString()</label>
-                                                                    <input type="text" class="form-control" name="CustomerPhone" required />
-                                                                </div>
-                                                                <div class="mb-3">
-                                                                    <label class="form-label">@localizer["Florist"].Value.ToString()</label>
-                                                                    <select class="form-select" name="FloristId" required>
-                                                                        @foreach (var florist in ViewBag.Florists as List<CRMSystem.Models.Florist>)
-                                                                        {
-                                                                            <option value="@florist.Id"> @florist.FullName</option>
-                                                                        }
-                                                                    </select>
-                                                                </div>
-                                                                <button type="submit" class="btn btn-primary">
-                                                                    @localizer["BtnAddOrder"].Value.ToString()
-                                                                </button>
-                                                            </form>
+                                                        <div class="card-footer d-flex">
+                                                            <a href="@Url.Action("Clients", "Company")" class="text-white text-decoration-none w-100 text-center">
+                                                                <span>@localizer["ViewAll"].Value.ToString()</span>
+                                                                <i class="bi bi-arrow-right-circle ms-2"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Статистика по флористам -->
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="card bg-success text-white h-100">
+                                                        <div class="card-body py-5">
+                                                            <h5 class="card-title text-center">@localizer["Florists"].Value.ToString()</h5>
+                                                            <h2 class="display-4 text-center">@ViewBag.FloristsCount</h2>
+                                                        </div>
+                                                        <div class="card-footer d-flex">
+                                                            <a href="@Url.Action("Florists", "Company")" class="text-white text-decoration-none w-100 text-center">
+                                                                <span>@localizer["ViewAll"].Value.ToString()</span>
+                                                                <i class="bi bi-arrow-right-circle ms-2"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Статистика по компаниям-поставщикам -->
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="card bg-info text-white h-100">
+                                                        <div class="card-body py-5">
+                                                            <h5 class="card-title text-center">@localizer["Companies"].Value.ToString()</h5>
+                                                            <h2 class="display-4 text-center">@ViewBag.CompaniesCount</h2>
+                                                        </div>
+                                                        <div class="card-footer d-flex">
+                                                            <a href="@Url.Action("Companies", "Company")" class="text-white text-decoration-none w-100 text-center">
+                                                                <span>@localizer["ViewAll"].Value.ToString()</span>
+                                                                <i class="bi bi-arrow-right-circle ms-2"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Статистика по цветам -->
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="card bg-warning text-dark h-100">
+                                                        <div class="card-body py-5">
+                                                            <h5 class="card-title text-center">@localizer["Flowers"].Value.ToString()</h5>
+                                                            <h2 class="display-4 text-center">@ViewBag.FlowersCount</h2>
+                                                        </div>
+                                                        <div class="card-footer d-flex">
+                                                            <a href="@Url.Action("Flowers", "Company")" class="text-dark text-decoration-none w-100 text-center">
+                                                                <span>@localizer["ViewAll"].Value.ToString()</span>
+                                                                <i class="bi bi-arrow-right-circle ms-2"></i>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- Конец модального окна -->
+
+                                            <!-- Последние добавленные цветы -->
+                                            <div class="row mb-4">
+                                                <div class="col-12">
+                                                    <div class="card shadow-sm">
+                                                        <div class="card-header">
+                                                            <h5>@localizer["RecentFlowers"].Value.ToString()</h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            @if (ViewBag.RecentFlowers != null && ViewBag.RecentFlowers.Count > 0)
+                                                            {
+                                                                <div class="table-responsive">
+                                                                    <table class="table table-striped">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>@localizer["Name"].Value.ToString()</th>
+                                                                                <th>@localizer["Company"].Value.ToString()</th>
+                                                                                <th>@localizer["Quantity"].Value.ToString()</th>
+                                                                                <th>@localizer["Price"].Value.ToString()</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            @foreach (var flower in ViewBag.RecentFlowers)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td>@flower.Name</td>
+                                                                                    <td>@(flower.Company?.Name ?? "-")</td>
+                                                                                    <td>@flower.Quantity</td>
+                                                                                    <td>@flower.ClientPrice.ToString("C")</td>
+                                                                                </tr>
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p class="text-center">@localizer["NoRecentFlowers"].Value.ToString()</p>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Последние добавленные клиенты -->
+                                            <div class="row mb-4">
+                                                <div class="col-12">
+                                                    <div class="card shadow-sm">
+                                                        <div class="card-header">
+                                                            <h5>@localizer["RecentClients"].Value.ToString()</h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            @if (ViewBag.RecentClients != null && ViewBag.RecentClients.Count > 0)
+                                                            {
+                                                                <div class="table-responsive">
+                                                                    <table class="table table-striped">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>@localizer["Name"].Value.ToString()</th>
+                                                                                <th>@localizer["PhoneNumber"].Value.ToString()</th>
+                                                                                <th>@localizer["CreatedAt"].Value.ToString()</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            @foreach (var client in ViewBag.RecentClients)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td>@client.Name</td>
+                                                                                    <td>@client.Phone</td>
+                                                                                    <td>@client.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                                                                                </tr>
+                                                                            }
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                            }
+                                                            else
+                                                            {
+                                                                <p class="text-center">@localizer["NoRecentClients"].Value.ToString()</p>
+                                                            }
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

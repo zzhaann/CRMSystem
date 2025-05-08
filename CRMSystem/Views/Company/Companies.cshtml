@@ -38,31 +38,53 @@
                         <div class="section">
                             <div class="container-fluid">
                                 <div class="row">
-                                    @foreach (var company in Model)
-                                    {
-                                        <div class="col-md-4 mb-4">
-                                            <div class="card shadow-sm h-100">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">@company.Name</h5>
-                                                    <p class="card-text">
-                                                        <strong>@localizer["Address"].Value.ToString():</strong> @(company.Address ?? "Не указано")<br />
-                                                        <strong>@localizer["ContactPhone"].Value.ToString():</strong> @(company.ContactPhone ?? "Не указан")
-                                                    </p>
-                                                    <form asp-action="DeleteCompany" asp-controller="Company" method="post" class="d-inline">
-                                                        <input type="hidden" name="id" value="@company.Id" />
-                                                        <button type="submit" class="btn btn-danger btn-sm"
-                                                        @(company.Flowers.Any() ? "disabled" : "")>
-                                                            @localizer["BtnDelete"].Value.ToString()
-                                                        </button>
-                                                    </form>
-                                                </div>
+                                    <div class="col w-col w-col-12">
+                                        <div class="card p-4 shadow-lg">
+                                            <div class="card-heading">
+                                                <h4 class="mb-3">@localizer["CompaniesList"].Value.ToString()</h4>
+                                            </div>
+
+                                            @if (TempData["ErrorMessage"] != null)
+                                            {
+                                                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+                                            }
+                                            @if (TempData["SuccessMessage"] != null)
+                                            {
+                                                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+                                            }
+
+                                            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addCompanyModal">
+                                                @localizer["AddCompany"].Value.ToString()
+                                            </button>
+
+                                            <div class="row">
+                                                @foreach (var company in Model)
+                                                {
+                                                    <div class="col-md-4 mb-4">
+                                                        <div class="card shadow-sm h-100">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">@company.Name</h5>
+                                                                <p class="card-text">
+                                                                    <strong>@localizer["Address"].Value.ToString():</strong> @(company.Address ?? "Не указано")<br />
+                                                                    <strong>@localizer["ContactPhone"].Value.ToString():</strong> @(company.ContactPhone ?? "Не указан")
+                                                                </p>
+                                                                <div class="d-flex justify-content-between">
+                                                                    <form asp-action="DeleteCompany" asp-controller="Company" method="post" class="d-inline">
+                                                                        <input type="hidden" name="id" value="@company.Id" />
+                                                                        <button type="submit" class="btn btn-danger btn-sm"
+                                                                        @(company.Flowers.Any() ? "disabled" : "")>
+                                                                            @localizer["BtnDelete"].Value.ToString()
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                }
                                             </div>
                                         </div>
-                                    }
+                                    </div>
                                 </div>
-                                <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addCompanyModal">
-                                    @localizer["AddCompany"].Value.ToString()
-                                </button>
                             </div>
                         </div>
                     </div>
