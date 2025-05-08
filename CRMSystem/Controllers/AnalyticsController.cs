@@ -10,10 +10,12 @@ namespace CRMSystem.Controllers
     public class AnalyticsController : Controller
     {
         private readonly ILogger<AnalyticsController> _logger;
+        private readonly string _apiBaseUrl;
 
-        public AnalyticsController(ILogger<AnalyticsController> logger)
+        public AnalyticsController(ILogger<AnalyticsController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _apiBaseUrl = configuration["ApiSettings:BaseUrl"];
         }
 
         private HttpClient CreateHttpClient()
@@ -24,13 +26,12 @@ namespace CRMSystem.Controllers
             return client;
         }
 
-        
         public async Task<IActionResult> AnalyzeDay()
         {
             _logger.LogInformation("Запрос аналитики за сегодня.");
 
             using var client = CreateHttpClient();
-            var response = await client.GetAsync("http://localhost:5053/api/orders/completed");
+            var response = await client.GetAsync($"{_apiBaseUrl}/api/orders/completed");
             if (!response.IsSuccessStatusCode)
             {
                 _logger.LogError("Не удалось получить завершённые заказы. Код: {StatusCode}", response.StatusCode);
@@ -89,27 +90,24 @@ namespace CRMSystem.Controllers
             return await AnalyzeByRange(DateTime.Today.AddDays(-7), DateTime.Today.AddDays(1), "день");
         }
 
-        
         public async Task<IActionResult> AnalyzeMonth()
         {
             var start = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
             return await AnalyzeByRange(start, DateTime.Today.AddDays(1), "день");
         }
 
-       
         public async Task<IActionResult> AnalyzeYear()
         {
             var start = new DateTime(DateTime.Today.Year, 1, 1);
             return await AnalyzeByRange(start, DateTime.Today.AddDays(1), "месяц");
         }
 
-        
         private async Task<IActionResult> AnalyzeByRange(DateTime start, DateTime end, string groupBy)
         {
             _logger.LogInformation("Анализ с {Start} по {End}, группировка по {GroupBy}", start, end, groupBy);
 
             using var client = CreateHttpClient();
-            var response = await client.GetAsync("http://localhost:5053/api/orders/completed");
+            var response = await client.GetAsync($"{_apiBaseUrl}/api/orders/completed");
             if (!response.IsSuccessStatusCode)
             {
                 _logger.LogError("Не удалось получить завершённые заказы. Код: {StatusCode}", response.StatusCode);

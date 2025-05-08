@@ -11,10 +11,12 @@ namespace CRMSystem.Controllers
     public class DashboardController : Controller
     {
         private readonly ILogger<DashboardController> _logger;
+        private readonly string _apiBaseUrl; // базовый URL из конфигурации
 
-        public DashboardController(ILogger<DashboardController> logger)
+        public DashboardController(ILogger<DashboardController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _apiBaseUrl = configuration["ApiSettings:BaseUrl"]; // считываем базовый URL
         }
 
         private HttpClient CreateHttpClient()
@@ -25,7 +27,6 @@ namespace CRMSystem.Controllers
             return client;
         }
 
-        
         public async Task<IActionResult> Incoming()
         {
             _logger.LogInformation("Запрос на получение заказов со статусом Incoming.");
@@ -33,7 +34,7 @@ namespace CRMSystem.Controllers
             List<Order> orders = new();
             using (var client = CreateHttpClient())
             {
-                var response = await client.GetAsync("http://localhost:5053/api/orders/incoming");
+                var response = await client.GetAsync($"{_apiBaseUrl}/api/orders/incoming");
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
@@ -45,8 +46,7 @@ namespace CRMSystem.Controllers
                     _logger.LogError("Ошибка при получении входящих заказов. Код: {StatusCode}", response.StatusCode);
                 }
 
-                
-                var flowersResponse = await client.GetAsync("http://localhost:5053/api/flowers");
+                var flowersResponse = await client.GetAsync($"{_apiBaseUrl}/api/flowers");
                 if (flowersResponse.IsSuccessStatusCode)
                 {
                     var json = await flowersResponse.Content.ReadAsStringAsync();
@@ -59,8 +59,7 @@ namespace CRMSystem.Controllers
                     _logger.LogError("Ошибка при получении цветов. Код: {StatusCode}", flowersResponse.StatusCode);
                 }
 
-                
-                var floristsResponse = await client.GetAsync("http://localhost:5053/api/florists");
+                var floristsResponse = await client.GetAsync($"{_apiBaseUrl}/api/florists");
                 if (floristsResponse.IsSuccessStatusCode)
                 {
                     var json = await floristsResponse.Content.ReadAsStringAsync();
@@ -77,7 +76,6 @@ namespace CRMSystem.Controllers
             return View(orders);
         }
 
-        
         public async Task<IActionResult> Processing()
         {
             _logger.LogInformation("Запрос на получение заказов со статусом Processing.");
@@ -85,7 +83,7 @@ namespace CRMSystem.Controllers
             List<Order> orders = new();
             using (var client = CreateHttpClient())
             {
-                var response = await client.GetAsync("http://localhost:5053/api/orders/processing");
+                var response = await client.GetAsync($"{_apiBaseUrl}/api/orders/processing");
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
@@ -101,7 +99,6 @@ namespace CRMSystem.Controllers
             return View(orders);
         }
 
-       
         public async Task<IActionResult> Completed()
         {
             _logger.LogInformation("Запрос на получение заказов со статусом Completed.");
@@ -109,7 +106,7 @@ namespace CRMSystem.Controllers
             List<Order> orders = new();
             using (var client = CreateHttpClient())
             {
-                var response = await client.GetAsync("http://localhost:5053/api/orders/completed");
+                var response = await client.GetAsync($"{_apiBaseUrl}/api/orders/completed");
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
@@ -125,7 +122,6 @@ namespace CRMSystem.Controllers
             return View(orders);
         }
 
-        
         [HttpPost]
         public async Task<IActionResult> Create(Order order)
         {
@@ -137,7 +133,7 @@ namespace CRMSystem.Controllers
                 var json = JsonConvert.SerializeObject(order);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await client.PostAsync("http://localhost:5053/api/orders", content);
+                var response = await client.PostAsync($"{_apiBaseUrl}/api/orders", content);
                 if (response.IsSuccessStatusCode)
                 {
                     _logger.LogInformation("Заказ успешно создан.");
@@ -154,7 +150,6 @@ namespace CRMSystem.Controllers
             }
         }
 
-        
         [HttpPost]
         public async Task<IActionResult> MoveToProcessing(int id)
         {
@@ -162,7 +157,7 @@ namespace CRMSystem.Controllers
 
             using (var client = CreateHttpClient())
             {
-                var response = await client.GetAsync($"http://localhost:5053/api/orders/{id}");
+                var response = await client.GetAsync($"{_apiBaseUrl}/api/orders/{id}");
                 if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogError("Ошибка при получении заказа ID={Id} перед обновлением. Код: {StatusCode}", id, response.StatusCode);
@@ -175,7 +170,7 @@ namespace CRMSystem.Controllers
 
                 var content = new StringContent(JsonConvert.SerializeObject(order), Encoding.UTF8, "application/json");
 
-                var updateResponse = await client.PutAsync($"http://localhost:5053/api/orders/{id}", content);
+                var updateResponse = await client.PutAsync($"{_apiBaseUrl}/api/orders/{id}", content);
                 if (updateResponse.IsSuccessStatusCode)
                     _logger.LogInformation("Статус заказа ID={Id} обновлён на Processing.", id);
                 else
@@ -185,7 +180,6 @@ namespace CRMSystem.Controllers
             return RedirectToAction("Incoming");
         }
 
-        
         [HttpPost]
         public async Task<IActionResult> MoveToCompleted(int id)
         {
@@ -193,7 +187,7 @@ namespace CRMSystem.Controllers
 
             using (var client = CreateHttpClient())
             {
-                var response = await client.GetAsync($"http://localhost:5053/api/orders/{id}");
+                var response = await client.GetAsync($"{_apiBaseUrl}/api/orders/{id}");
                 if (!response.IsSuccessStatusCode)
                 {
                     _logger.LogError("Ошибка при получении заказа ID={Id} перед обновлением. Код: {StatusCode}", id, response.StatusCode);
@@ -206,7 +200,7 @@ namespace CRMSystem.Controllers
 
                 var content = new StringContent(JsonConvert.SerializeObject(order), Encoding.UTF8, "application/json");
 
-                var updateResponse = await client.PutAsync($"http://localhost:5053/api/orders/{id}", content);
+                var updateResponse = await client.PutAsync($"{_apiBaseUrl}/api/orders/{id}", content);
                 if (updateResponse.IsSuccessStatusCode)
                     _logger.LogInformation("Статус заказа ID={Id} обновлён на Completed.", id);
                 else
@@ -216,7 +210,6 @@ namespace CRMSystem.Controllers
             return RedirectToAction("Processing");
         }
 
-        
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
@@ -224,7 +217,7 @@ namespace CRMSystem.Controllers
 
             using (var client = CreateHttpClient())
             {
-                var response = await client.DeleteAsync($"http://localhost:5053/api/orders/{id}");
+                var response = await client.DeleteAsync($"{_apiBaseUrl}/api/orders/{id}");
                 if (response.IsSuccessStatusCode)
                 {
                     _logger.LogInformation("Заказ ID={Id} успешно удалён.", id);

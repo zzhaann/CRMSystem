@@ -12,13 +12,14 @@ namespace CRMSystem.Controllers
     public class ContractsController : Controller
     {
         private readonly ILogger<ContractsController> _logger;
+        private readonly string _apiBaseUrl;
 
-        public ContractsController(ILogger<ContractsController> logger)
+        public ContractsController(ILogger<ContractsController> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _apiBaseUrl = configuration["ApiSettings:BaseUrl"];
         }
 
-        
         private HttpClient CreateHttpClient()
         {
             var client = new HttpClient();
@@ -27,7 +28,6 @@ namespace CRMSystem.Controllers
             return client;
         }
 
-       
         public async Task<IActionResult> Index()
         {
             _logger.LogInformation("Запрос на получение завершённых заказов.");
@@ -35,7 +35,7 @@ namespace CRMSystem.Controllers
             List<Order> completedOrders = new List<Order>();
             using (var client = CreateHttpClient())
             {
-                var response = await client.GetAsync("http://localhost:5053/api/orders/completed");
+                var response = await client.GetAsync($"{_apiBaseUrl}/api/orders/completed");
                 if (response.IsSuccessStatusCode)
                 {
                     var json = await response.Content.ReadAsStringAsync();
@@ -53,7 +53,6 @@ namespace CRMSystem.Controllers
                 _logger.LogWarning("Не найдено завершённых заказов.");
             }
 
-           
             var groupedOrders = completedOrders
                 .GroupBy(o => o.CreatedAt.Date)
                 .ToDictionary(g => g.Key, g => g.ToList());
