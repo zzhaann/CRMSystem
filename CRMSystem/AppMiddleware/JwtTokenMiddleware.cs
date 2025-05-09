@@ -19,16 +19,11 @@ namespace CRMSystem.AppMiddleware
 
         public async Task Invoke(HttpContext context, TokenService tokenService)
         {
-            // Проверяем, является ли запрос API-запросом
-            if (!IsApiRequest(context))
-            {
-                await _next(context);
-                return;
-            }
-
+            // Извлекаем токены из куки для любого запроса
             var accessToken = context.Request.Cookies["jwtToken"];
             var refreshToken = context.Request.Cookies["refreshToken"];
 
+            // Если токенов нет, пропускаем middleware
             if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
             {
                 await _next(context);
@@ -59,7 +54,7 @@ namespace CRMSystem.AppMiddleware
                     {
                         HttpOnly = true,
                         Secure = context.Request.IsHttps,
-                        SameSite = SameSiteMode.Strict
+                        SameSite = SameSiteMode.Lax // Изменено с Strict для работы с внешними API
                     });
 
                     _logger.LogInformation("Access token успешно обновлен");
@@ -71,11 +66,6 @@ namespace CRMSystem.AppMiddleware
             }
 
             await _next(context);
-        }
-        private bool IsApiRequest(HttpContext context)
-        {
-            var path = context.Request.Path.Value?.ToLower();
-            return path != null && path.StartsWith("/api/");
         }
     }
 
