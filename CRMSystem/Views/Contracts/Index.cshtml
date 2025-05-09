@@ -23,10 +23,175 @@
             <div class="app-main-layout-content">
                 <div class="section-inner">
                     <div class="card p-4 shadow">
+                        <!-- Фильтры и кнопка экспорта -->
+                        <div class="card-header bg-light mb-4">
+                            <h5 class="mb-3">@localizer["FilterTitle"].Value.ToString()</h5>
+                            <form method="get" action="@Url.Action("Index")" class="row g-3">
+                                <!-- Период дат -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="startDate">@localizer["StartDate"].Value.ToString()</label>
+                                        <input type="date" id="startDate" name="startDate" class="form-control" value="@ViewBag.StartDate" />
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="endDate">@localizer["EndDate"].Value.ToString()</label>
+                                        <input type="date" id="endDate" name="endDate" class="form-control" value="@ViewBag.EndDate" />
+                                    </div>
+                                </div>
+                                
+                                <!-- Фильтр по клиенту -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="clientId">@localizer["Client"].Value.ToString()</label>
+                                        <select id="clientId" name="clientId" class="form-select">
+                                            <option value="">@localizer["AllClients"].Value.ToString()</option>
+                                            @if (ViewBag.Clients != null)
+                                            {
+                                                @foreach (var client in ViewBag.Clients)
+                                                {
+                                                    <option value="@client.Id" selected="@(ViewBag.ClientId == client.Id)">
+                                                        @client.Name (@client.Phone)
+                                                    </option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Фильтр по флористу -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="floristId">@localizer["Florist"].Value.ToString()</label>
+                                        <select id="floristId" name="floristId" class="form-select">
+                                            <option value="">@localizer["AllFlorists"].Value.ToString()</option>
+                                            @if (ViewBag.Florists != null)
+                                            {
+                                                @foreach (var florist in ViewBag.Florists)
+                                                {
+                                                    <option value="@florist.Id" selected="@(ViewBag.FloristId == florist.Id)">
+                                                        @florist.FullName
+                                                    </option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Фильтр по типу цветов -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="flowerId">@localizer["Flowers"].Value.ToString()</label>
+                                        <select id="flowerId" name="flowerId" class="form-select">
+                                            <option value="">@localizer["AllFlowers"].Value.ToString()</option>
+                                            @if (ViewBag.Flowers != null)
+                                            {
+                                                @foreach (var flower in ViewBag.Flowers)
+                                                {
+                                                    <option value="@flower.Id" selected="@(ViewBag.FlowerId == flower.Id)">
+                                                        @flower.Name
+                                                    </option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                
+                                <!-- Фильтр по диапазону цен -->
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="minPrice">@localizer["MinPrice"].Value.ToString()</label>
+                                        <input type="number" id="minPrice" name="minPrice" class="form-control" 
+                                               min="0" step="0.01" value="@ViewBag.MinPrice" />
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="maxPrice">@localizer["MaxPrice"].Value.ToString()</label>
+                                        <input type="number" id="maxPrice" name="maxPrice" class="form-control" 
+                                               min="0" step="0.01" value="@ViewBag.MaxPrice" />
+                                    </div>
+                                </div>
+                                
+                                <!-- Фильтр по номеру контракта -->
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="contractNumber">@localizer["ContractNumber"].Value.ToString()</label>
+                                        <input type="text" id="contractNumber" name="contractNumber" class="form-control" 
+                                               value="@ViewBag.ContractNumber" placeholder="@localizer["SearchByContractNumber"].Value.ToString()" />
+                                    </div>
+                                </div>
+                                
+                                <!-- Кнопки фильтрации и сброса -->
+                                <div class="col-md-2">
+                                    <div class="d-flex mt-4">
+                                        <button type="submit" class="btn btn-primary me-2">@localizer["Filter"].Value.ToString()</button>
+                                        <a href="@Url.Action("Index")" class="btn btn-outline-secondary">@localizer["Reset"].Value.ToString()</a>
+                                    </div>
+                                </div>
+                                
+                                <!-- Кнопка экспорта -->
+                                <div class="col-md-2">
+                                    <div class="mt-4">
+                                        <a href="@Url.Action("ExportToExcel", new { 
+                                            startDate = ViewBag.StartDate, 
+                                            endDate = ViewBag.EndDate,
+                                            clientId = ViewBag.ClientId,
+                                            floristId = ViewBag.FloristId,
+                                            flowerId = ViewBag.FlowerId,
+                                            minPrice = ViewBag.MinPrice,
+                                            maxPrice = ViewBag.MaxPrice,
+                                            contractNumber = ViewBag.ContractNumber
+                                        })" class="btn btn-success">
+                                            <i class="fas fa-file-excel me-1"></i> @localizer["ExportToExcel"].Value.ToString()
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <!-- Статистика по отфильтрованным заказам -->
+                        <div class="card-body mb-4">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <div class="card bg-light p-3 text-center">
+                                        <h6>@localizer["TotalOrders"].Value.ToString()</h6>
+                                        <h3 class="mb-0">@Model.Values.SelectMany(x => x).Count()</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-light p-3 text-center">
+                                        <h6>@localizer["TotalClients"].Value.ToString()</h6>
+                                        <h3 class="mb-0">@Model.Values.SelectMany(x => x).Select(x => x.CustomerId).Distinct().Count()</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-light p-3 text-center">
+                                        <h6>@localizer["TotalRevenue"].Value.ToString()</h6>
+                                        <h3 class="mb-0">@Model.Values.SelectMany(x => x).Sum(x => x.Price).ToString("N0")</h3>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card bg-light p-3 text-center">
+                                        <h6>@localizer["AvgOrderValue"].Value.ToString()</h6>
+                                        @{
+                                            var totalOrders = Model.Values.SelectMany(x => x).Count();
+                                            var avgValue = totalOrders > 0 
+                                                ? Model.Values.SelectMany(x => x).Sum(x => x.Price) / totalOrders 
+                                                : 0;
+                                        }
+                                        <h3 class="mb-0">@avgValue.ToString("N0")</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         @if (!Model.Any())
                         {
-                            <p class="text-muted">@localizer["NoOrders"].Value.ToString()</p>
+                            <p class="text-muted text-center p-5">@localizer["NoOrders"].Value.ToString()</p>
                         }
                         else
                         {
@@ -35,11 +200,12 @@
                                 <div class="mb-5">
                                     <h5 class="text-primary mb-3">
                                         @group.Key.ToString("dd.MM.yyyy") – @localizer["Orders"].Value.ToString()
+                                        <span class="badge bg-primary ms-2">@group.Value.Count</span>
                                     </h5>
 
                                     <div class="table-responsive">
-                                        <table class="table table-bordered">
-                                            <thead>
+                                        <table class="table table-bordered table-hover">
+                                            <thead class="table-light">
                                                 <tr>
                                                     <th>@localizer["ContractNumber"].Value.ToString()</th>
                                                     <th>@localizer["Flowers"].Value.ToString()</th>
@@ -64,17 +230,35 @@
                                                     </tr>
                                                 }
                                             </tbody>
+                                            <tfoot>
+                                                <tr class="table-light">
+                                                    <td colspan="2" class="text-end fw-bold">@localizer["Total"].Value.ToString():</td>
+                                                    <td class="fw-bold">@group.Value.Sum(o => o.Flower?.Quantity ?? 0)</td>
+                                                    <td class="fw-bold">@group.Value.Sum(o => o.Flower?.Price ?? 0)</td>
+                                                    <td colspan="3"></td>
+                                                </tr>
+                                            </tfoot>
                                         </table>
                                     </div>
                                 </div>
                             }
                         }
-
                     </div>
                 </div>
             </div>
         </div>
         <!-- Main content END -->
-
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Инициализация элементов выбора с поиском
+            $('.form-select').select2({
+                placeholder: '@localizer["Select"].Value.ToString()',
+                allowClear: true
+            });
+        });
+    </script>
+}
