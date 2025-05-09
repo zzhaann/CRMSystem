@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -47,21 +48,25 @@ namespace CRMSystem.Controllers
                 var result = await _signInManager.PasswordSignInAsync(user.UserName, password, false, false);
                 if (result.Succeeded)
                 {
+                    // Генерируем access и refresh токены
                     var accessToken = await _tokenService.GenerateAccessToken(user);
                     var refreshToken = _tokenService.GenerateRefreshToken();
 
-                    // Сохраняем refresh token в базе данных
-                    user.RefreshToken = refreshToken;
-                    user.RefreshTokenExpiryTime = DateTime.Now.AddDays(
-                        Convert.ToDouble(_configuration["Jwt:RefreshTokenExpirationDays"]));
-                    await _userManager.UpdateAsync(user);
+                    // Устанавливаем токены в куки
+                    Response.Cookies.Append("jwtToken", accessToken, new CookieOptions
+                    {
+                        HttpOnly = true,
+                        Secure = Request.IsHttps,
+                        SameSite = SameSiteMode.Strict
+                    });
 
-                    // Возвращаем токены
-                    Response.Cookies.Append("jwtToken", accessToken);
                     Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions
                     {
                         HttpOnly = true,
-                        Secure = true // в продакшене установите true для HTTPS
+                        Secure = Request.IsHttps,
+                        SameSite = SameSiteMode.Strict,
+                        Expires = DateTimeOffset.Now.AddDays(
+                            Convert.ToDouble(_configuration["Jwt:RefreshTokenExpirationDays"] ?? "7"))
                     });
 
                     _logger.LogInformation("User {Email} logged in successfully.", email);
@@ -105,21 +110,6 @@ namespace CRMSystem.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            // Получаем текущего пользователя перед выходом
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (!string.IsNullOrEmpty(userId))
-            {
-                var user = await _userManager.FindByIdAsync(userId);
-                if (user != null)
-                {
-                    // Очищаем refresh token в базе данных
-                    user.RefreshToken = "";
-                    user.RefreshTokenExpiryTime = DateTime.MinValue;
-                    await _userManager.UpdateAsync(user);
-                    _logger.LogInformation("RefreshToken cleared for user ID: {UserId}", userId);
-                }
-            }
-
             // Удаляем куки с токенами
             Response.Cookies.Delete("jwtToken");
             Response.Cookies.Delete("refreshToken");
@@ -133,39 +123,51 @@ namespace CRMSystem.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest model)
+        [Route("api/account/refreshtoken")]
+        public IActionResult RefreshToken()
         {
-            string accessToken = model.AccessToken;
-            string refreshToken = model.RefreshToken;
+            // Получаем токены из куки
+            var accessToken = Request.Cookies["jwtToken"];
+            var refreshToken = Request.Cookies["refreshToken"];
 
-            // Получаем информацию из токена
-            var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
-            var userId = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            // Находим пользователя
-            var user = await _userManager.FindByIdAsync(userId);
-
-            if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+            if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
             {
-                return BadRequest("Invalid client request");
+                return BadRequest("No token provided");
             }
 
-            // Обновляем токены
-            var tokens = await _tokenService.RefreshTokens(accessToken, refreshToken, user);
-
-            // Сохраняем обновленный RefreshToken в базу данных
-            user.RefreshToken = tokens.RefreshToken;
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(
-                Convert.ToDouble(_configuration["Jwt:RefreshTokenExpirationDays"]));
-            await _userManager.UpdateAsync(user);
-
-            // Возвращаем новые токены
-            return Ok(new
+            // Проверяем истек ли access token
+            if (!_tokenService.IsTokenExpired(accessToken))
             {
-                AccessToken = tokens.AccessToken,
-                RefreshToken = tokens.RefreshToken
-            });
-        }
+                return BadRequest("Access token is still valid");
+            }
 
+            // Получаем информацию из токена
+            var principal = _tokenService.GetPrincipalFromToken(accessToken);
+            if (principal == null)
+            {
+                return BadRequest("Invalid access token");
+            }
+
+            try
+            {
+                // Генерируем новый access token
+                var newAccessToken = _tokenService.GenerateAccessTokenFromPrincipal(principal);
+
+                // Устанавливаем новый access token в куки
+                Response.Cookies.Append("jwtToken", newAccessToken, new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = Request.IsHttps,
+                    SameSite = SameSiteMode.Strict
+                });
+
+                return Ok(new { message = "Token refreshed successfully" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error refreshing token");
+                return BadRequest("Error refreshing token");
+            }
+        }
     }
 }

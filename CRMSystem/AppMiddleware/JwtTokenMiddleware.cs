@@ -1,10 +1,6 @@
 ﻿using CRMSystem.Models;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 
 namespace CRMSystem.AppMiddleware
 {
@@ -12,24 +8,19 @@ namespace CRMSystem.AppMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<JwtTokenMiddleware> _logger;
-        private readonly IConfiguration _configuration;
 
         public JwtTokenMiddleware(
             RequestDelegate next,
-            ILogger<JwtTokenMiddleware> logger,
-            IConfiguration configuration)
+            ILogger<JwtTokenMiddleware> logger)
         {
             _next = next;
             _logger = logger;
-            _configuration = configuration;
         }
 
-        public async Task Invoke(
-            HttpContext context,
-            UserManager<ApplicationUser> userManager,
-            TokenService tokenService)
+        public async Task Invoke(HttpContext context, TokenService tokenService)
         {
-            if (ShouldSkipMiddleware(context))
+            // Проверяем, является ли запрос API-запросом
+            if (!IsApiRequest(context))
             {
                 await _next(context);
                 return;
@@ -38,111 +29,53 @@ namespace CRMSystem.AppMiddleware
             var accessToken = context.Request.Cookies["jwtToken"];
             var refreshToken = context.Request.Cookies["refreshToken"];
 
-            // Если токенов нет, перенаправляем на логин
             if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(refreshToken))
             {
-                _logger.LogInformation("Токены отсутствуют, перенаправление на страницу входа");
-                context.Response.Redirect("/Account/Login");
+                await _next(context);
                 return;
             }
 
-            try
+            // Проверяем истек ли access token
+            if (tokenService.IsTokenExpired(accessToken))
             {
-                // Проверяем, истек ли access token
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var jwtToken = tokenHandler.ReadJwtToken(accessToken);
-                var tokenExpiryTime = jwtToken.ValidTo;
+                _logger.LogInformation("Access token истек, обновляем с помощью refresh token");
 
-                if (tokenExpiryTime < DateTime.UtcNow)
+                // Получаем информацию из access token
+                var principal = tokenService.GetPrincipalFromToken(accessToken);
+                if (principal == null)
                 {
-                    _logger.LogInformation("Access token истек, пробуем обновить через refresh token");
+                    _logger.LogWarning("Не удалось извлечь данные из access token");
+                    await _next(context);
+                    return;
+                }
 
-                    var principal = tokenService.GetPrincipalFromExpiredToken(accessToken);
-                    var userId = principal.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+                try
+                {
+                    // Генерируем новый access token
+                    var newAccessToken = tokenService.GenerateAccessTokenFromPrincipal(principal);
 
-                    if (string.IsNullOrEmpty(userId))
-                    {
-                        _logger.LogWarning("Невозможно извлечь ID пользователя из токена");
-                        await LogoutAndRedirect(context);
-                        return;
-                    }
-
-                    var user = await userManager.FindByIdAsync(userId);
-                    if (user == null)
-                    {
-                        _logger.LogWarning("Пользователь не найден");
-                        await LogoutAndRedirect(context);
-                        return;
-                    }
-
-                    // Проверяем валидность refresh token
-                    if (user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-                    {
-                        _logger.LogWarning("Refresh token недействителен или истек");
-                        await LogoutAndRedirect(context);
-                        return;
-                    }
-
-                    // Генерируем новые токены
-                    var tokens = await tokenService.RefreshTokens(accessToken, refreshToken, user);
-
-                    // Обновляем refresh token в базе данных
-                    user.RefreshToken = tokens.RefreshToken;
-                    user.RefreshTokenExpiryTime = DateTime.Now.AddDays(
-                        Convert.ToDouble(_configuration["Jwt:RefreshTokenExpirationDays"] ?? "7"));
-                    await userManager.UpdateAsync(user);
-
-                    // Устанавливаем новые токены в куки
-                    context.Response.Cookies.Append("jwtToken", tokens.AccessToken);
-                    context.Response.Cookies.Append("refreshToken", tokens.RefreshToken, new CookieOptions
+                    // Устанавливаем новый access token в куки
+                    context.Response.Cookies.Append("jwtToken", newAccessToken, new CookieOptions
                     {
                         HttpOnly = true,
-                        Secure = true
+                        Secure = context.Request.IsHttps,
+                        SameSite = SameSiteMode.Strict
                     });
 
-                    _logger.LogInformation("Токены успешно обновлены");
+                    _logger.LogInformation("Access token успешно обновлен");
                 }
-            }
-            catch (SecurityTokenException ex)
-            {
-                _logger.LogWarning(ex, "Ошибка при проверке токена");
-                await LogoutAndRedirect(context);
-                return;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Непредвиденная ошибка при проверке токенов");
-                await LogoutAndRedirect(context);
-                return;
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Ошибка при обновлении access token");
+                }
             }
 
             await _next(context);
         }
-
-        private bool ShouldSkipMiddleware(HttpContext context)
+        private bool IsApiRequest(HttpContext context)
         {
             var path = context.Request.Path.Value?.ToLower();
-            return path != null && (
-                path.Equals("/") ||
-                path.StartsWith("/account/login") ||
-                path.StartsWith("/account/signup") ||
-                path.StartsWith("/account/forgotpassword") ||
-                path.StartsWith("/css/") ||
-                path.StartsWith("/js/") ||
-                path.StartsWith("/lib/") ||
-                path.StartsWith("/images/") ||
-                path.EndsWith(".ico")
-            );
-        }
-
-        private async Task LogoutAndRedirect(HttpContext context)
-        {
-            context.Response.Cookies.Delete("jwtToken");
-            context.Response.Cookies.Delete("refreshToken");
-
-            await context.SignOutAsync(IdentityConstants.ApplicationScheme);
-
-            context.Response.Redirect("/Account/Login");
+            return path != null && path.StartsWith("/api/");
         }
     }
 

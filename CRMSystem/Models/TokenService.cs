@@ -11,6 +11,7 @@ namespace CRMSystem.Models
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
     }
+
     public class TokenService
     {
         private readonly IConfiguration _configuration;
@@ -19,34 +20,52 @@ namespace CRMSystem.Models
             _configuration = configuration;
         }
 
+        // Генерация Access Token на основе пользователя
         public async Task<string> GenerateAccessToken(ApplicationUser user)
         {
-            //полезная нагрузка
-            var claim = new List<Claim>()
+            var claims = new List<Claim>()
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
-            //заголовок
+
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            //"AccessTokenExpirationMinutes": 15
             var token = new JwtSecurityToken(
-
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
-                claims: claim,
+                claims: claims,
                 expires: DateTime.Now.AddMinutes(
-                    Convert.ToDouble(_configuration["Jwt:AccessTokenExpirationMinutes"])),
-
+                    Convert.ToDouble(_configuration["Jwt:AccessTokenExpirationMinutes"] ?? "15")),
                 signingCredentials: cred);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-        // Метод генерации Refresh Token
+
+        // Генерация Access Token на основе Principal (для обновления токена)
+        public string GenerateAccessTokenFromPrincipal(ClaimsPrincipal principal)
+        {
+            var claims = principal.Claims.ToList();
+
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(
+                    Convert.ToDouble(_configuration["Jwt:AccessTokenExpirationMinutes"] ?? "15")),
+                signingCredentials: cred);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        // Надежная генерация Refresh Token
         public string GenerateRefreshToken()
         {
             var randomNumber = new byte[64];
@@ -54,29 +73,9 @@ namespace CRMSystem.Models
             rng.GetBytes(randomNumber);
             return Convert.ToBase64String(randomNumber);
         }
-        // Метод для проверки и обновления токенов
-        public async Task<(string AccessToken, string RefreshToken)> RefreshTokens(string expiredAccessToken, string refreshToken, ApplicationUser user)
-        {
-            // Проверяем валидность Refresh Token (должен быть реализован в вашей модели пользователя)
-            // Этот метод предполагает, что у вас есть поле RefreshToken и RefreshTokenExpiryTime в ApplicationUser
-            if (user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-            {
-                throw new SecurityTokenException("Invalid refresh token");
-            }
 
-            // Генерируем новые токены
-            string newAccessToken = await GenerateAccessToken(user);
-            string newRefreshToken = GenerateRefreshToken();
-
-            // Обновляем Refresh Token в базе данных
-            user.RefreshToken = newRefreshToken;
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(
-                Convert.ToDouble(_configuration["Jwt:RefreshTokenExpirationDays"] ?? "7"));
-
-            return (newAccessToken, newRefreshToken);
-        }
-        // Метод для проверки валидности токена
-        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        // Получение информации из токена
+        public ClaimsPrincipal GetPrincipalFromToken(string token)
         {
             var tokenValidationParameters = new TokenValidationParameters
             {
@@ -84,21 +83,39 @@ namespace CRMSystem.Models
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"])),
-                ValidateLifetime = false // Не проверяем срок действия, так как токен может быть истекшим
+                ValidateLifetime = false // Не проверяем срок действия
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
 
-            // Проверяем, что токен использует правильный алгоритм безопасности
-            if (securityToken is not JwtSecurityToken jwtSecurityToken ||
-                !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
-                StringComparison.InvariantCultureIgnoreCase))
+            try
             {
-                throw new SecurityTokenException("Invalid token");
-            }
+                var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
 
-            return principal;
+                if (!(securityToken is JwtSecurityToken jwtSecurityToken) ||
+                    !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    throw new SecurityTokenException("Invalid token");
+                }
+
+                return principal;
+            }
+            catch
+            {
+                return null; // Возвращаем null вместо исключения для упрощения проверки
+            }
+        }
+
+        // Проверка, истек ли токен
+        public bool IsTokenExpired(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            if (tokenHandler.CanReadToken(token))
+            {
+                var jwtToken = tokenHandler.ReadJwtToken(token);
+                return jwtToken.ValidTo < DateTime.UtcNow;
+            }
+            return true; // Если токен невозможно прочитать, считаем его истекшим
         }
     }
 }
