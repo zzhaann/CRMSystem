@@ -55,9 +55,9 @@ namespace CRMSystem.Controllers
                     // Устанавливаем токены в куки
                     Response.Cookies.Append("jwtToken", accessToken, new CookieOptions
                     {
-                        HttpOnly = true,
+                        HttpOnly = false,
                         Secure = Request.IsHttps,
-                        SameSite = SameSiteMode.Strict
+                        SameSite = SameSiteMode.Lax
                     });
 
                     Response.Cookies.Append("refreshToken", refreshToken, new CookieOptions

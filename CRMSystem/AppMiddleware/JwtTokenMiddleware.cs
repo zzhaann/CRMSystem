@@ -52,7 +52,7 @@ namespace CRMSystem.AppMiddleware
                     // Устанавливаем новый access token в куки
                     context.Response.Cookies.Append("jwtToken", newAccessToken, new CookieOptions
                     {
-                        HttpOnly = true,
+                        HttpOnly = false,
                         Secure = context.Request.IsHttps,
                         SameSite = SameSiteMode.Lax // Изменено с Strict для работы с внешними API
                     });
