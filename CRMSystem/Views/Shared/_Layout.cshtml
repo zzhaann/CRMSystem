@@ -72,99 +72,98 @@
 
         <div class="app-navbar-container">
             <div class="app-navbar-menu">
-                <!-- Поиск -->
-                <div class="app-navbar-menu-item">
-                    <div data-delay="0" class="menu-dropdown w-dropdown">
-                        <div class="menu-dropdown-toggle dropdown-search w-dropdown-toggle"></div>
-                        <nav class="menu-dropdown-list search search-dropdown-list w-dropdown-list">
-                            <form action="/search" class="search w-form">
-                                <input type="search" class="search-input w-input" maxlength="256" name="query" placeholder="Search…" id="search" required="" />
-                                <input type="submit" value="Search" class="search-button w-button" />
-                            </form>
-                        </nav>
-                    </div>
-                </div>
-                <!-- Inbox (входящие сообщения) -->
-                <div class="app-navbar-menu-item">
-                    <div data-delay="0" class="menu-dropdown w-dropdown">
-                        <div class="menu-dropdown-toggle dropdown-message w-dropdown-toggle"></div>
-                        <nav class="menu-dropdown-list w-dropdown-list">
-                            <div class="notification-content-heading"><div>Inbox (6)</div></div>
-                            <div class="notification-content-body">
-                                <a href="#" class="notification-item w-inline-block">
-                                    <div class="notification-item-icon _1"></div>
-                                    <div class="notification-item-body">
-                                        <div class="notification-item-title">Anny Sanders</div>
-                                        <div class="notification-item-text">This is some text inside of a div block.</div>
-                                    </div>
-                                    <div class="notification-item-date">1h ago</div>
-                                </a>
-                                <a href="/inbox" class="custom-link">View all</a>
-                            </div>
-                        </nav>
-                    </div>
-                </div>
+                @* <!-- Поиск --> *@
+                @* <div class="app-navbar-menu-item"> *@
+                @*     <div data-delay="0" class="menu-dropdown w-dropdown"> *@
+                @*         <div class="menu-dropdown-toggle dropdown-search w-dropdown-toggle"></div> *@
+                @*         <nav class="menu-dropdown-list search search-dropdown-list w-dropdown-list"> *@
+                @*             <form action="/search" class="search w-form"> *@
+                @*                 <input type="search" class="search-input w-input" maxlength="256" name="query" placeholder="Search…" id="search" required="" /> *@
+                @*                 <input type="submit" value="Search" class="search-button w-button" /> *@
+                @*             </form> *@
+                @*         </nav> *@
+                @*     </div> *@
+                @* </div> *@
+                @* <!-- Inbox (входящие сообщения) --> *@
+                @* <div class="app-navbar-menu-item"> *@
+                @*     <div data-delay="0" class="menu-dropdown w-dropdown"> *@
+                @*         <div class="menu-dropdown-toggle dropdown-message w-dropdown-toggle"></div> *@
+                @*         <nav class="menu-dropdown-list w-dropdown-list"> *@
+                @*             <div class="notification-content-heading"><div>Inbox (6)</div></div> *@
+                @*             <div class="notification-content-body"> *@
+                @*                 <a href="#" class="notification-item w-inline-block"> *@
+                @*                     <div class="notification-item-icon _1"></div> *@
+                @*                     <div class="notification-item-body"> *@
+                @*                         <div class="notification-item-title">Anny Sanders</div> *@
+                @*                         <div class="notification-item-text">This is some text inside of a div block.</div> *@
+                @*                     </div> *@
+                @*                     <div class="notification-item-date">1h ago</div> *@
+                @*                 </a> *@
+                @*                 <a href="/inbox" class="custom-link">View all</a> *@
+                @*             </div> *@
+                @*         </nav> *@
+                @*     </div> *@
+                @* </div> *@
 
-                <!-- Уведомления -->
-                <div class="app-navbar-menu-item">
-                    <div data-delay="0" class="menu-dropdown w-dropdown">
-                        <div class="menu-dropdown-toggle dropdown-notification w-dropdown-toggle"></div>
-                        <nav class="menu-dropdown-list w-dropdown-list">
-                            <div data-duration-in="300" data-duration-out="100" class="notification-tabs w-tabs">
-                                <div class="tabs-menu notification-menu w-tab-menu">
-                                    <a data-w-tab="Tab 1" class="tab-link notification-tab w-inline-block w-tab-link">
-                                        <img src="images/5e906cca4576bc78b0b5afcf_icons8-notification-center-100.png" width="25" alt="" class="notification-icon" />
-                                        <div class="hint">Notifications</div>
-                                    </a>
-                                </div>
-                                <div class="tabs-content notification-content w-tab-content">
-                                    <div data-w-tab="Tab 1" class="w-tab-pane">
-                                        <div class="notification-content-heading"><div>Notifications (3)</div></div>
-                                        <div class="notification-content-body">
-                                            <a href="#" class="notification-item w-inline-block">
-                                                <div class="notification-item-icon _4"></div>
-                                                <div class="notification-item-body">
-                                                    <div class="hint"><span class="hint-bold">Izabella Watson</span> liked your post.</div>
-                                                    <div class="notification-item-time">2h ago</div>
-                                                </div>
-                                            </a>
-                                            <a href="/inbox" class="custom-link">View all</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </nav>
-                    </div>
-                </div>
+                @* <!-- Уведомления --> *@
+                @* <div class="app-navbar-menu-item"> *@
+                @*     <div data-delay="0" class="menu-dropdown w-dropdown"> *@
+                @*         <div class="menu-dropdown-toggle dropdown-notification w-dropdown-toggle"></div> *@
+                @*         <nav class="menu-dropdown-list w-dropdown-list"> *@
+                @*             <div data-duration-in="300" data-duration-out="100" class="notification-tabs w-tabs"> *@
+                @*                 <div class="tabs-menu notification-menu w-tab-menu"> *@
+                @*                     <a data-w-tab="Tab 1" class="tab-link notification-tab w-inline-block w-tab-link"> *@
+                @*                         <img src="images/5e906cca4576bc78b0b5afcf_icons8-notification-center-100.png" width="25" alt="" class="notification-icon" /> *@
+                @*                         <div class="hint">Notifications</div> *@
+                @*                     </a> *@
+                @*                 </div> *@
+                @*                 <div class="tabs-content notification-content w-tab-content"> *@
+                @*                     <div data-w-tab="Tab 1" class="w-tab-pane"> *@
+                @*                         <div class="notification-content-heading"><div>Notifications (3)</div></div> *@
+                @*                         <div class="notification-content-body"> *@
+                @*                             <a href="#" class="notification-item w-inline-block"> *@
+                @*                                 <div class="notification-item-icon _4"></div> *@
+                @*                                 <div class="notification-item-body"> *@
+                @*                                     <div class="hint"><span class="hint-bold">Izabella Watson</span> liked your post.</div> *@
+                @*                                     <div class="notification-item-time">2h ago</div> *@
+                @*                                 </div> *@
+                @*                             </a> *@
+                @*                             <a href="/inbox" class="custom-link">View all</a> *@
+                @*                         </div> *@
+                @*                     </div> *@
+                @*                 </div> *@
+                @*             </div> *@
+                @*         </nav> *@
+                @*     </div> *@
+                @* </div> *@
 
                 <!-- Профиль -->
                 <div class="app-navbar-menu-item">
-                    <div data-delay="0" class="menu-dropdown w-dropdown">
-                        <div class="menu-dropdown-toggle w-dropdown-toggle">
-                            <div class="navbar-dropdown-avatar"></div>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div data-delay="0" class="menu-dropdown w-dropdown">
+                            <div class="menu-dropdown-toggle w-dropdown-toggle">
+                                <div class="navbar-dropdown-avatar"></div>
+                                <span class="username">@User.Identity.Name</span>
+                            </div>
+                            <nav class="menu-dropdown-list w-dropdown-list">
+                                <a href="/User/Profile" class="menu-dropdown-link w-inline-block">
+                                    <div class="munu-dropdown-link-container">
+                                        <img src="images/5e8a0bc6f99d7c01a2738435_icons8-settings-100-20-2-.png" width="20" alt="" class="menu-dropdown-link-icon" />
+                                        <div>Settings</div>
+                                    </div>
+                                </a>
+                                <a href="/account/logout" class="menu-dropdown-link w-inline-block">
+                                    <div class="munu-dropdown-link-container">
+                                        <img src="images/5e8a0c2aa6b2c1d212a8243c_icons8-logout-rounded-left-100-20-1-.png" width="20" alt="" class="menu-dropdown-link-icon" />
+                                        <div>Logout</div>
+                                    </div>
+                                </a>
+                            </nav>
                         </div>
-                        <nav class="menu-dropdown-list w-dropdown-list">
-                            <a href="/user-profile" class="menu-dropdown-link w-inline-block">
-                                <div class="munu-dropdown-link-container">
-                                    <img src="images/5e8a0ba64fbaead7c8227773_icons8-male-user-100-20-3-.png" width="20" alt="" class="menu-dropdown-link-icon" />
-                                    <div>Profile</div>
-                                </div>
-                            </a>
-                            <a href="/account-settings/general" class="menu-dropdown-link w-inline-block">
-                                <div class="munu-dropdown-link-container">
-                                    <img src="images/5e8a0bc6f99d7c01a2738435_icons8-settings-100-20-2-.png" width="20" alt="" class="menu-dropdown-link-icon" />
-                                    <div>Settings</div>
-                                </div>
-                            </a>
-                            <a href="/account/logout" class="menu-dropdown-link w-inline-block">
-                                <div class="munu-dropdown-link-container">
-                                    <img src="images/5e8a0c2aa6b2c1d212a8243c_icons8-logout-rounded-left-100-20-1-.png" width="20" alt="" class="menu-dropdown-link-icon" />
-                                    <div>Logout</div>
-                                </div>
-                            </a>
-                        </nav>
-                    </div>
+                    }
                 </div>
+
 
             </div>
         </div>

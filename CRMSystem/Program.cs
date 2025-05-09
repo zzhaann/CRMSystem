@@ -140,6 +140,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseJwtTokenMiddleware();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
