@@ -150,13 +150,13 @@
                                 <a href="/User/Profile" class="menu-dropdown-link w-inline-block">
                                     <div class="munu-dropdown-link-container">
                                         <img src="images/5e8a0bc6f99d7c01a2738435_icons8-settings-100-20-2-.png" width="20" alt="" class="menu-dropdown-link-icon" />
-                                        <div>Settings</div>
+                                        <div>@localizer["AccountSettings"]</div>
                                     </div>
                                 </a>
                                 <a href="/account/logout" class="menu-dropdown-link w-inline-block">
                                     <div class="munu-dropdown-link-container">
                                         <img src="images/5e8a0c2aa6b2c1d212a8243c_icons8-logout-rounded-left-100-20-1-.png" width="20" alt="" class="menu-dropdown-link-icon" />
-                                        <div>Logout</div>
+                                        <div>@localizer["Logout"]</div>
                                     </div>
                                 </a>
                             </nav>
@@ -203,14 +203,14 @@
                                 <li class="sidebar-navbar-link link-projects w-nav-link" style="color: white; text-decoration: none;">
                                     @Html.ActionLink(localizer["Analytics"].Value.ToString(), "AnalyzeDay", "Analytics", null, new { style = "color: inherit; text-decoration: none;" })
                                 </li>
-                                <li class="sidebar-navbar-link link-projects w-nav-link" style="color: white; text-decoration: none;">
+                                <li class="sidebar-navbar-link link-contacts w-nav-link w--nav-link-open" style="color: white; text-decoration: none;">
                                     @Html.ActionLink(localizer["Company"].Value.ToString(), "index", "Company", null, new { style = "color: inherit; text-decoration: none;" })
                                 </li>
                                 
                             </div>
                         </div>
                         <div class="sidebar-navbar-footer">
-                            <div class="sidebar-navbar-link" >@Html.Partial("_Langs")</div>
+                            <div class="sidebar-navbar-link link-style-guide w-dropdown-link">@Html.Partial("_Langs")</div>
                             <a href="/account/logout" class="sidebar-navbar-link link-logout w-nav-link"> @localizer["Logout"].Value.ToString()</a>
                         </div>
                         <div class="sidebar-navbar-footer nav-toggle">
