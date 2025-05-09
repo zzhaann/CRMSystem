@@ -117,8 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AllClients" xml:space="preserve">
+    <value>All Clients</value>
+  </data>
+  <data name="AllFlorists" xml:space="preserve">
+    <value>All Florists</value>
+  </data>
+  <data name="AllFlowers" xml:space="preserve">
+    <value>All Flowers</value>
+  </data>
+  <data name="AvgOrderValue" xml:space="preserve">
+    <value>Average Order Value</value>
+  </data>
   <data name="Client" xml:space="preserve">
     <value>Client name</value>
+  </data>
+  <data name="ContractHeading" xml:space="preserve">
+    <value>Contracts</value>
   </data>
   <data name="ContractNumber" xml:space="preserve">
     <value>Contract number</value>
@@ -126,11 +141,32 @@
   <data name="Count" xml:space="preserve">
     <value>Count</value>
   </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="ExportToExcel" xml:space="preserve">
+    <value>Export to Excel</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="FilterTitle" xml:space="preserve">
+    <value>Selection filter</value>
+  </data>
   <data name="Florist" xml:space="preserve">
     <value>Florist</value>
   </data>
   <data name="Flowers" xml:space="preserve">
     <value>Flowers name</value>
+  </data>
+  <data name="MaxPrice" xml:space="preserve">
+    <value>Maximum price</value>
+  </data>
+  <data name="MinPrice" xml:space="preserve">
+    <value>Minimum price</value>
+  </data>
+  <data name="NoOrders" xml:space="preserve">
+    <value>No Orders</value>
   </data>
   <data name="Orders" xml:space="preserve">
     <value>Orders</value>
@@ -140,5 +176,26 @@
   </data>
   <data name="Price" xml:space="preserve">
     <value>Price</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="SearchByContractNumber" xml:space="preserve">
+    <value>Search by contract number</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Select</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="TotalClients" xml:space="preserve">
+    <value>Total Clients</value>
+  </data>
+  <data name="TotalOrders" xml:space="preserve">
+    <value>Total Orders</value>
+  </data>
+  <data name="TotalRevenue" xml:space="preserve">
+    <value>Total Revenue</value>
   </data>
 </root>

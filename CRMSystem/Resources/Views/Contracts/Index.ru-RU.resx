@@ -117,8 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AllClients" xml:space="preserve">
+    <value>Все клиенты</value>
+  </data>
+  <data name="AllFlorists" xml:space="preserve">
+    <value>Все флористы</value>
+  </data>
+  <data name="AllFlowers" xml:space="preserve">
+    <value>Все цветы</value>
+  </data>
+  <data name="AvgOrderValue" xml:space="preserve">
+    <value>Средний чек</value>
+  </data>
   <data name="Client" xml:space="preserve">
     <value>Имя клиента</value>
+  </data>
+  <data name="ContractHeading" xml:space="preserve">
+    <value>Контракты</value>
   </data>
   <data name="ContractNumber" xml:space="preserve">
     <value>Номер контракта</value>
@@ -126,11 +141,32 @@
   <data name="Count" xml:space="preserve">
     <value>Количество</value>
   </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>Дата окончания</value>
+  </data>
+  <data name="ExportToExcel" xml:space="preserve">
+    <value>Экспорт в Excel</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Поиск</value>
+  </data>
+  <data name="FilterTitle" xml:space="preserve">
+    <value>Критерии выбора</value>
+  </data>
   <data name="Florist" xml:space="preserve">
     <value>Флорист</value>
   </data>
   <data name="Flowers" xml:space="preserve">
     <value>Название цветов</value>
+  </data>
+  <data name="MaxPrice" xml:space="preserve">
+    <value>Максимальная цена</value>
+  </data>
+  <data name="MinPrice" xml:space="preserve">
+    <value>Минимальная цена</value>
+  </data>
+  <data name="NoOrders" xml:space="preserve">
+    <value>Нет заказов</value>
   </data>
   <data name="Orders" xml:space="preserve">
     <value>Заказы</value>
@@ -140,5 +176,26 @@
   </data>
   <data name="Price" xml:space="preserve">
     <value>Цена</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Сброс</value>
+  </data>
+  <data name="SearchByContractNumber" xml:space="preserve">
+    <value>Поиск по номеру контракта</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Выбрать</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Дата начала</value>
+  </data>
+  <data name="TotalClients" xml:space="preserve">
+    <value>Всего клиентов</value>
+  </data>
+  <data name="TotalOrders" xml:space="preserve">
+    <value>Всего заказов</value>
+  </data>
+  <data name="TotalRevenue" xml:space="preserve">
+    <value>Общий доход</value>
   </data>
 </root>

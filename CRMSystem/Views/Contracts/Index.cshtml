@@ -124,32 +124,38 @@
                                                value="@ViewBag.ContractNumber" placeholder="@localizer["SearchByContractNumber"].Value.ToString()" />
                                     </div>
                                 </div>
-                                
-                                <!-- Кнопки фильтрации и сброса -->
+
+                                <!-- Іздеу және Қалпына келтіру -->
                                 <div class="col-md-2">
-                                    <div class="d-flex mt-4">
-                                        <button type="submit" class="btn btn-primary me-2">@localizer["Filter"].Value.ToString()</button>
-                                        <a href="@Url.Action("Index")" class="btn btn-outline-secondary">@localizer["Reset"].Value.ToString()</a>
+                                    <div class="d-flex mt-4 gap-2">
+                                        <button type="submit" class="btn btn-primary btn-sm w-auto px-3">
+                                            @localizer["Filter"].Value.ToString()
+                                        </button>
+                                        <a href="@Url.Action("Index")" class="btn btn-outline-secondary btn-sm w-auto px-3">
+                                            @localizer["Reset"].Value.ToString()
+                                        </a>
                                     </div>
                                 </div>
-                                
-                                <!-- Кнопка экспорта -->
+
+                                <!-- Excel-ге экспорттау -->
                                 <div class="col-md-2">
                                     <div class="mt-4">
-                                        <a href="@Url.Action("ExportToExcel", new { 
-                                            startDate = ViewBag.StartDate, 
-                                            endDate = ViewBag.EndDate,
-                                            clientId = ViewBag.ClientId,
-                                            floristId = ViewBag.FloristId,
-                                            flowerId = ViewBag.FlowerId,
-                                            minPrice = ViewBag.MinPrice,
-                                            maxPrice = ViewBag.MaxPrice,
-                                            contractNumber = ViewBag.ContractNumber
-                                        })" class="btn btn-success">
+                                        <a href="@Url.Action("ExportToExcel", new {
+                                                    startDate = ViewBag.StartDate,
+                                                    endDate = ViewBag.EndDate,
+                                                    clientId = ViewBag.ClientId,
+                                                    floristId = ViewBag.FloristId,
+                                                    flowerId = ViewBag.FlowerId,
+                                                    minPrice = ViewBag.MinPrice,
+                                                    maxPrice = ViewBag.MaxPrice,
+                                                    contractNumber = ViewBag.ContractNumber
+                                                })" class="btn btn-success btn-sm w-auto px-3">
                                             <i class="fas fa-file-excel me-1"></i> @localizer["ExportToExcel"].Value.ToString()
                                         </a>
                                     </div>
                                 </div>
+
+
                             </form>
                         </div>
                         

@@ -117,8 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AllClients" xml:space="preserve">
+    <value>Барлық клиенттер</value>
+  </data>
+  <data name="AllFlorists" xml:space="preserve">
+    <value>Барлық флористтер</value>
+  </data>
+  <data name="AllFlowers" xml:space="preserve">
+    <value>Барлық гүлдер</value>
+  </data>
+  <data name="AvgOrderValue" xml:space="preserve">
+    <value>Орташа тапсырыс құны</value>
+  </data>
   <data name="Client" xml:space="preserve">
     <value>Тапсырыс берушінің есімі</value>
+  </data>
+  <data name="ContractHeading" xml:space="preserve">
+    <value>Тапсырыстар</value>
   </data>
   <data name="ContractNumber" xml:space="preserve">
     <value>Келісімшарт нөмірі</value>
@@ -126,11 +141,32 @@
   <data name="Count" xml:space="preserve">
     <value>Саны</value>
   </data>
+  <data name="EndDate" xml:space="preserve">
+    <value>Аяқталу күні</value>
+  </data>
+  <data name="ExportToExcel" xml:space="preserve">
+    <value>Excel-ге экспорттау</value>
+  </data>
+  <data name="Filter" xml:space="preserve">
+    <value>Іздеу</value>
+  </data>
+  <data name="FilterTitle" xml:space="preserve">
+    <value>Таңдау критерийі</value>
+  </data>
   <data name="Florist" xml:space="preserve">
     <value>Флорист</value>
   </data>
   <data name="Flowers" xml:space="preserve">
     <value>Гүл атауы</value>
+  </data>
+  <data name="MaxPrice" xml:space="preserve">
+    <value>Максималды баға</value>
+  </data>
+  <data name="MinPrice" xml:space="preserve">
+    <value>Минималды баға</value>
+  </data>
+  <data name="NoOrders" xml:space="preserve">
+    <value>Тапсырыс жоқ</value>
   </data>
   <data name="Orders" xml:space="preserve">
     <value>Тапсырыстар</value>
@@ -140,5 +176,26 @@
   </data>
   <data name="Price" xml:space="preserve">
     <value>Бағасы</value>
+  </data>
+  <data name="Reset" xml:space="preserve">
+    <value>Қалпына келтіру</value>
+  </data>
+  <data name="SearchByContractNumber" xml:space="preserve">
+    <value>Контракт нөмірі бойынша іздеу</value>
+  </data>
+  <data name="Select" xml:space="preserve">
+    <value>Таңдау</value>
+  </data>
+  <data name="StartDate" xml:space="preserve">
+    <value>Басталу күні</value>
+  </data>
+  <data name="TotalClients" xml:space="preserve">
+    <value>Жалпы клиенттер</value>
+  </data>
+  <data name="TotalOrders" xml:space="preserve">
+    <value>Жалпы тапсырыстар</value>
+  </data>
+  <data name="TotalRevenue" xml:space="preserve">
+    <value>Жалпы табыс</value>
   </data>
 </root>
