@@ -194,6 +194,8 @@
         const flowerSelect = document.getElementById("flowerSelect");
         const quantityInput = document.getElementById("orderQuantity");
         const priceInput = document.getElementById("orderPrice");
+        const addOrderModal = document.getElementById('addOrderModal');
+        const contractNumberInput = document.querySelector('input[name="ContractNumber"]');
 
         function updatePrice() {
             const selectedOption = flowerSelect.options[flowerSelect.selectedIndex];
@@ -208,8 +210,28 @@
             priceInput.value = (clientPrice * quantityInput.value).toFixed(2);
         }
 
-        flowerSelect.addEventListener("change", updatePrice);
-        quantityInput.addEventListener("input", updatePrice);
+        if (flowerSelect && quantityInput && priceInput) {
+            flowerSelect.addEventListener("change", updatePrice);
+            quantityInput.addEventListener("input", updatePrice);
+        }
+
+        if (addOrderModal && contractNumberInput) {
+            addOrderModal.addEventListener('show.bs.modal', function () {
+                const now = new Date();
+                const randomSuffix = Math.random().toString(36).substring(2, 4).toUpperCase();
+
+                const generatedNumber = "ORD-" +
+                    now.getFullYear().toString().substr(2, 2) +
+                    ("0" + (now.getMonth() + 1)).slice(-2) +
+                    ("0" + now.getDate()).slice(-2) +
+                    ("0" + now.getHours()).slice(-2) +
+                    ("0" + now.getMinutes()).slice(-2) +
+                    ("0" + now.getSeconds()).slice(-2) +
+                    "-" + randomSuffix;
+
+                contractNumberInput.value = generatedNumber;
+            });
+        }
 
         document.querySelectorAll(".delete-order-btn").forEach(button => {
             button.addEventListener("click", function () {
@@ -254,21 +276,19 @@
         const newClientFields = document.getElementById("newClientFields");
 
         if (clientSelect.value === "") {
-            // Новый клиент
+           
             customerId.value = "";
             customerName.value = "";
             customerPhone.value = "";
             newClientFields.style.display = "block";
         } else {
-            // Существующий клиент
+            
             const selectedOption = clientSelect.options[clientSelect.selectedIndex];
             customerId.value = clientSelect.value;
             customerName.value = selectedOption.dataset.name || "";
             customerPhone.value = selectedOption.dataset.phone || "";
-
-            // Поля заполнены, но всё равно отображаем для возможности редактирования
             newClientFields.style.display = "block";
-            // В реальном сценарии можно скрыть поля: newClientFields.style.display = "none";
         }
     }
 </script>
+
