@@ -120,9 +120,6 @@
   <data name="Client" xml:space="preserve">
     <value>Имя клиента</value>
   </data>
-  <data name="ContractHeading" xml:space="preserve">
-    <value>Контракты</value>
-  </data>
   <data name="ContractNumber" xml:space="preserve">
     <value>Номер контракта</value>
   </data>

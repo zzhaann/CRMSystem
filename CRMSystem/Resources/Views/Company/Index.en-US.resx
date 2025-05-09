@@ -117,28 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Client" xml:space="preserve">
-    <value />
+  <data name="Clients" xml:space="preserve">
+    <value>Clients</value>
   </data>
-  <data name="ContractNumber" xml:space="preserve">
-    <value />
+  <data name="Companies" xml:space="preserve">
+    <value>Companies</value>
   </data>
-  <data name="Count" xml:space="preserve">
-    <value />
+  <data name="Company" xml:space="preserve">
+    <value>Company</value>
   </data>
-  <data name="Florist" xml:space="preserve">
-    <value />
+  <data name="CompanyDashboard" xml:space="preserve">
+    <value>Company dashboard</value>
+  </data>
+  <data name="CreatedAt" xml:space="preserve">
+    <value>Created at</value>
+  </data>
+  <data name="Florists" xml:space="preserve">
+    <value>Florists</value>
   </data>
   <data name="Flowers" xml:space="preserve">
-    <value />
+    <value>Flowers</value>
   </data>
-  <data name="Orders" xml:space="preserve">
-    <value />
+  <data name="MyCompany" xml:space="preserve">
+    <value>About Company</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Client</value>
+  </data>
+  <data name="NoRecentClients" xml:space="preserve">
+    <value>No recent clients</value>
+  </data>
+  <data name="NoRecentFlowers" xml:space="preserve">
+    <value>No recent flowers</value>
   </data>
   <data name="PhoneNumber" xml:space="preserve">
-    <value />
+    <value>Phone number</value>
   </data>
   <data name="Price" xml:space="preserve">
-    <value />
+    <value>Price</value>
+  </data>
+  <data name="Quantity" xml:space="preserve">
+    <value>Quantity</value>
+  </data>
+  <data name="RecentClients" xml:space="preserve">
+    <value>Recent clients</value>
+  </data>
+  <data name="RecentFlowers" xml:space="preserve">
+    <value>Recent flowers</value>
+  </data>
+  <data name="ViewAll" xml:space="preserve">
+    <value>View all</value>
   </data>
 </root>

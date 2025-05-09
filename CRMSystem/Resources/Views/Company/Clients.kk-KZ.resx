@@ -117,46 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddCompany" xml:space="preserve">
-    <value />
+  <data name="AddClient" xml:space="preserve">
+    <value>Клиент қосу</value>
   </data>
-  <data name="AddNewCompany" xml:space="preserve">
-    <value />
+  <data name="BtnAddClient" xml:space="preserve">
+    <value>Қосу</value>
   </data>
-  <data name="Address" xml:space="preserve">
-    <value />
+  <data name="BtnDelete" xml:space="preserve">
+    <value>Өшіру</value>
   </data>
-  <data name="ClientPrice" xml:space="preserve">
-    <value />
+  <data name="Clients" xml:space="preserve">
+    <value>Клиенттер</value>
   </data>
-  <data name="CompanyDetails" xml:space="preserve">
-    <value />
+  <data name="ClientsList" xml:space="preserve">
+    <value>Клиенттер тізімі</value>
   </data>
-  <data name="CompanyList" xml:space="preserve">
-    <value />
+  <data name="Companies" xml:space="preserve">
+    <value>Компаниялар</value>
   </data>
-  <data name="CompanyName" xml:space="preserve">
-    <value />
+  <data name="Florists" xml:space="preserve">
+    <value>Флористтер</value>
   </data>
-  <data name="ContactPhone" xml:space="preserve">
-    <value />
+  <data name="Flowers" xml:space="preserve">
+    <value>Гүлдер</value>
   </data>
-  <data name="FlowerInfo" xml:space="preserve">
-    <value />
+  <data name="Name" xml:space="preserve">
+    <value>Клиент есімі</value>
   </data>
-  <data name="FlowerName" xml:space="preserve">
-    <value />
-  </data>
-  <data name="NoCompanies" xml:space="preserve">
-    <value />
-  </data>
-  <data name="PurchasePrice" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Quantity" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Stock" xml:space="preserve">
-    <value />
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Телефон нөмірі</value>
   </data>
 </root>

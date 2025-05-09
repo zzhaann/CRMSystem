@@ -117,46 +117,55 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddCompany" xml:space="preserve">
-    <value>Добавить компанию</value>
+  <data name="Clients" xml:space="preserve">
+    <value>Клиенттер</value>
   </data>
-  <data name="AddNewCompany" xml:space="preserve">
-    <value>Добавит новую компанию</value>
+  <data name="Companies" xml:space="preserve">
+    <value>Компаниялар</value>
   </data>
-  <data name="Address" xml:space="preserve">
-    <value>Адрес</value>
+  <data name="Company" xml:space="preserve">
+    <value>Компания</value>
   </data>
-  <data name="ClientPrice" xml:space="preserve">
-    <value>Стоимость продажи</value>
+  <data name="CompanyDashboard" xml:space="preserve">
+    <value>Компанияның басқару тақтасы</value>
   </data>
-  <data name="CompanyDetails" xml:space="preserve">
-    <value>Подробности компании</value>
+  <data name="CreatedAt" xml:space="preserve">
+    <value>Құрылған уақыты</value>
   </data>
-  <data name="CompanyList" xml:space="preserve">
-    <value>Список компаний</value>
+  <data name="Florists" xml:space="preserve">
+    <value>Флористтер</value>
   </data>
-  <data name="CompanyName" xml:space="preserve">
-    <value>Название компании</value>
+  <data name="Flowers" xml:space="preserve">
+    <value>Гүлдер</value>
   </data>
-  <data name="ContactPhone" xml:space="preserve">
-    <value>Контактный номер</value>
+  <data name="MyCompany" xml:space="preserve">
+    <value>Компания туралы</value>
   </data>
-  <data name="FlowerInfo" xml:space="preserve">
-    <value>Информация цветка</value>
+  <data name="Name" xml:space="preserve">
+    <value>Клиент </value>
   </data>
-  <data name="FlowerName" xml:space="preserve">
-    <value>Название цветка</value>
+  <data name="NoRecentClients" xml:space="preserve">
+    <value>Соңғы клиенттер жоқ</value>
   </data>
-  <data name="NoCompanies" xml:space="preserve">
-    <value>Нет компаний</value>
+  <data name="NoRecentFlowers" xml:space="preserve">
+    <value>Соңғы гүлдер жоқ</value>
   </data>
-  <data name="PurchasePrice" xml:space="preserve">
-    <value>Стоимость покупки</value>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Телефон нөмірі</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Бағасы</value>
   </data>
   <data name="Quantity" xml:space="preserve">
-    <value>Количество</value>
+    <value>Саны</value>
   </data>
-  <data name="Stock" xml:space="preserve">
-    <value>Остаток</value>
+  <data name="RecentClients" xml:space="preserve">
+    <value>Соңғы қосылған клиенттер</value>
+  </data>
+  <data name="RecentFlowers" xml:space="preserve">
+    <value>Соңғы қосылған гүлдер</value>
+  </data>
+  <data name="ViewAll" xml:space="preserve">
+    <value>Барлығын көру</value>
   </data>
 </root>

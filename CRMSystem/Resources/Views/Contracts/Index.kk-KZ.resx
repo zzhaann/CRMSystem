@@ -120,9 +120,6 @@
   <data name="Client" xml:space="preserve">
     <value>Тапсырыс берушінің есімі</value>
   </data>
-  <data name="ContractHeading" xml:space="preserve">
-    <value>Келісімшарттар</value>
-  </data>
   <data name="ContractNumber" xml:space="preserve">
     <value>Келісімшарт нөмірі</value>
   </data>

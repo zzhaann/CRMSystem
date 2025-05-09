@@ -117,28 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Client" xml:space="preserve">
-    <value />
+  <data name="AddFlorist" xml:space="preserve">
+    <value>Флорист қосу</value>
   </data>
-  <data name="ContractNumber" xml:space="preserve">
-    <value />
+  <data name="BtnAddFlorist" xml:space="preserve">
+    <value>Қосу</value>
   </data>
-  <data name="Count" xml:space="preserve">
-    <value />
+  <data name="BtnDelete" xml:space="preserve">
+    <value>Өшіру</value>
   </data>
-  <data name="Florist" xml:space="preserve">
-    <value />
+  <data name="Clients" xml:space="preserve">
+    <value>Клиенттер</value>
+  </data>
+  <data name="Companies" xml:space="preserve">
+    <value>Компаниялар</value>
+  </data>
+  <data name="Florists" xml:space="preserve">
+    <value>Флористтер</value>
+  </data>
+  <data name="FloristsList" xml:space="preserve">
+    <value>Флористтер тізімі</value>
   </data>
   <data name="Flowers" xml:space="preserve">
-    <value />
+    <value>Гүлдер</value>
   </data>
-  <data name="Orders" xml:space="preserve">
-    <value />
+  <data name="FullName" xml:space="preserve">
+    <value>Толық аты-жөні</value>
   </data>
   <data name="PhoneNumber" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Price" xml:space="preserve">
-    <value />
+    <value>Телефон нөмірі</value>
   </data>
 </root>

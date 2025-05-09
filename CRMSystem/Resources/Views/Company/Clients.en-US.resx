@@ -117,28 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Client" xml:space="preserve">
-    <value />
+  <data name="AddClient" xml:space="preserve">
+    <value>Add client</value>
   </data>
-  <data name="ContractNumber" xml:space="preserve">
-    <value />
+  <data name="BtnAddClient" xml:space="preserve">
+    <value>Add</value>
   </data>
-  <data name="Count" xml:space="preserve">
-    <value />
+  <data name="BtnDelete" xml:space="preserve">
+    <value>Delete</value>
   </data>
-  <data name="Florist" xml:space="preserve">
-    <value />
+  <data name="Clients" xml:space="preserve">
+    <value>Clients</value>
+  </data>
+  <data name="ClientsList" xml:space="preserve">
+    <value>Clients List</value>
+  </data>
+  <data name="Companies" xml:space="preserve">
+    <value>Companies</value>
+  </data>
+  <data name="Florists" xml:space="preserve">
+    <value>Florists</value>
   </data>
   <data name="Flowers" xml:space="preserve">
-    <value />
+    <value>Flowers</value>
   </data>
-  <data name="Orders" xml:space="preserve">
-    <value />
+  <data name="Name" xml:space="preserve">
+    <value>Client name</value>
   </data>
   <data name="PhoneNumber" xml:space="preserve">
-    <value />
-  </data>
-  <data name="Price" xml:space="preserve">
-    <value />
+    <value>Phone number</value>
   </data>
 </root>
