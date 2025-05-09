@@ -189,6 +189,9 @@
   <data name="StartDate" xml:space="preserve">
     <value>Басталу күні</value>
   </data>
+  <data name="Total" xml:space="preserve">
+    <value>Барлығы</value>
+  </data>
   <data name="TotalClients" xml:space="preserve">
     <value>Жалпы клиенттер</value>
   </data>
