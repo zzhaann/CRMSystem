@@ -203,6 +203,25 @@ namespace CRMSystem.Controllers
                     }
                 }
 
+                // Получение информации о цветке для расчета цены
+                if (order.FlowerId.HasValue)
+                {
+                    var flowerResponse = await client.GetAsync($"{_apiBaseUrl}/api/flowers/{order.FlowerId}");
+                    if (flowerResponse.IsSuccessStatusCode)
+                    {
+                        var flowerJson = await flowerResponse.Content.ReadAsStringAsync();
+                        var flower = JsonConvert.DeserializeObject<Flower>(flowerJson);
+
+                        // Установка цены заказа на основе цены цветка и количества
+                        order.Price = flower.ClientPrice * order.Quantity;
+                        _logger.LogInformation("Установлена цена заказа: {Price}", order.Price);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Не удалось получить информацию о цветке для расчета цены");
+                    }
+                }
+
                 // Создание заказа
                 var json = JsonConvert.SerializeObject(order);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");

@@ -15,27 +15,23 @@ namespace CRMSystem.Admin.Models
 
         public async Task<string> GenerateAccessToken(AppUser user)
         {
-            //полезная нагрузка
-            var claim = new List<Claim>()
+            var claims = new List<Claim>()
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
-            //заголовок
+
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-            //"AccessTokenExpirationMinutes": 15
             var token = new JwtSecurityToken(
-
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
-                claims: claim,
+                claims: claims,
                 expires: DateTime.Now.AddMinutes(
-                    Convert.ToDouble(_configuration["Jwt:AccessTokenExpirationMinutes"])),
-
+                    Convert.ToDouble(_configuration["Jwt:AccessTokenExpirationMinutes"] ?? "15")),
                 signingCredentials: cred);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

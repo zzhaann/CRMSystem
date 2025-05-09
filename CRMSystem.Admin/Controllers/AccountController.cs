@@ -1,4 +1,5 @@
-﻿using CRMSystem.Admin.Models;
+﻿using Azure.Core;
+using CRMSystem.Admin.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,7 +40,12 @@ namespace CRMSystem.Admin.Controllers
                 if (result.Succeeded)
                 {
                     var jwtToken = await _tokenService.GenerateAccessToken(user);
-                    Response.Cookies.Append("jwtToken", jwtToken);
+                    Response.Cookies.Append("jwtToken", jwtToken, new CookieOptions
+                    {
+                        HttpOnly = false,
+                        Secure = Request.IsHttps,
+                        SameSite = SameSiteMode.Lax
+                    });
                     _logger.LogInformation("User {Email} logged in successfully.", email);
                     return RedirectToAction("Index", "Home");
                 }

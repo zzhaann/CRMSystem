@@ -250,8 +250,8 @@ namespace CRMSystem.Controllers
                     {
                         worksheet.Cell(row, 1).Value = order.ContractNumber;
                         worksheet.Cell(row, 2).Value = order.Flower?.Name ?? "";
-                        worksheet.Cell(row, 3).Value = order.Flower?.Quantity ?? 0;
-                        worksheet.Cell(row, 4).Value = order.Flower?.Price ?? 0;
+                        worksheet.Cell(row, 3).Value = order.Quantity;
+                        worksheet.Cell(row, 4).Value = order.Price;
                         worksheet.Cell(row, 5).Value = order.Customer?.Name ?? "Не указан";
                         worksheet.Cell(row, 6).Value = order.Customer?.Phone ?? "Не указан";
                         worksheet.Cell(row, 7).Value = order.Florist?.FullName ?? "";
@@ -265,12 +265,12 @@ namespace CRMSystem.Controllers
                     worksheet.Cell(row, 3).Style.Font.Bold = true;
 
                     // Суммируем количество
-                    var totalQuantity = completedOrders.Sum(o => o.Flower?.Quantity ?? 0);
+                    var totalQuantity = completedOrders.Sum(o => o.Quantity);
                     worksheet.Cell(row, 4).Value = totalQuantity;
                     worksheet.Cell(row, 4).Style.Font.Bold = true;
 
                     // Суммируем цену
-                    var totalPrice = completedOrders.Sum(o => o.Flower?.Price ?? 0);
+                    var totalPrice = completedOrders.Sum(o => o.Price);
                     worksheet.Cell(row, 5).Value = totalPrice;
                     worksheet.Cell(row, 5).Style.Font.Bold = true;
 

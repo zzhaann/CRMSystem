@@ -40,7 +40,7 @@
                                         <input type="date" id="endDate" name="endDate" class="form-control" value="@ViewBag.EndDate" />
                                     </div>
                                 </div>
-                                
+
                                 <!-- Фильтр по клиенту -->
                                 <div class="col-md-3">
                                     <div class="form-group">
@@ -98,29 +98,29 @@
                                     </div>
                                 </div>
 
-                                
+
                                 <!-- Фильтр по диапазону цен -->
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label for="minPrice">@localizer["MinPrice"].Value.ToString()</label>
-                                        <input type="number" id="minPrice" name="minPrice" class="form-control" 
+                                        <input type="number" id="minPrice" name="minPrice" class="form-control"
                                                min="0" step="0.01" value="@ViewBag.MinPrice" />
                                     </div>
                                 </div>
-                                
+
                                 <div class="col-md-2">
                                     <div class="form-group">
                                         <label for="maxPrice">@localizer["MaxPrice"].Value.ToString()</label>
-                                        <input type="number" id="maxPrice" name="maxPrice" class="form-control" 
+                                        <input type="number" id="maxPrice" name="maxPrice" class="form-control"
                                                min="0" step="0.01" value="@ViewBag.MaxPrice" />
                                     </div>
                                 </div>
-                                
+
                                 <!-- Фильтр по номеру контракта -->
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="contractNumber">@localizer["ContractNumber"].Value.ToString()</label>
-                                        <input type="text" id="contractNumber" name="contractNumber" class="form-control" 
+                                        <input type="text" id="contractNumber" name="contractNumber" class="form-control"
                                                value="@ViewBag.ContractNumber" placeholder="@localizer["SearchByContractNumber"].Value.ToString()" />
                                     </div>
                                 </div>
@@ -158,7 +158,7 @@
 
                             </form>
                         </div>
-                        
+
                         <!-- Статистика по отфильтрованным заказам -->
                         <div class="card-body mb-4">
                             <div class="row g-3">
@@ -185,9 +185,9 @@
                                         <h6>@localizer["AvgOrderValue"].Value.ToString()</h6>
                                         @{
                                             var totalOrders = Model.Values.SelectMany(x => x).Count();
-                                            var avgValue = totalOrders > 0 
-                                                ? Model.Values.SelectMany(x => x).Sum(x => x.Price) / totalOrders 
-                                                : 0;
+                                            var avgValue = totalOrders > 0
+                                            ? Model.Values.SelectMany(x => x).Sum(x => x.Price) / totalOrders
+                                            : 0;
                                         }
                                         <h3 class="mb-0">@avgValue.ToString("N0")</h3>
                                     </div>
@@ -228,8 +228,8 @@
                                                     <tr>
                                                         <td>@order.ContractNumber</td>
                                                         <td>@order.Flower?.Name</td>
-                                                        <td>@order.Flower?.Quantity</td>
-                                                        <td>@order.Flower?.Price</td>
+                                                        <td>@order.Quantity</td>
+                                                        <td>@order.Price</td>
                                                         <td>@(order.Customer?.Name ?? "Не указан")</td>
                                                         <td>@(order.Customer?.Phone ?? "Не указан")</td>
                                                         <td>@order.Florist?.FullName</td>
@@ -239,8 +239,8 @@
                                             <tfoot>
                                                 <tr class="table-light">
                                                     <td colspan="2" class="text-end fw-bold">@localizer["Total"].Value.ToString():</td>
-                                                    <td class="fw-bold">@group.Value.Sum(o => o.Flower?.Quantity ?? 0)</td>
-                                                    <td class="fw-bold">@group.Value.Sum(o => o.Flower?.Price ?? 0)</td>
+                                                    <td class="fw-bold">@group.Value.Sum(o => o.Quantity)</td>
+                                                    <td class="fw-bold">@group.Value.Sum(o => o.Price)</td>
                                                     <td colspan="3"></td>
                                                 </tr>
                                             </tfoot>
