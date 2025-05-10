@@ -55,31 +55,56 @@
             <script>
                 document.addEventListener("DOMContentLoaded", function () {
 
-                    var ctxOrders = document.getElementById("ordersChart").getContext("2d");
-                    new Chart(ctxOrders, {
-                        type: "bar",
-                        data: {
-                            labels: @Html.Raw(Json.Serialize(Model.Labels)),
-                            datasets: [
-                                {
-                                    label: @Html.Raw(Json.Serialize(localizer["OrderCountSC"].Value.ToString())),
-                                    data: @Html.Raw(Json.Serialize(Model.OrderCounts)),
-                                    backgroundColor: "rgba(54, 162, 235, 0.7)"
-                                },
-                                {
-                                    label: @Html.Raw(Json.Serialize(localizer["Revenue"].Value.ToString())),
-                                    data: @Html.Raw(Json.Serialize(Model.TotalRevenue)),
-                                    backgroundColor: "rgba(75, 192, 192, 0.7)"
-                                }
-                            ]
+                var ctxOrders = document.getElementById("ordersChart").getContext("2d");
+                new Chart(ctxOrders, {
+                    type: "bar",
+                    data: {
+                        labels: @Html.Raw(Json.Serialize(Model.Labels)),
+                        datasets: [
+                            {
+                                label: @Html.Raw(Json.Serialize(localizer["OrderCountSC"].Value.ToString())),
+                                data: @Html.Raw(Json.Serialize(Model.OrderCounts)),
+                                backgroundColor: "rgba(54, 162, 235, 0.7)",
+                                yAxisID: "yOrders"
+                            },
+                            {
+                                label: @Html.Raw(Json.Serialize(localizer["Revenue"].Value.ToString())),
+                                data: @Html.Raw(Json.Serialize(Model.TotalRevenue)),
+                                backgroundColor: "rgba(75, 192, 192, 0.7)",
+                                yAxisID: "yRevenue"
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        aspectRatio: 2,
+                        plugins: {
+                            legend: { position: "top" }
                         },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            aspectRatio: 2,
-                            plugins: { legend: { position: "top" } }
+                        scales: {
+                            yOrders: {
+                                type: "linear",
+                                position: "left",
+                                title: {
+                                    display: true,
+                                    text: @Html.Raw(Json.Serialize(localizer["OrderCount"].Value.ToString()))
+                                }
+                            },
+                            yRevenue: {
+                                type: "linear",
+                                position: "right",
+                                title: {
+                                    display: true,
+                                    text: @Html.Raw(Json.Serialize(localizer["Revenue"].Value.ToString()))
+                                },
+                                grid: {
+                                    drawOnChartArea: false
+                                }
+                            }
                         }
-                    });
+                    }
+                });
 
                     var ctxFlowers = document.getElementById("flowersChart").getContext("2d");
                     new Chart(ctxFlowers, {

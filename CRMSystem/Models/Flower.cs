@@ -14,7 +14,7 @@ namespace CRMSystem.Models
         [Required]
         public int Quantity { get; set; }
 
-        public int InitialQuantity { get; set; } // начальное количество
+        public int InitialQuantity { get; set; }
 
         [Required]
         [Column(TypeName = "decimal(18,2)")]
@@ -33,6 +33,6 @@ namespace CRMSystem.Models
 
 
         [ForeignKey("CompanyId")]
-        public Company Company { get; set; }
+        public Company? Company { get; set; }
     }
 }

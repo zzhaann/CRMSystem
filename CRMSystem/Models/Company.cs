@@ -16,7 +16,6 @@ namespace CRMSystem.Models
         public string? ContactPhone { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public string CreatedBy { get; set; } = "admin";
-
-        public ICollection<Flower> Flowers { get; set; }
+        //public ICollection<Flower> Flowers { get; set; }
     }
 }

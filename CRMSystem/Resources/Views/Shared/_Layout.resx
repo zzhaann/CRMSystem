@@ -138,6 +138,9 @@
   <data name="Inbox" xml:space="preserve">
     <value />
   </data>
+  <data name="Login" xml:space="preserve">
+    <value />
+  </data>
   <data name="Logout" xml:space="preserve">
     <value />
   </data>

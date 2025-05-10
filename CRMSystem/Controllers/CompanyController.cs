@@ -323,31 +323,6 @@ namespace CRMSystem.Controllers
                     var json = await response.Content.ReadAsStringAsync();
                     companies = JsonConvert.DeserializeObject<List<Company>>(json);
                     _logger.LogInformation("Получено {Count} компаний.", companies.Count);
-
-                    // Получаем цветы для компаний (для отображения связанных цветов)
-                    var flowersResponse = await client.GetAsync($"{_apiBaseUrl}/api/flowers");
-                    if (flowersResponse.IsSuccessStatusCode)
-                    {
-                        var flowersJson = await flowersResponse.Content.ReadAsStringAsync();
-                        var flowers = JsonConvert.DeserializeObject<List<Flower>>(flowersJson);
-
-                        // Группируем цветы по компаниям
-                        var flowersGroupedByCompany = flowers.GroupBy(f => f.CompanyId)
-                            .ToDictionary(g => g.Key, g => g.ToList());
-
-                        // Присваиваем цветы соответствующим компаниям
-                        foreach (var company in companies)
-                        {
-                            if (flowersGroupedByCompany.TryGetValue(company.Id, out var companyFlowers))
-                            {
-                                company.Flowers = companyFlowers;
-                            }
-                            else
-                            {
-                                company.Flowers = new List<Flower>();
-                            }
-                        }
-                    }
                 }
                 else
                 {
@@ -456,34 +431,33 @@ namespace CRMSystem.Controllers
                     var json = await response.Content.ReadAsStringAsync();
                     flowers = JsonConvert.DeserializeObject<List<Flower>>(json);
                     _logger.LogInformation("Получено {Count} цветов.", flowers.Count);
-
-                    // Получаем список компаний для выпадающего списка
-                    var companiesResponse = await client.GetAsync($"{_apiBaseUrl}/api/companies");
-                    if (companiesResponse.IsSuccessStatusCode)
-                    {
-                        var companiesJson = await companiesResponse.Content.ReadAsStringAsync();
-                        companies = JsonConvert.DeserializeObject<List<Company>>(companiesJson);
-                        _logger.LogInformation("Получено {Count} компаний для выпадающего списка.", companies.Count);
-
-                        // Связываем цветы с компаниями
-                        var companiesDict = companies.ToDictionary(c => c.Id);
-                        foreach (var flower in flowers)
-                        {
-                            if (flower.CompanyId > 0 && companiesDict.TryGetValue(flower.CompanyId, out Company company))
-                            {
-                                flower.Company = company;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        _logger.LogError("Ошибка при получении компаний. Код: {StatusCode}", companiesResponse.StatusCode);
-                    }
                 }
                 else
                 {
                     _logger.LogError("Ошибка при получении цветов. Код: {StatusCode}", response.StatusCode);
                     TempData["ErrorMessage"] = "Ошибка при получении списка цветов.";
+                }
+                // Получаем список компаний для выпадающего списка
+                var companiesResponse = await client.GetAsync($"{_apiBaseUrl}/api/companies");
+                if (companiesResponse.IsSuccessStatusCode)
+                {
+                    var companiesJson = await companiesResponse.Content.ReadAsStringAsync();
+                    companies = JsonConvert.DeserializeObject<List<Company>>(companiesJson);
+                    _logger.LogInformation("Получено {Count} компаний для выпадающего списка.", companies.Count);
+
+                    // Связываем цветы с компаниями
+                    var companiesDict = companies.ToDictionary(c => c.Id);
+                    foreach (var flower in flowers)
+                    {
+                        if (flower.CompanyId > 0 && companiesDict.TryGetValue(flower.CompanyId, out Company company))
+                        {
+                            flower.Company = company;
+                        }
+                    }
+                }
+                else
+                {
+                    _logger.LogError("Ошибка при получении компаний. Код: {StatusCode}", companiesResponse.StatusCode);
                 }
             }
 
@@ -495,6 +469,7 @@ namespace CRMSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> AddFlower(Flower flower)
         {
+
             if (!ModelState.IsValid)
             {
                 TempData["ErrorMessage"] = "Пожалуйста, заполните все обязательные поля.";

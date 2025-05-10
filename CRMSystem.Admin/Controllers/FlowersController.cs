@@ -121,6 +121,9 @@ namespace CRMSystem.Admin.Controllers
                         if (!response.IsSuccessStatusCode)
                         {
                             _logger.LogError("Failed to update flower with ID {Id}. Status code: {StatusCode}", flower.Id, response.StatusCode);
+
+                            // Заново загружаем список компаний перед возвратом представления
+                            await LoadCompaniesForViewModel(viewModel);
                             return View(viewModel);
                         }
                     }
@@ -128,14 +131,16 @@ namespace CRMSystem.Admin.Controllers
                 catch (Exception ex)
                 {
                     _logger.LogError("Error occurred while updating flower with ID {Id}: {Message}", flower.Id, ex.Message);
+
+                    // Заново загружаем список компаний перед возвратом представления
+                    await LoadCompaniesForViewModel(viewModel);
                     return View(viewModel);
                 }
             }
             else
             {
                 flower.CreatedAt = DateTime.Now;
-                flower.CreatedBy = User.Identity.Name;
-
+                flower.CreatedBy = User.Identity?.Name ?? "Unknown";
                 try
                 {
                     var content = new StringContent(
@@ -148,7 +153,11 @@ namespace CRMSystem.Admin.Controllers
                     {
                         if (!response.IsSuccessStatusCode)
                         {
-                            _logger.LogError("Failed to create flower. Status code: {StatusCode}", response.StatusCode);
+                            var error = await response.Content.ReadAsStringAsync();
+                            _logger.LogError("Failed to create flower. Status code: {StatusCode}, {Error}", response.StatusCode, error);
+
+                            // Заново загружаем список компаний перед возвратом представления
+                            await LoadCompaniesForViewModel(viewModel);
                             return View(viewModel);
                         }
                     }
@@ -156,12 +165,50 @@ namespace CRMSystem.Admin.Controllers
                 catch (Exception ex)
                 {
                     _logger.LogError("Error occurred while creating flower: {Message}", ex.Message);
+
+                    // Заново загружаем список компаний перед возвратом представления
+                    await LoadCompaniesForViewModel(viewModel);
                     return View(viewModel);
                 }
             }
 
             return RedirectToAction("Index");
         }
+
+        // Вспомогательный метод для загрузки компаний
+        private async Task LoadCompaniesForViewModel(FlowerViewModel viewModel)
+        {
+            // Инициализируем Companies пустым списком, если он null
+            viewModel.Companies ??= new List<Company>();
+
+            try
+            {
+                var token = Request.Cookies["jwtToken"];
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+                using (var companiesResponse = await client.GetAsync($"{_apiBaseUrl}/api/companies"))
+                {
+                    if (companiesResponse.IsSuccessStatusCode)
+                    {
+                        var companiesJson = await companiesResponse.Content.ReadAsStringAsync();
+                        var companies = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Company>>(companiesJson);
+                        if (companies != null)
+                        {
+                            viewModel.Companies = companies;
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogError("Failed to fetch companies. Status code: {StatusCode}", companiesResponse.StatusCode);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error occurred while loading companies: {Message}", ex.Message);
+            }
+        }
+
 
         public async Task<IActionResult> Delete(int id)
         {

@@ -48,7 +48,7 @@ namespace CRMSystem.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromForm] Flower flower)
+        public IActionResult Post([FromBody] Flower flower)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace CRMSystem.WebAPI.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while creating a flower.");
+                _logger.LogError(ex.Message, ex.InnerException, "Error occurred while creating a flower.");
                 var innerMessage = ex.InnerException?.Message;
                 return BadRequest(new { message = ex.Message, innerMessage });
             }

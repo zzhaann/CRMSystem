@@ -119,7 +119,7 @@ namespace CRMSystem.Controllers
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
 
-            return RedirectToAction("Login");
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]

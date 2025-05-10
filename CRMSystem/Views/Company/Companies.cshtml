@@ -71,8 +71,7 @@
                                                                 <div class="d-flex justify-content-between">
                                                                     <form asp-action="DeleteCompany" asp-controller="Company" method="post" class="d-inline">
                                                                         <input type="hidden" name="id" value="@company.Id" />
-                                                                        <button type="submit" class="btn btn-danger btn-sm"
-                                                                        @(company.Flowers.Any() ? "disabled" : "")>
+                                                                        <button type="submit" class="btn btn-danger btn-sm">
                                                                             @localizer["BtnDelete"].Value.ToString()
                                                                         </button>
                                                                     </form>

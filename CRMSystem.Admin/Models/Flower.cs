@@ -30,6 +30,6 @@ namespace CRMSystem.Admin.Models
         public int CompanyId { get; set; }
 
         [ForeignKey("CompanyId")]
-        public Company Company { get; set; }
+        public Company? Company { get; set; }
     }
 }
