@@ -235,6 +235,7 @@ namespace CRMSystem.Controllers
                 }
 
                 // Создание заказа
+                order.CreatedBy = User.Identity.Name;
                 var json = JsonConvert.SerializeObject(order);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 

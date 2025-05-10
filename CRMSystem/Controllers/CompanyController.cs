@@ -162,6 +162,7 @@ namespace CRMSystem.Controllers
 
             using (var httpClient = CreateHttpClient())
             {
+                client.CreatedBy = User.Identity.Name;
                 var json = JsonConvert.SerializeObject(client);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -260,6 +261,7 @@ namespace CRMSystem.Controllers
 
             using (var httpClient = CreateHttpClient())
             {
+                florist.CreatedBy = User.Identity.Name;
                 var json = JsonConvert.SerializeObject(florist);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -346,6 +348,7 @@ namespace CRMSystem.Controllers
 
             using (var httpClient = CreateHttpClient())
             {
+                company.CreatedBy = User.Identity.Name;
                 var json = JsonConvert.SerializeObject(company);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -481,6 +484,7 @@ namespace CRMSystem.Controllers
 
             using (var httpClient = CreateHttpClient())
             {
+                flower.CreatedBy = User.Identity.Name;
                 var json = JsonConvert.SerializeObject(flower);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
